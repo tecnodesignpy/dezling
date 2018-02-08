@@ -1,0 +1,48 @@
+<ion-view view-title="Sign in" class="signin" hide-nav-bar="true" ng-init="checkAuth()">
+
+
+<!--<div ng-include="'templates/common/loading.html'" ng-show="loading"></div>-->
+
+	<ion-content style="background-image: url('img/back.jpg'); background-size: cover;">
+
+		<form name="loginForm"  novalidate >
+
+		<div class="header">
+			<img src="img/dezling-color.png" width="130px">
+		</div>
+
+		<div class="signin-input-holder">
+
+			<ion-list>
+
+				<ion-item style="color:white; background-color: transparent; border-bottom: 2px solid #fff;" class="item-input ">
+					<i class="icon_set_1_icon-70" style="font-size: 20px"></i>
+					<input style="color:white" type="email" ng-model="loginData.userEmail" placeholder="Email" required>
+
+				</ion-item>
+				<ion-item style="color:white; background-color: transparent; border-bottom: 2px solid #fff;" class="item-input ">
+					<i class="icon_set_1_icon-71" style="font-size: 20px"></i>
+					<input style="color:white" type="password" ng-model="loginData.userPassword" placeholder="Contraseña" required>
+
+				</ion-item>
+
+			</ion-list>
+
+      <h5 style="color:white; margin-bottom: 0 !important" class="light-font" ui-sref="forgot-password">Olvide mi contraseña</h5>
+
+		</div>
+
+		<div class="footer-boton">
+			<h5 style="color:white" class="color-grapefruit m-t-b-0" ng-show="loginError"> {{loginError}}</h5>
+			<button style="border-color: white;" class="button button-dark button-block button-round animated bounceIn" ng-disabled="loginForm.$invalid || disableSubmit" ng-click="doLogin()">Ingresar</button>
+			<button class="button button-facebook button-block button-round animated bounceIn" ng-click="doLoginSocial();" style="font-size:9px">Ingresar con Facebook</button>
+		</div>
+		<div class="footer-button" style="background: transparent; padding-top: 0 !important">
+			<a style="color:white" class="button button-clear button-full button-stable" ui-sref="app.editorial">Ingresar sin registrarme</a>
+			<h5 style="color:white" class="light-font"  ui-sref="signup">No tengo una cuenta. <span class="semibold-font" style="color:white">Registrarme</span></h5>
+			<p style="color:white" class="padding light-font color-warm-white" ng-click="openTermsModal()">Terminos &amp; Condiciones</p>
+		</div>
+		</div>
+		</form>
+	</ion-content>
+</ion-view>

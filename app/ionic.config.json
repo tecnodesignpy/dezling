@@ -1,0 +1,14 @@
+{
+  "name": "Dezling",
+  "app_id": "77782e5f",
+  "type": "ionic1",
+  "watchPatterns": [
+    "scss/**/*",
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ],
+  "integrations": {
+    "cordova": {}
+  }
+}

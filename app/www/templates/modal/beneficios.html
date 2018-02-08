@@ -1,0 +1,22 @@
+
+<ion-modal-view  class="image-modal" hide-nav-bar="true" can-swipe-back="true" on-swipe-down="closeBeneficiosModal()" title="" on-swipe-right="closeBeneficiosModal()">
+
+    <ion-header-bar class="pinro-header profile-header">
+      <button class="button button-icon icon ion-ios-arrow-back" style="color: black !important" ng-click="closeBeneficiosModal()"></button>
+      <h1 class="title" style="color: black !important">Beneficios</h1>
+    </ion-header-bar>
+
+  	<ion-content class="has-header">
+  		<div class="content">
+
+      		<img style="margin-top: 14%" width="30%" src="img/cool.svg">
+			<h2 class="normal-font">SELECCIONA UN BENEFICIO</h2>
+			<button ng-repeat="(key, beneficio) in item.detalle_beneficio" ng-click="beneficio_elegido(item, key)" class="button button-dark button-block button-outline"><span style="float: left">{{ beneficio }} </span><span style="float: right">{{ item.puntos_beneficio[key] }} puntos</span></button>
+		</div>
+  	</ion-content>
+
+
+</ion-modal-view>
+
+
+

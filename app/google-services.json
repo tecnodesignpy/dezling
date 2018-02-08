@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "747704207185",
+    "firebase_url": "https://dezling-405c6.firebaseio.com",
+    "project_id": "dezling-405c6",
+    "storage_bucket": "dezling-405c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747704207185:android:247b245b4fbebc20",
+        "android_client_info": {
+          "package_name": "com.tecnodesign.dezling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "747704207185-2fnakvamp5q6judfju33tqa22ppci0qq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArmD64F5zk_R70PSYbFo9V51qRlcN7H-Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

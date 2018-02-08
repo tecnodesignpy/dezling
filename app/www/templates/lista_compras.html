@@ -1,0 +1,46 @@
+<ion-view hide-back-button="false" title="Lista de Compras"  hide-nav-bar="false"  can-swipe-back="true"  on-swipe-right="swipe('right')">
+
+	<ion-nav-bar class="bar-light pinro-header header-shadow">
+      <ion-nav-back-button class="button-icon button-clear">
+        <i><img src="img/icons/icon_back.png" width="24px"></i>
+      </ion-nav-back-button>
+      <ion-nav-buttons side="right">
+        <button title="Nueva Lista" class="button button-icon button-clear" ng-click="agregar()">
+          <i class="icon_set_1_icon-11" style="font-size: 25px;"></i></button>
+      </ion-nav-buttons>
+
+    </ion-nav-bar>
+
+  <ion-content class="has-header" ng-show="Listado.length != 0">
+    <ion-list ng-controller="ListaComprasCtrl"
+              show-delete="shouldShowDelete"
+              show-reorder="shouldShowReorder"
+              can-swipe="listCanSwipe">
+      <ion-item ui-sref="app.detalle_lista({id:lista.key})" class="item-thumbnail-left-3 item-complex-3" ng-repeat="lista in Listado | orderBy:'-detalle.timestamp' " >
+        <h2 class="text-left">{{ lista.detalle.nombreLista }}</h2>
+        <p class="text-left" ng-bind="lista.detalle.timestamp | date : 'dd/MM/yyyy &mdash; HH:mm'"></p>
+        <div class="item-icon-right">
+            <i class="icon ion-ios-arrow-right"></i>
+        </div>
+        <ion-option-button class="button-info"
+                           ng-click="editar_nombre(lista.key,lista.detalle.nombreLista)">
+          Editar
+        </ion-option-button>
+        <ion-option-button class="button-assertive"
+                           ng-click="eliminar_lista(lista.key)">
+          Eliminar
+        </ion-option-button>
+
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+
+
+  <ion-content class="has-header has-subheader" ng-show="Listado.length == 0">
+      <!--<img style="margin-top: 10%" width="50%" src="img/listado.svg">-->
+      <i class="icon_set_1_icon-87" style="font-size: 70px; color: #66BEE6"></i>
+    <h3>¡No tienes lista de compras!</h3>
+  </ion-content>
+  
+</ion-view>

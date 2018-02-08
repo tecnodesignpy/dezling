@@ -1,0 +1,48 @@
+
+<ion-view hide-back-button="true" title="Promociones Cercanas"  hide-nav-bar="true"  can-swipe-back="false"  on-swipe="swipe()" scroll="false">
+  <style type="text/css">
+  .popup-buttons {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    padding: 10px;
+    min-height: 45px !important;
+}
+</style>
+
+  <ion-nav-bar class="bar-light pinro-header header-shadow">
+      <ion-nav-buttons side="right">
+        <!--
+        <button class="button button-icon button-clear" ui-sref="app.buscadorPromociones">
+          <i class="icon_set_1_icon-66" style="font-size: 25px"></i></button> -->
+        <!--<button class="button button-icon button-clear" ng-click="showFilterBar()">
+          <i class="icon_set_1_icon-66" style="font-size: 25px"></i></button>
+      </ion-nav-buttons> -->
+  </ion-nav-bar>
+	<ion-content scroll="false" data-tap-disabled="true">
+            <angucomplete-alt id="ex1"
+                    placeholder="Buscador"
+                    text-searching="Buscando .."
+                    text-no-results="No hay promociones"
+                    pause="100"
+                    selected-object="centrar"
+                    local-data="lista_buscador"
+                    search-fields="nombre"
+                    title-field="nombre"
+                    minlength="1"
+                    input-class="filter-bar-search input-100"
+                    matchClass="input-100"
+                    style="width: 100%;" />
+
+      <!-- <input id="pac-input" class="controls" type="text" placeholder="Search Box"> -->
+	</ion-content>
+</ion-view>

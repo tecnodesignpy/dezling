@@ -1,0 +1,47 @@
+
+    <ion-nav-bar class="bar-light pinro-header header-shadow">
+      <ion-nav-back-button class="button-icon button-clear">
+        <i><img src="img/icons/icon_back.png" width="24px"></i>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear" ng-click="OpenNotificaciones()">
+          <i class="ion-ios-bell-outline" style="font-size: 25px"></i>
+          <div ng-show="hay_nuevas==true" class="shopping-cart">
+          <span class="badge badge-assertive header-badge">{{ campana }}</span>
+          </div></button>
+      </ion-nav-buttons>
+
+      <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear" ui-sref="buscador">
+          <i class="ion-ios-search" style="font-size: 25px"></i></button>
+      </ion-nav-buttons>
+
+    </ion-nav-bar>
+
+    <ion-nav-view name="notificacionesContent"></ion-nav-view>
+
+
+    <ion-tabs class="tabs-icon-center tabs-color-active-positive">
+
+      <!-- Inicio Tab -->
+      <ion-tab icon-off="dezling" icon-on="dezling" href="#/app/editorial">
+        <ion-nav-view name="menuContent"></ion-nav-view>
+      </ion-tab>
+
+      <!-- Categorias Tab -->
+      <ion-tab icon-off="icon_set_1_icon-50" icon-on="icon_set_1_icon-50 bolsa" ng-click="goToCategorias()">
+        <ion-nav-view name="CategoriaContent"></ion-nav-view>
+      </ion-tab>
+
+      <!-- Check-In Tab -->
+      <ion-tab icon-off="ion-ios-location-outline" icon-on="ion-ios-location-outline check" href="#/app/mapaPromociones">
+        <ion-nav-view name="CheckContent"></ion-nav-view>
+      </ion-tab>
+
+      <!-- Perfil y Configuraciones Tab -->
+      <ion-tab icon-off="icon_set_1_icon-70" icon-on="icon_set_1_icon-70 perfil" ng-click="goToPerfil()">
+        <ion-nav-view name="perfilContent"></ion-nav-view>
+      </ion-tab>
+
+    </ion-tabs>

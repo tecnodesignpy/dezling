@@ -1,0 +1,88 @@
+<ion-view view-title="Step 2" class="payment">
+	
+
+<div ng-include="'templates/common/loading.html'" ng-show="loading"></div>
+
+	<ion-content class="step2">
+
+        <h5>Payment</h5>
+
+        <div class="line-holder">
+                <img src="img/icons/top-line-middle.svg" width="100%">
+        </div>
+
+
+<!--<h5 class="padding-bottom">Select payment method</h5>-->
+
+<div class="button-bar" ng-init="payment_method_selected = 'card'">
+  <a class="button button-small" ng-class="{'button-light': payment_method_selected == 'card'}" ng-click="payment_method_selected = 'card'">Pay by card</a>
+  <a class="button button-small" ng-class="{'button-light': payment_method_selected == 'cash'}" ng-click="payment_method_selected = 'cash'">Cash on delivery</a>
+</div>
+
+
+<!--cash on delivery-->
+
+<div class="padding" ng-if="payment_method_selected == 'cash'">
+  <h5 class="">You have selected to pay<br></h5>
+  <h2>Cash on delivery</h2>
+  <div class="footer-button">
+      <button class="button button-dark button-block button-round button-outline " ng-click="payCashOnDelivery()">Confirm Order</button>
+    </div>
+</div>
+
+  <!--cash on delivery ends-->
+
+
+<!--card payment-->
+<div ng-if="payment_method_selected == 'card'">
+        <div class="line-holder">
+                <button class="button button-dark button-round button-outline" ng-click="scanCard()">Scan card</button>
+        </div>
+        
+  <div class="card-input-holder">
+  
+  <ion-list>
+    <ion-item class="item-input ">
+          
+    <input type="text" placeholder="Cardholder Name" ng-model="card.name">
+
+      </ion-item>
+      <ion-item class="item-input ">
+          
+    <input type="text" placeholder="Card Number" ng-model="card.number" name="cardNumber" cc-number>
+
+      </ion-item>
+      
+      <ion-item class="item-input">
+          
+    <input type="text" placeholder="MM" ng-model="card.exp_month" cc-exp-month>
+                
+
+      </ion-item>
+      <ion-item class="item-input">
+          
+    <input type="text" ng-model="card.exp_year" placeholder="YY">
+
+      </ion-item>
+      <ion-item class="item-input">
+        
+    <input type="text" placeholder="CVC" ng-model="card.cvc" cc-type="cardNumber.$ccType">
+
+      </ion-item>
+  </ion-list>
+
+  </div>
+  
+  <div class="footer-button">
+     <button class="button button-dark button-block button-round button-outline " ng-click="makeStripePayment(card)">Confirm Order</button>
+  </div>
+
+</div>
+<!--card payment section end-->
+
+</div>
+
+
+		
+	</ion-content>
+</ion-view>
