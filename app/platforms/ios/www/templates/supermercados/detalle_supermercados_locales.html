@@ -1,0 +1,36 @@
+<ion-view hide-back-button="false" title="Sucursales"  hide-nav-bar="false"  can-swipe-back="true"  on-swipe-right="swipe('right')">
+
+	<ion-nav-bar class="bar-light pinro-header header-shadow">
+      <ion-nav-back-button class="button-icon button-clear">
+        <i><img src="img/icons/icon_back.png" width="24px"></i>
+      </ion-nav-back-button>
+
+    </ion-nav-bar>
+
+	<ion-content ng-init="sucursales()">
+
+		<ion-refresher
+		    pulling-text="Actualizar..."
+		    on-refresh="doRefresh()">
+		</ion-refresher>
+      	<div class="row">
+        	<div class="col col-100" style="min-height: 70px; width: 100% !important" ng-repeat="(slug, local) in locales">
+        		<a ui-sref="app.local_supermercados({local:slug,slug:shopp})" style="text-decoration: none;">
+					<div style="min-height: 70px" class="card card-margin">
+								 <div class="item item-divider" style="max-height: 70px; padding-right: 0px;">
+							      	<div class="row">
+							          	<div class="col text-left">
+										      	<ion-item class="item-thumbnail-left item-text-wrap" style="background-color: transparent !important;padding-left: 110px; top: -10px !important; left: 0px !important;">
+								              		<img src="{{ shopping.perfil.icono || 'img/dezling-logo.png' }}" width="auto" height="70px" style="top: 0px; left: ">
+										        	<h2 class="text-right">{{ local.perfil.nombre }}</h2>
+										      	</ion-item>
+							          	</div>
+							      	</div>
+								 </div>
+					</div>
+				</a>
+			</div>
+		</div>
+
+	</ion-content>
+</ion-view>

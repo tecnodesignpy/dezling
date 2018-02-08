@@ -1,0 +1,83 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-android-play-services-gradle-release": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-badge": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-browsertab": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-buildinfo": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-camera": {
+      "CAMERA_USAGE_DESCRIPTION": " ",
+      "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-crosswalk-webview": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-customurlscheme": {
+      "URL_SCHEME": "com.tecnodesign.dezling",
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-geolocation": {
+      "GEOLOCATION_USAGE_DESCRIPTION": " ",
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-google-analytics": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-spinner": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-sqlite-storage": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-universal-links-plugin": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "ionic-plugin-keyboard": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-actionsheet": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
+    }
+  }
+}
