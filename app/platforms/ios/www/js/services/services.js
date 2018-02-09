@@ -1548,7 +1548,7 @@ angular.module('starter.services', [])
         const numberOfUsers = 5;
         const randomIndex = Math.floor(Math.random() * numberOfUsers);
         console.log(randomIndex);
-        FireFunc.onValue2('sponsors/',5).then(function(result){
+        FireFunc.onValue('sponsors/').then(function(result){
           if(result != null) {
             self.listado = result;
           } else {

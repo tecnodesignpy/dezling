@@ -4,7 +4,7 @@
     "CoreLocation.framework": 2,
     "AVFoundation.framework": 1,
     "AudioToolbox.framework": 1,
-    "SystemConfiguration.framework": 2,
+    "SystemConfiguration.framework": 3,
     "CoreData.framework": 1,
     "AdSupport.framework": 1,
     "libz.dylib": 1,

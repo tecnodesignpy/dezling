@@ -125,4 +125,5 @@
     <plugin name="cordova-plugin-dialogs" spec="~1.3.3" />
     <plugin name="cordova-android-play-services-gradle-release" spec="^1.1.1" />
     <plugin name="cordova-plugin-spinner" spec="^1.1.0" />
+    <plugin name="onesignal-cordova-plugin" spec="^2.2.5" />
 </widget>

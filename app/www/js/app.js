@@ -14,16 +14,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     },function(AUTH_LOGGED_OUT){
         console.log("No esta logeado");
     })
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    //window.ga.startTrackerWithId('UA-99283677-1', 30)
+    /*
+    window.onerror = function (errorMsg, url, lineNumber) {
+      console.log("ERROR");
+      alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+    }
+     */
+
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       
       navigator.splashscreen.hide();
+  
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+      cordova.plugins.Keyboard.disableScroll(true);
+      cordova.plugins.Keyboard.close();
 
       // Enable to debug issues.
-      // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
-  
+      window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+      
       var notificationOpenedCallback = function(jsonData) {
         console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
       };
@@ -31,20 +39,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       window.plugins.OneSignal
         .startInit("3feef121-bc77-483a-adbe-98de478ab827")
         .handleNotificationOpened(notificationOpenedCallback)
-        //.sendTag("perfil", " aca deben ir los datos")
+        .sendTag("perfil", "Aca van los datos del usuario")
         .endInit();
 
-      window.plugins.OneSignal.promptLocation();
-      //window.plugins.OneSignal.sendTags({perfil: Profile.ProfileData});
-        
-      // Call syncHashedEmail anywhere in your app if you have the user's email.
-      // This improves the effectiveness of OneSignal's "best-time" notification scheduling feature.
-      // window.plugins.OneSignal.syncHashedEmail(userEmail);
-
-  
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-      cordova.plugins.Keyboard.disableScroll(true);
-      cordova.plugins.Keyboard.close();
 
     }
 
@@ -459,15 +456,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // if none of the above states are matched, use this as the fallback
   //$urlRouterProvider.otherwise('/onboarding');
   $urlRouterProvider.otherwise(function($injector, $location, Auth) {
-      var $state = $injector.get('$state')
-      var onboarding = localStorage.getItem('onboarding');
-      console.log("ONBOARDING ",onboarding);
-      if(onboarding === true || onboarding == 'true'){
-        $state.go('app.editorial');
-      }else{
-        $state.go('onboarding');
-        localStorage.setItem('onboarding',true);
-      }           
+    console.log("Verificamos que vista mostramos");
+    var $state = $injector.get('$state')
+    var onboarding = localStorage.getItem('onboarding');
+    console.log("ONBOARDING ",onboarding);
+    if(onboarding === true || onboarding == 'true'){
+      $state.go('app.editorial');
+    }else{
+      $state.go('onboarding');
+      localStorage.setItem('onboarding',true);
+    }           
   })
   $ionicConfigProvider.backButton.previousTitleText(false).text('');
 });

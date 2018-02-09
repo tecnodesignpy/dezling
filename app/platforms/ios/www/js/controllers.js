@@ -6,31 +6,16 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
   //amMoment.changeTimezone('America/Asuncion');
   $scope.AuthData = Auth.AuthData;
-  //console.log($scope.AuthData);
-  ionic.Platform.ready(function(){
-    // will execute when device is ready, or immediately if the device is already ready.
-    ////console.log(ionic.Platform.platform());
-    var isIOS = ionic.Platform.isIOS();
-    ////console.log(isIOS);
+
+  $scope.$on("$ionicView.enter", function (event, data) {
+    //  Chequeamos las notificaciones y lo guardamos en el cache dentro del Service
+    // modificamos el BADGE de la campana de notificaciones
+    CheckNotificaciones();
   });
 
-
-
-    document.addEventListener("deviceready", function () {
-
-    var device = $cordovaDevice.getDevice();
-
-    var cordova = $cordovaDevice.getCordova();
-
-    var model = $cordovaDevice.getModel();
-
-    var platform = $cordovaDevice.getPlatform();
-
-    var uuid = $cordovaDevice.getUUID();
-
-    var version = $cordovaDevice.getVersion();
-
-  }, false);
+  $scope.$on("$ionicView.beforeEnter", function (event, data) {
+    loadWallet();
+  });
 
     // Creamos una funcion para ir categorias, donde limpiamos el cache en el caso de que el usuario
     // haya entrado a algun comercio desde el buscador, porque dentro de CategoriaContent usamos IonicHistory
@@ -43,12 +28,6 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.goToHome = function(){
       $ionicHistory.clearCache().then(function(){ $state.go('app.editorial');});
     }
-
-  loadWallet();
-
-  //  Chequeamos las notificaciones y lo guardamos en el cache dentro del Service
-  // modificamos el BADGE de la campana de notificaciones
-  CheckNotificaciones();
 
   $scope.$on("$ionicView.afterLeave", function (event, data) {
     // handle event
@@ -637,7 +616,21 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 .controller('MainCtrl', function ($scope, $state, $ionicHistory, $ionicScrollDelegate, Maestro, $dataService,
  $pinroUiService, $ionicLoading, $ionicPopup, Sponsor, Visitas, Destacados, $window) {
 
-	   var showLoading = function(){
+      $scope.$on("$ionicView.enter", function (event, data) {
+        /*
+          Chequeamos si el usuario tiene alguna notificaion o mensaje en el buzon de entrada
+        */
+        // Cargamos los banners de sponsor
+          CargarBannerSponsors();
+        // Cargamos los banner de Destacados
+          CargarBannerDestacados()
+        // Obtenes los numeros de visita en cada categoria, ordenamos por cantidad y filtramos solo 5 por categorias
+          VisitasShoppings();
+          VisitasMultimarcas();
+          VisitasSupermercados();
+      });
+
+      var showLoading = function(){
         
         $scope.popup = $ionicPopup.show({
           templateUrl: "templates/common/loading.html"
@@ -671,20 +664,6 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             $scope.$apply();
           });
         }
-      });
-
-      $scope.$on("$ionicView.beforeEnter", function (event, data) {
-    	  /*
-    	    Chequeamos si el usuario tiene alguna notificaion o mensaje en el buzon de entrada
-    	  */
-        // Cargamos los banners de sponsor
-          CargarBannerSponsors();
-        // Cargamos los banner de Destacados
-          CargarBannerDestacados()
-        // Obtenes los numeros de visita en cada categoria, ordenamos por cantidad y filtramos solo 5 por categorias
-          VisitasShoppings();
-          VisitasMultimarcas();
-          VisitasSupermercados();
       });
 
     
@@ -733,6 +712,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       function CargarBannerSponsors() {
           $scope.listado = [];
           $scope.sponsors = [];
+          $scope.cantidadSponsor = 1;
           //showLoading();
           Sponsor.get().then(
               function(success){
@@ -740,17 +720,15 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     setTimeout(function() {
                         //$scope.sponsors = Sponsor.listado;
                         angular.forEach(Sponsor.listado, function(item, key){
-                          var dt1   = parseInt(item.fechainicio.substring(0,2));
-                          var mon1  = parseInt(item.fechainicio.substring(3,5));
-                          var yr1   = parseInt(item.fechainicio.substring(6,10));
-                          var date1 = new Date(yr1, mon1-1, dt1);
-                          var dt1   = parseInt(item.fechafin.substring(0,2));
-                          var mon1  = parseInt(item.fechafin.substring(3,5));
-                          var yr1   = parseInt(item.fechafin.substring(6,10));
-                          var date2 = new Date(yr1, mon1-1, dt1); 
-                          if(date1 <= new Date() && date2 >= new Date()){
+                          const [day, month, year] = item.fechainicio.split("/");
+                          const [day1, month1, year1] = item.fechafin.split("/");
+                          var date1 = new Date(year, month - 1, day); 
+                          var date2 = new Date(year1, month1 - 1, day1);
+
+                          if(date1 <= new Date() && date2 >= new Date() && $scope.cantidadSponsor <= 5){
                             var randomvalue = 0.5 - Math.random();
                             $scope.sponsors.push({item:item, random:randomvalue, key:key});
+                            $scope.cantidadSponsor ++;
                           }
                         });
 

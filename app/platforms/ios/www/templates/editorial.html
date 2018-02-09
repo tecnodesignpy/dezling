@@ -3,11 +3,11 @@
 			
 	
 	<ion-content>
-		<div class="offer-header animated fadeIn" style="height: 60%">
-        	<div style="margin-top: 30%" ng-show="!cargado">
-			  	<ion-spinner></ion-spinner>
-			    <h5 class="light-font">Cargando..!</h5>
-			</div>
+    	<div style="margin-top: 10%" ng-show="!cargado">
+		  	<ion-spinner></ion-spinner>
+		    <h5 class="light-font">Cargando..!</h5>
+		</div>
+		<div ng-show="sponsors.length != 0" class="offer-header animated fadeIn" style="height: 60%">
 			<ion-slides options="opciones" slider="sliderDelegate" style="height: 100% !important;">
                 <ion-slide-page ng-repeat="sponsor in sponsors | orderBy:'-random'" ng-click="openSponsor(sponsor.item.titulo,sponsor.item.descripcion);SumarClick('sponsor', sponsor.key)">
 					<img ng-src="{{ sponsor.item.banner }}" width="100%">
@@ -19,7 +19,7 @@
 
 
 
-		<p  ng-show="!cargado_destacados" class="script"><span>DESTACADOS</span></p>
+		<p ng-show="destacados.length != 0" class="script"><span>DESTACADOS</span></p>
 
          <div style="margin-top: 10%" ng-show="!cargado_destacados">
 			<ion-spinner></ion-spinner>
