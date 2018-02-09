@@ -67,7 +67,7 @@
 			<h2 style="text-transform: uppercase; margin: 0px">{{ tab }}</h2>
 			<p>TOP 5</p>
 			<div class="product-list" ng-show="tab =='shoppings'" style="margin-bottom: 5px">
-				<div class="card" style="background-color: #f5f5f5">
+				<div ng-show="visitas_multimarcas[0]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: url('img/trofeo.svg'); background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
 					      	<div class="row">
 					          	<div class="col text-left">
@@ -87,7 +87,7 @@
 					      	</div>
 					  	</div>
 				</div>
-				<div class="card" style="background-color: #f5f5f5">
+				<div ng-show="visitas_multimarcas[1]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: none; background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
 					      	<div class="row">
 					          	<div class="col text-left">
@@ -107,7 +107,7 @@
 					      	</div>
 					  	</div>
 				</div>
-				<div class="card" style="background-color: #f5f5f5">
+				<div ng-show="visitas_multimarcas[2]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: none; background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
 					      	<div class="row">
 					          	<div class="col text-left">
@@ -127,7 +127,7 @@
 					      	</div>
 					  	</div>
 				</div>
-				<div class="card" style="background-color: #f5f5f5">
+				<div ng-show="visitas_multimarcas[3]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: none; background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
 					      	<div class="row">
 					          	<div class="col text-left">
@@ -147,7 +147,7 @@
 					      	</div>
 					  	</div>
 				</div>
-				<div class="card" style="background-color: #f5f5f5">
+				<div ng-show="visitas_multimarcas[4]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: none; background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
 					      	<div class="row">
 					          	<div class="col text-left">

@@ -757,6 +757,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                         $scope.visitas_shopping.push(item);
                       }
                     });
+
+                    $scope.visitas_shopping.sort(function(a, b){return a.visitas-b.visitas}).reverse();
                   }
               },
               function(error){
@@ -776,6 +778,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                         $scope.visitas_multimarcas.push(item);
                       }
                     });
+
+                    $scope.visitas_multimarcas.sort(function(a, b){return a.visitas-b.visitas}).reverse();
                   }
               },
               function(error){
@@ -795,6 +799,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                         $scope.visitas_supermercados.push(item);
                       }
                     });
+
+                    $scope.visitas_supermercados.sort(function(a, b){return a.visitas-b.visitas}).reverse();
                   }
               },
               function(error){

@@ -1918,7 +1918,7 @@ angular.module('starter.services', [])
       self.getShoppings = function() {
         self.shoppings = {};
         var qCat = $q.defer();
-        FireFunc.onValueSort('categorias/centros_comerciales/comercios/','/estadisticas/visitas/', 5).then(function(result){
+        FireFunc.onValueSort('categorias/centros_comerciales/comercios/','-/estadisticas/visitas/', 5).then(function(result){
           //console.log(result);
           if(result != null) {
             self.shoppings = result;
