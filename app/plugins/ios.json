@@ -73,12 +73,12 @@
     },
     "onesignal-cordova-plugin": {
       "PACKAGE_NAME": "com.tecnodesign.dezling"
+    },
+    "cordova-plugin-actionsheet": {
+      "PACKAGE_NAME": "com.tecnodesign.dezling"
     }
   },
   "dependent_plugins": {
-    "cordova-plugin-actionsheet": {
-      "PACKAGE_NAME": "com.tecnodesign.dezling"
-    },
     "cordova-plugin-compat": {
       "PACKAGE_NAME": "com.tecnodesign.dezling"
     }

@@ -106,7 +106,8 @@
       "cordova-plugin-dialogs": {},
       "cordova-android-play-services-gradle-release": {},
       "cordova-plugin-spinner": {},
-      "onesignal-cordova-plugin": {}
+      "onesignal-cordova-plugin": {},
+      "cordova-plugin-actionsheet": {}
     },
     "platforms": []
   }
