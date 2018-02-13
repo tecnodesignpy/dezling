@@ -6382,8 +6382,8 @@ button.item.item-button-right {
   .item-thumbnail-left .item-content > img:first-child,
   .item-thumbnail-left .item-content .item-image {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 15px;
+    left: 5px;
     max-width: 60px;
     max-height: 100%;
     width: 100%;
@@ -10167,7 +10167,9 @@ Menu & Header
   .platform-windowsphone .pinro-header .title {
     font-size: 12px;
     font-family: 'montserratregular';
-    color: #000000; }
+    color: #000000;
+    left: 85px !important;
+    right: 85px !important; }
   .platform-android .pinro-header i,
   .platform-ios .pinro-header i,
   .platform-windowsphone .pinro-header i {
@@ -11809,7 +11811,7 @@ float: right
 
 #map {
   width: 100%;
-  height: 700px;
+  height: 100%;
   display: block;
   overflow: hidden; }
 

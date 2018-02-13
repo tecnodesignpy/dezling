@@ -115,9 +115,7 @@
     <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="^1.7.2" />
     <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
-    <plugin name="cordova-plugin-customurlscheme" spec="~4.3.0">
-        <variable name="URL_SCHEME" value="com.tecnodesign.dezling" />
-    </plugin>
     <plugin name="cordova-plugin-spinner" spec="~1.1.0" />
     <plugin name="onesignal-cordova-plugin" spec="~2.2.5" />
+    <engine name="ios" spec="~4.3.1" />
 </widget>

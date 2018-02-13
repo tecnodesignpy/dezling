@@ -7,7 +7,6 @@
     "angular-credit-cards": "^3.1.4",
     "cordova-android-play-services-gradle-release": "^1.1.1",
     "cordova-ios": "4.5.4",
-    "cordova-plugin-actionsheet": "^2.3.3",
     "cordova-plugin-badge": "^0.8.4",
     "cordova-plugin-browsertab": "^0.2.0",
     "cordova-plugin-buildinfo": "^2.0.1",
@@ -83,7 +82,9 @@
       "ionic-plugin-keyboard": {},
       "cordova-plugin-network-information": {},
       "cordova-sqlite-storage": {},
-      "cordova-plugin-geolocation": {},
+      "cordova-plugin-geolocation": {
+        "GEOLOCATION_USAGE_DESCRIPTION": " "
+      },
       "cordova-plugin-crosswalk-webview": {
         "XWALK_VERSION": "23+",
         "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
@@ -107,7 +108,7 @@
       "cordova-android-play-services-gradle-release": {},
       "cordova-plugin-spinner": {},
       "onesignal-cordova-plugin": {},
-      "cordova-plugin-actionsheet": {}
+      "cordova-plugin-compat": {}
     },
     "platforms": []
   }

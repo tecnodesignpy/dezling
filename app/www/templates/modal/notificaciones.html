@@ -25,7 +25,7 @@
       Vigentes
     </label>
     -->
-      <ion-item ng-click="openSponsor(item.datos.titulo,item.datos.descripcion_larga)" style="min-height: 75px" class="item-thumbnail-left"  ng-repeat="item in lista_notificaciones | filter : {estado:'vigente'} " ng-click="{{ item.funcion }}">
+      <ion-item ng-click="openSponsor(item.datos.titulo, item.datos.descripcion_larga, item.avatar)" style="min-height: 75px" class="item-thumbnail-left"  ng-repeat="item in lista_notificaciones | filter : {estado:'vigente'} " ng-click="{{ item.funcion }}">
         <img style="width: 60px; height: auto;" ng-src="{{ item.avatar || 'img/dezling-logo.png' }}">
         <h2 class="text-left" style="padding-left: 10px;">{{ item.datos.titulo }}</h2>
         <p class="text-left" style="white-space: normal; padding-left: 10px">{{ item.datos.descripcion }}</p>

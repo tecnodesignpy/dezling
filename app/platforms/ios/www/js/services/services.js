@@ -5,10 +5,10 @@ angular.module('starter.services', [])
         $localStorage.things = $localStorage.things || [];
         $localStorage.things.userObj = $localStorage.things.userObj || {};
 
-       // //console.log()
+       // ////console.log()
 
         var _getAll = function () {
-            //console.log($localStorage.things);
+            ////console.log($localStorage.things);
             return $localStorage.things;
         };
         var _push = function (thing) {
@@ -19,12 +19,12 @@ angular.module('starter.services', [])
             $localStorage.things.userObj = data;
         }
         var _getUserObj = function (data) {
-            ////console.log($localStorage.things.userObj);
+            //////console.log($localStorage.things.userObj);
            return $localStorage.things.userObj;
         }
         var _remove = function () {
             $localStorage.things = [];
-            ////console.log('userObj removed')
+            //////console.log('userObj removed')
         }
         return {
             getAll: _getAll,
@@ -40,21 +40,21 @@ angular.module('starter.services', [])
         $localStorage.cart = $localStorage.cart || [];
 
         var _getAll = function () {
-            //console.log($localStorage.cart);
+            ////console.log($localStorage.cart);
             return $localStorage.cart;
         };
         var _push = function (thing) {
             $localStorage.cart.push(thing);
-            //console.log($localStorage.cart);
+            ////console.log($localStorage.cart);
         }
         var _remove = function (thing) {
             $localStorage.cart.splice($localStorage.cart.indexOf(thing), 1);
-            //console.log('removed, current length'+ $localStorage.cart.length);
+            ////console.log('removed, current length'+ $localStorage.cart.length);
         }
         
         var _removeAll = function () {
             $localStorage.cart = [];
-            //console.log('all items removed');
+            ////console.log('all items removed');
         }
         return {
             getAll: _getAll,
@@ -69,16 +69,16 @@ angular.module('starter.services', [])
         $localStorage.wishlist = $localStorage.wishlist || [];
 
         var _getAll = function () {
-            //console.log($localStorage.wishlist);
+            ////console.log($localStorage.wishlist);
             return $localStorage.wishlist;
         };
         var _push = function (thing) {
             $localStorage.wishlist.push(thing);
-            //console.log($localStorage.wishlist);
+            ////console.log($localStorage.wishlist);
         }
         var _remove = function (thing) {
             $localStorage.wishlist.splice($localStorage.wishlist.indexOf(thing), 1);
-            //console.log('removed, current length'+ $localStorage.wishlist.length);
+            ////console.log('removed, current length'+ $localStorage.wishlist.length);
         }
         return {
             getAll: _getAll,
@@ -120,7 +120,7 @@ angular.module('starter.services', [])
             },
 
             $passwordReset: function (params) {
-                //console.log(params);
+                ////console.log(params);
                 return $http.get(apiUrl + '/user/retrieve_password/', {
                     header: header,
                     params: params
@@ -128,7 +128,7 @@ angular.module('starter.services', [])
             },
 
             $getPosts: function (params) {
-                //console.log(params);
+                ////console.log(params);
                 return $http.get(apiUrl + '/get_category_posts/', {
                     header: header,
                     params: params
@@ -249,7 +249,7 @@ angular.module('starter.services', [])
         var lugares = [];
         var qGet = $q.defer();
         firebase.database().ref(childRef).orderByChild(sortNode).on('child_added', function(snapshot) {
-            //console.log(snapshot.key + " = " + snapshot.val().perfil.puntos);
+            ////console.log(snapshot.key + " = " + snapshot.val().perfil.puntos);
             if(snapshot.val().perfil.puntos == true || snapshot.val().perfil.puntos == 'true'){
               lugares.push({lugar:snapshot.key, puntos:snapshot.val().perfil.puntos, icono:snapshot.val().perfil.icono, nombre:snapshot.val().perfil.nombre, categoria: 'centros_comerciales'})
             }
@@ -263,7 +263,7 @@ angular.module('starter.services', [])
       self.puntosMultimarcas = function(childRef, sortNode) {
         var qGet = $q.defer();
         firebase.database().ref(childRef).orderByChild(sortNode).on('child_added', function(snapshot) {
-            //console.log(snapshot.key + " = " + snapshot.val().perfil.puntos);
+            ////console.log(snapshot.key + " = " + snapshot.val().perfil.puntos);
             if(snapshot.val().perfil.puntos == true || snapshot.val().perfil.puntos == 'true'){
               lugares.push({lugar:snapshot.key, puntos:snapshot.val().perfil.puntos, icono:snapshot.val().perfil.icono, nombre:snapshot.val().perfil.nombre, categoria: 'multimarcas'})
             }
@@ -279,7 +279,7 @@ angular.module('starter.services', [])
         var datos = [];
         var qGet = $q.defer();
         firebase.database().ref(childRef).orderByChild(sortNode).on('child_added', function(snapshot) {
-              //console.log(snapshot.key + " was " + snapshot.val().estadisticas.visitas + " meters tall");
+              ////console.log(snapshot.key + " was " + snapshot.val().estadisticas.visitas + " meters tall");
               datos.push({lugar:snapshot.key, visitas:snapshot.val().estadisticas.visitas, icono:snapshot.val().perfil.icono, nombre:snapshot.val().perfil.nombre, online:snapshot.val().perfil.online,})
             qGet.resolve(datos);
         }, function(error){
@@ -291,7 +291,7 @@ angular.module('starter.services', [])
         var datos2 = [];
         var qGet = $q.defer();
         firebase.database().ref(childRef).orderByChild(sortNode).limitToLast(limitValue).on('child_added', function(snapshot) {
-            //console.log(snapshot.key + " was " + snapshot.val().estadisticas.visitas + " meters tall");
+            ////console.log(snapshot.key + " was " + snapshot.val().estadisticas.visitas + " meters tall");
             datos2.push({lugar:snapshot.key, visitas:snapshot.val().estadisticas.visitas, icono:snapshot.val().perfil.icono, nombre:snapshot.val().perfil.nombre})
             qGet.resolve(datos2);
         }, function(error){
@@ -410,7 +410,7 @@ angular.module('starter.services', [])
                 disableBack: true   
               });
               $ionicHistory.clearHistory();
-              //console.log("No esta logeado");
+              ////console.log("No esta logeado");
               qCheck.reject("AUTH_LOGGED_OUT");
             };
         });
@@ -430,7 +430,7 @@ angular.module('starter.services', [])
                 disableBack: true   
               });
               $ionicHistory.clearHistory();
-              //console.log("No esta logeado");
+              ////console.log("No esta logeado");
               qCheck.reject("AUTH_LOGGED_OUT");
             };
         });
@@ -442,11 +442,11 @@ angular.module('starter.services', [])
         firebase.auth().onAuthStateChanged(
           function(user) {
             if (user.email == null) {
-              //console.log("Notificaciones ",user);
+              ////console.log("Notificaciones ",user);
               self.AuthData = user;//gv
               qCheck.resolve("true");
             } else {
-              //console.log("No esta logeado");
+              ////console.log("No esta logeado");
               qCheck.reject("AUTH_LOGGED_OUT");
             };
         });
@@ -569,7 +569,7 @@ angular.module('starter.services', [])
        
       // Crgamos los datos del usuario que se conecto con Facebook
       self.CargarPerfil = function(auth, perfil) {
-        //console.log(perfil.first_name);
+        ////console.log(perfil.first_name);
         var datos = {
           nombre: perfil.first_name || '',
           apellido: perfil.last_name || '',
@@ -619,7 +619,7 @@ angular.module('starter.services', [])
 
       self.getListadoTodo = function(uid,key) {
         var qCat = $q.defer();
-        //console.log(key)
+        ////console.log(key)
         FireFunc.onValue('users/'+ uid +'/listado/'+key+'/items/').then(function(result){
           if(result != null) {
             self.listaTodo = result;
@@ -641,20 +641,20 @@ angular.module('starter.services', [])
             nombreLista: nombreLista,
             timestamp: timeNow,
         }
-        //console.log(post);
+        ////console.log(post);
         return firebase.database().ref('users/' + uid + '/listado/').push(post);
       };
 
       // SET
       self.agregarTodo = function(uid,key,todo) {
-        //console.log(todo);
+        ////console.log(todo);
         var post ={
             lista: todo.item,
             cantidad: todo.cantidad,
             done: false,
         }
         
-        //console.log(todo);
+        ////console.log(todo);
         return firebase.database().ref('users/' + uid + '/listado/'+key+'/items/').push(post);
       };
 
@@ -674,13 +674,13 @@ angular.module('starter.services', [])
 
       self.eliminarTodo = function(uid, key,item) {
         var childRef = 'users/' + uid + '/listado/'+key+'/items/'+item;
-        //console.log(childRef);
+        ////console.log(childRef);
         return FireFunc.remove(childRef);
       };
 
       self.eliminarLista = function(uid, key ) {
         var childRef = 'users/' + uid + '/listado/'+key;
-        //console.log(childRef);
+        ////console.log(childRef);
         return FireFunc.remove(childRef);
       };
 
@@ -714,13 +714,13 @@ angular.module('starter.services', [])
         var qCat = $q.defer();
         if(uid != undefined){
           FireFunc.onValue("users/" + uid + "/configuracion/notificaciones").then(function(result){
-            console.log(uid);
-            console.log(result);
+            //console.log(uid);
+            //console.log(result);
             if((result != null || result != 'null') && (uid != undefined || uid != 'undefined')) {
               self.notificacion = result;
               qCat.resolve(self.notificacion);
             } else {
-              console.log("error");
+              //console.log("error");
               self.notificacion = null;
               qCat.resolve(self.notificacion);
             }
@@ -756,7 +756,7 @@ angular.module('starter.services', [])
         var post ={
             activada: valor,
         }
-        //console.log(post);
+        ////console.log(post);
         return firebase.database().ref("users/" + uid + "/configuracion/notificaciones").set(post);
       };
       
@@ -818,10 +818,10 @@ angular.module('starter.services', [])
         if(perfil.email != undefined && perfil.email != '' && perfil.email != null){
           user.updateEmail(perfil.email).then(function() {
             // Update successful.
-            //console.log("Correo Actualizado");
+            ////console.log("Correo Actualizado");
           }, function(error) {
             // An error happened.
-            //console.log("Correo NO Actualizado",error);
+            ////console.log("Correo NO Actualizado",error);
           });
         }
         var datos = {
@@ -838,7 +838,7 @@ angular.module('starter.services', [])
 
         return firebase.database().ref('/users/' + uid + '/' + 'perfil').update(datos).then(
               function(success){
-                //console.log(success);
+                ////console.log(success);
                 return success;
               })  
       };
@@ -866,7 +866,7 @@ angular.module('starter.services', [])
       // SET        usernames/$username (new)         proceed2b
       self.changeUserName = function(uid, newUsername) {
         
-        //console.log(uid, newUsername)
+        ////console.log(uid, newUsername)
         
         // 0    validate if username taken
         var newUsernamesRef = "usernames/" + newUsername;
@@ -933,7 +933,7 @@ angular.module('starter.services', [])
       
       self.getErrorMessage = function(error) {
         var updateMessage = "";
-        //console.log(error)
+        ////console.log(error)
         if (error.hasOwnProperty('code')){
           switch(error.code) {
             case 'INVALID_USER':
@@ -1154,10 +1154,16 @@ angular.module('starter.services', [])
       };
 
       self.getLocal = function(local,shopping) {
+        var resultado = [];
         var qCat = $q.defer();
         FireFunc.onValue('categorias/centros_comerciales/comercios/'+shopping+'/locales/'+local).then(function(result){
           if(result != null) {
-            self.local = result;
+            FireFunc.onValue('categorias/centros_comerciales/comercios/'+shopping).then(function(resultado){
+              console.log(resultado.perfil.online);
+              if(resultado.perfil.online == true){
+                self.local = result;
+              }
+            })
           } else {
             self.local = {};
           }
@@ -1170,6 +1176,7 @@ angular.module('starter.services', [])
       };
 
       self.getLocal2 = function(local,shopping) {
+        console.log(local, shopping);
         var qCat = $q.defer();
         FireFunc.onValue('categorias/centros_comerciales/comercios/'+shopping+'/locales/'+local).then(function(result){
           if(result != null) {
@@ -1547,7 +1554,7 @@ angular.module('starter.services', [])
         var qCat = $q.defer();
         const numberOfUsers = 5;
         const randomIndex = Math.floor(Math.random() * numberOfUsers);
-        console.log(randomIndex);
+        //console.log(randomIndex);
         FireFunc.onValue('sponsors/').then(function(result){
           if(result != null) {
             self.listado = result;
@@ -1606,7 +1613,7 @@ angular.module('starter.services', [])
 
       self.sumarClicks = function(key) {
         FireFunc.onValue('destacados/'+key).then(function(result){
-          console.log(result);
+          //console.log(result);
           if(result != null) {
             // Al obertener los datos del comercio le sumamos una visita
               // Obtenemos la cantidad de visitas actuales y le sumamos uno
@@ -1636,7 +1643,7 @@ angular.module('starter.services', [])
       self.puntosShopping = function() {
         var qCat = $q.defer();
         FireFunc.puntosShopping('categorias/centros_comerciales/comercios/','/perfil/puntos/').then(function(result){
-          //console.log(result);
+          ////console.log(result);
           if(result != null) {
             self.locales = result;
           } else {
@@ -1653,7 +1660,7 @@ angular.module('starter.services', [])
       self.puntosMultimarcas = function() {
         var qCat = $q.defer();
         FireFunc.puntosMultimarcas('categorias/multimarcas/comercios/','/perfil/puntos/').then(function(result){
-          //console.log(result);
+          ////console.log(result);
           if(result != null) {
             self.locales = result;
           } else {
@@ -1670,7 +1677,7 @@ angular.module('starter.services', [])
 
       // SET
       self.Sugerir = function(item) {
-        //console.log(item);
+        ////console.log(item);
         if(item.comercios.perfil.hasOwnProperty(['sugeridos'])){
           var post ={
               sugeridos: item.comercios.perfil.sugeridos + 1,
@@ -1692,7 +1699,7 @@ angular.module('starter.services', [])
         var qCat = $q.defer();
         var uid = Auth.AuthData.uid;
         FireFunc.onValue('users/' + uid + '/cupones').then(function(result){
-          //console.log(result);
+          ////console.log(result);
           if(result != null) {
             self.cupones = result;
           } else {
@@ -1743,9 +1750,9 @@ angular.module('starter.services', [])
                       self.beneficio = false;
                       self.detalle_beneficio = [];
                       self.puntos_beneficio = [];
-                      console.log(childRef);
+                      //console.log(childRef);
                       FireFunc.GetValue(childRef,'/beneficios/').then(function(result) {
-                        console.log(result);
+                        //console.log(result);
                         angular.forEach(result.beneficios,function (detalles,key) {
                           if(detalles.puntos <= puntos2){
                             self.beneficio = true;
@@ -1772,7 +1779,7 @@ angular.module('starter.services', [])
         var qCat = $q.defer();
         var uid = Auth.AuthData.uid;
         FireFunc.onValue('users/' + uid + '/checks').then(function(result){
-          //console.log(result);
+          ////console.log(result);
           if(result != null) {
             self.puntos = result;
           } else {
@@ -1826,7 +1833,7 @@ angular.module('starter.services', [])
                       var comercio2 = item.multimarca;
                     }
                     var suma  = detalles.puntos + 1;
-                    //console.log(childRef);
+                    ////console.log(childRef);
                     FireFunc.GetValue(childRef,'/beneficios/').then(function(result) {
                       // Recorremos los beneficios que tiene el comercio
                       angular.forEach(result.beneficios,function (detalles,key) {
@@ -1836,10 +1843,10 @@ angular.module('starter.services', [])
                           self.detalle_beneficio.push(detalles.beneficios);
                           self.puntos_beneficio.push(detalles.puntos);
                           self.key_beneficio = key;
-                          console.log("Ya tiene beneficios", detalles.beneficios);
+                          //console.log("Ya tiene beneficios", detalles.beneficios);
                         }
                       });
-                      //console.log(self.detalle_beneficio);
+                      ////console.log(self.detalle_beneficio);
                       var post ={
                           puntos: suma,
                           beneficios: self.beneficio,
@@ -1852,23 +1859,23 @@ angular.module('starter.services', [])
                       check_realizado = true;
                       return firebase.database().ref('users/' + uid + '/checks/'+llave).update(post).then(
                             function(success){
-                              console.log("Funciono");
+                              //console.log("Funciono");
                             }, function(error){
-                              console.log("No Funciono");
+                              //console.log("No Funciono");
                             });
                     },
                     function(error){
-                        console.log("ERROR");
-                        console.log(error);
+                        //console.log("ERROR");
+                        //console.log(error);
                     })
                   }else{
                     check_realizado = false;
                   }
                 });
                 $q.all(check_realizado).then(function(){
-                  //console.log("Deleted all test users");
+                  ////console.log("Deleted all test users");
                   if(!check_realizado){
-                    //console.log("Agrega uno nuevo");
+                    ////console.log("Agrega uno nuevo");
                     // No esta en la lista
                     var post ={
                         categoria: item.categoria,
@@ -1880,9 +1887,9 @@ angular.module('starter.services', [])
                     }
                     return firebase.database().ref('users/' + uid + '/checks/').push().set(post).then(
                             function(success){
-                              console.log("Funciono");
+                              //console.log("Funciono");
                             }, function(error){
-                              console.log("No Funciono");
+                              //console.log("No Funciono");
                             })
                   }      
                 })
@@ -1919,7 +1926,7 @@ angular.module('starter.services', [])
         self.shoppings = {};
         var qCat = $q.defer();
         FireFunc.onValueSort('categorias/centros_comerciales/comercios/','-/estadisticas/visitas/', 5).then(function(result){
-          //console.log(result);
+          ////console.log(result);
           if(result != null) {
             self.shoppings = result;
           } else {
@@ -1937,7 +1944,7 @@ angular.module('starter.services', [])
         self.multimarcas = {};
         var qCat = $q.defer();
         FireFunc.onValueSort('categorias/multimarcas/comercios/','/estadisticas/visitas/', 5).then(function(result){
-          //console.log(result);
+          ////console.log(result);
           if(result != null) {
             self.multimarcas = result;
           } else {
@@ -1955,7 +1962,7 @@ angular.module('starter.services', [])
         self.supermercados = {};
         var qCat = $q.defer();
         FireFunc.onValueSort('categorias/supermercados/comercios/','/estadisticas/visitas/', 5).then(function(result){
-          //console.log(result);
+          ////console.log(result);
           if(result != null) {
             self.supermercados = result;
           } else {
@@ -1999,11 +2006,11 @@ angular.module('starter.services', [])
           if(AuthData.hasOwnProperty('uid')){
             self.getList(AuthData.uid).then(
               function(WalletList){
-                console.log("Favoritos ",self.CachedList);
+                //console.log("Favoritos ",self.CachedList);
                 qLoad.resolve(self.CachedList);
               },
               function(error){
-                ////console.log(error);
+                //////console.log(error);
                 qLoad.reject(error);
               })
           } else {
@@ -2017,7 +2024,7 @@ angular.module('starter.services', [])
       // SET
       self.save = function(uid, productId, categoria, comercio) {
         // Guardamos el favorito en la estadistica de la empresa
-        console.log(comercio);
+        //console.log(comercio);
         var posteo ={
             fav: true,
         }
@@ -2041,7 +2048,7 @@ angular.module('starter.services', [])
             slug: productId,
             comercio: comercio || ''
         }
-        console.log(post);
+        //console.log(post);
         return firebase.database().ref('users/' + uid + '/favoritos/' + productId).set(post);
       };
 
@@ -2080,34 +2087,34 @@ angular.module('starter.services', [])
           tempPressed = true;
 
           if(!self.CachedList[productId]){ // add
-            console.log("Agrega fav");
+            //console.log("Agrega fav");
 
             self.save(AuthData.uid, productId, categoria,comercio).then(
               function(success){
-                console.log(success);
+                //console.log(success);
                 self.CachedList[productId] = true;
                 tempPressed = false;
                 qPress.resolve(self.CachedList);
               },
               function(error){
-                console.log(error);
+                //console.log(error);
                 tempPressed = false;
                 qPress.reject();
               }
             )
 
           } else { // remove
-            console.log("Elimina fav");
+            //console.log("Elimina fav");
 
             self.remove(AuthData.uid, productId, categoria, comercio).then(
               function(success){
-                console.log(success);
+                //console.log(success);
                 self.CachedList[productId] = false;
                 tempPressed = false;
                 qPress.resolve(self.CachedList);
               },
               function(error){
-                console.log(error);
+                //console.log(error);
                 tempPressed = false;
                 qPress.reject();
               }
@@ -2117,7 +2124,7 @@ angular.module('starter.services', [])
 
         } // end auth and tempPressed
         else {
-          console.log("Error");
+          //console.log("Error");
           qPress.resolve(self.CachedList)
         }
         return qPress.promise;
@@ -2199,7 +2206,7 @@ angular.module('starter.services', [])
         var childRef = 'categorias/centros_comerciales/comercios';
         FireFunc.GetComercios(childRef).then(function(Comercios) {
               self.CentrosComerciales =  Comercios;
-              //console.log(Comercios);
+              ////console.log(Comercios);
               qGet.resolve(Comercios);
         }, function (error) {
             qGet.reject(error);
@@ -2211,7 +2218,7 @@ angular.module('starter.services', [])
         var childRef = 'categorias/multimarcas/comercios';
         FireFunc.GetComercios(childRef).then(function(Comercios) {
               self.Multimarcas =  Comercios;
-              //console.log(Comercios);
+              ////console.log(Comercios);
               qGet.resolve(Comercios);
         }, function (error) {
             qGet.reject(error);
@@ -2223,7 +2230,7 @@ angular.module('starter.services', [])
         var childRef = 'categorias/supermercados/comercios';
         FireFunc.GetComercios(childRef).then(function(Comercios) {
               self.Supermercados =  Comercios;
-              //console.log(Comercios);
+              ////console.log(Comercios);
               qGet.resolve(Comercios);
         }, function (error) {
             qGet.reject(error);
@@ -2236,7 +2243,7 @@ angular.module('starter.services', [])
         var sortNode = '/locales/';
         FireFunc.onValue3(childRef,sortNode).then(function(Comercios) {
               self.MultimarcasSucursales =  Comercios;
-              console.log(Comercios);
+              //console.log(Comercios);
               qGet.resolve(Comercios);
         }, function (error) {
             qGet.reject(error);
@@ -2335,7 +2342,7 @@ angular.module('starter.services', [])
         var post ={
             estado: 'vigente',
         }
-        //console.log(post);
+        ////console.log(post);
         return firebase.database().ref('users/' + uid + '/notificaciones/' + notificacion).update(post);
       };
 

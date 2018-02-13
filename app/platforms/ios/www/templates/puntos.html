@@ -58,7 +58,7 @@
 				              	<img src="{{ comercio.icono || 'img/dezling-logo.png' }}" style="height: 45px !important; width: auto">
 				              	<div class="row">
 				              		<div class="col col-60 col-offset-20">
-				              			<p class="text-center">{{ comercio.nombre }}<br> {{ comercio.puntos }}</p>
+				              			<p class="text-center" style="white-space: normal; word-wrap: break-word; line-height: 1.2; position: absolute; left: 50%; transform: translate(-50%, -50%); top: 50%;">{{ comercio.nombre }}<br><br> {{ comercio.puntos }}</p>
 				              		</div>
 				              		<div class="col col-20">
 				              			<a ng-click="cupon(comercio)" ng-show="comercio.beneficios" href="" style="float: right"><img src="img/canjear.png" width="100%"></a>

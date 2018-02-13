@@ -39,7 +39,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       window.plugins.OneSignal
         .startInit("3feef121-bc77-483a-adbe-98de478ab827")
         .handleNotificationOpened(notificationOpenedCallback)
-        .sendTag("perfil", "Aca van los datos del usuario")
+        .sendTag("perfil", Profile.ProfileData)
         .endInit();
 
 

@@ -15,7 +15,7 @@
 		    <ion-list
 		              show-delete="showDelete"
 		              can-swipe="listCanSwipe">
-		      <ion-item class="item-thumbnail-left" ng-repeat="favs in detalle_Favorito | orderBy:'perfil.nombre' track by $index">
+		      <ion-item class="item-thumbnail-left" ng-repeat="favs in detalle_Favorito | orderBy:'perfil.nombre' track by $index  ">
 		        <ion-delete-button 	class="ion-minus-circled" 
 		        					ng-click="eliminar($index)">
 		        </ion-delete-button>
