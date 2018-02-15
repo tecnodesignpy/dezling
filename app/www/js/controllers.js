@@ -3492,6 +3492,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         showLoading();
         Multimarcas.getLocal2(local,slug).then(
             function(success){
+              console.log(success);
                 if(Multimarcas.local != null) {
                   $scope.shopp = slug;
                   $scope.local = Multimarcas.local;
@@ -3692,7 +3693,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.BeneficioModal.hide();
   };
 
-  $scope.openBeneficiosModal = function () {
+  $scope.openBeneficiosModal = function (beneficios) {
+    $scope.beneficios = beneficios;
     $scope.BeneficioModal.show();
   };
 
@@ -4082,7 +4084,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.BeneficioModal.hide();
   };
 
-  $scope.openBeneficiosModal = function () {
+  $scope.openBeneficiosModal = function (beneficios) {
+    $scope.beneficios = beneficios;
     $scope.BeneficioModal.show();
   };
 
