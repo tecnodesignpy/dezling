@@ -86,7 +86,7 @@
     <allow-navigation href="http://192.168.0.27:8100" />
     <universal-links>
         <host name="a9w6b.app.goo.gl" scheme="https" />
-        <host name="ezling-405c6.firebaseapp.com" scheme="https">
+        <host name="dezling-405c6.firebaseapp.com" scheme="https">
             <path url="/__/auth/callback" />
         </host>
     </universal-links>
@@ -109,7 +109,6 @@
     <plugin name="cordova-android-play-services-gradle-release" spec="^1.1.1" />
     <plugin name="cordova-plugin-crosswalk-webview" spec="~2.3.0" />
     <plugin name="cordova-plugin-badge" spec="~0.8.4" />
-    <plugin name="cordova-plugin-actionsheet" spec="^2.3.3" />
     <plugin name="cordova-plugin-google-analytics" spec="^1.8.3" />
     <plugin name="cordova-plugin-buildinfo" spec="^2.0.1" />
     <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
@@ -117,5 +116,6 @@
     <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
     <plugin name="cordova-plugin-spinner" spec="~1.1.0" />
     <plugin name="onesignal-cordova-plugin" spec="~2.2.5" />
-    <engine name="ios" spec="~4.3.1" />
+    <plugin name="cordova-plugin-actionsheet" spec="~2.3.3" />
+    <engine name="ios" spec="4.5.4" />
 </widget>

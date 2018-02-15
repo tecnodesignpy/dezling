@@ -55,28 +55,28 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     if (window.cordova){
       cordova.plugins.notification.badge.set($scope.campana);
     }
-    //////console.log("Check Notificaciones");
+    //////////console.log("Check Notificaciones");
     // Check si esta habilitado recibir notificaciones
     
     $scope.AuthData = Auth.AuthData;
     Profile.notificaciones($scope.AuthData.uid).then(function(success){
-      //console.log(success);
+      //////console.log(success);
       if(success != null || success != 'null'){
-        //console.log(success);
-        //console.log(Profile.notificacion);
+        //////console.log(success);
+        //////console.log(Profile.notificacion);
         if(success.activada == true && (success != null || success != 'null')){
-          //////console.log("Habilitado para recibir notificaciones " + Profile.notificacion.activada );
+          //////////console.log("Habilitado para recibir notificaciones " + Profile.notificacion.activada );
           // Obtenemos las notificaciones
           Profile.GetNotificaciones(Auth.AuthData.uid).then(function(result){
-            //////console.log(result);
+            //////////console.log(result);
             var timeNow = new Date();
             if(result != null){
               // Recorremos las notificaciones para obtener las nuevas y las vigentes
               angular.forEach(result,function (detalles,key) {
-                ////console.log(detalles);
+                ////////console.log(detalles);
                 const [day, month, year] = detalles.fechainicio.split("/")
                 const [day1, month1, year1] = detalles.fechafin.split("/")
-                //////console.log(detalles);
+                //////////console.log(detalles);
                 if(new Date(year, month - 1, day).getTime() == timeNow.getTime() || new Date(year, month - 1, day).getTime() < timeNow.getTime()){
                   if(new Date(year1, month1 - 1, day1).getTime() == timeNow.getTime() || new Date(year1, month1 - 1, day1).getTime() > timeNow.getTime()){
                     if(detalles.estado == 'nueva'){
@@ -112,24 +112,24 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               $scope.error = true;
           });
         }else{
-          //////console.log("NO Habilitado para recibir notificaciones");
+          //////////console.log("NO Habilitado para recibir notificaciones");
         }
       }
     },function(error){
-        //////console.log(error);
+        //////////console.log(error);
     });
 
   };
 
   $scope.MarcarVigentes = function(){
-    //////console.log("Vamos a poner como vigente la notificacion");
+    //////////console.log("Vamos a poner como vigente la notificacion");
 
     angular.forEach($scope.lista_notificaciones,function (detalles,key) {
-      //////console.log(detalles)
+      //////////console.log(detalles)
       if(detalles.estado == "nueva"){
         // Ahora ponemos como Vigente en Firebase
         Notificaciones.UpdateNotificaciones(Auth.AuthData.uid,detalles.id).then(function(success){
-          //////console.log(success);
+          //////////console.log(success);
         });
         setTimeout(function(){
             $scope.hay_nuevas = false;
@@ -260,7 +260,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
   };
 
   $scope.openTermsModal = function () {
-    //////console.log('clicked');
+    //////////console.log('clicked');
     $scope.termsModal.show();
   };
 
@@ -269,7 +269,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
   $scope.allImages = [];
   $scope.zoomMin = 1;
   $scope.showImages = function(index, images) {
-    //////console.log('clicked to show gallery');
+    //////////console.log('clicked to show gallery');
     $scope.activeSlide = index;
     $scope.allImages = images;
     $scope.showModal('templates/modal/gallery-zoomview.html');
@@ -312,7 +312,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.user = {};
     // Funcion para Registrar usuario
     $scope.Registrarse = function() {
-      //////console.log($scope.user.email);
+      //////////console.log($scope.user.email);
       showLoading();
       if($scope.user.email && $scope.user.user_pass) {
         Auth.signUpPassword($scope.user.email, $scope.user.user_pass).then(function(User){
@@ -325,7 +325,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           if(error.code == 'auth/network-request-failed') {
               error['message'] = "Oops... It seems that your browser is not supported. Please download Google Chrome or Safari and try again."
           };
-          //////console.log(error);
+          //////////console.log(error);
           hideLoading();
         });
       }
@@ -351,7 +351,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   if(Profile.notificacion != null) {
                     $scope.notificaciones.promociones = Profile.notificacion;
           
-                    //////console.log($scope.notificaciones.promociones);
+                    //////////console.log($scope.notificaciones.promociones);
                     if($scope.notificaciones.promociones.activada == true){
                       $scope.notificaciones.mensaje = "Activada";
                       $scope.notificaciones.promociones = true;
@@ -360,12 +360,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       $scope.notificaciones.promociones = false;
                     }
                   }else if(Profile.notificacion == null){
-                    //////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
+                    //////////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
                     Profile.UpdateNotificaciones($scope.AuthData.uid,true);
                   }
               },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
                   $scope.notificaciones.mensaje = "Activada";
               }
           );
@@ -394,7 +394,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     };
 
     $scope.openTermsModal = function () {
-      //////console.log('clicked');
+      //////////console.log('clicked');
       $scope.termsModal.show();
     };
 
@@ -499,13 +499,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     firebase.auth().signInWithRedirect(provider).then(function() {
                       firebase.auth().getRedirectResult().then(function(result) {
                         
-                        ////console.log("Entro con Facebook");
+                        ////////console.log("Entro con Facebook");
                           // This gives you a Google Access Token.
                           // You can use it to access the Google API.
                           var token = result.credential.accessToken;
                           // The signed-in user info.
                           var user = result.user;
-                          ////console.log(result.credential);
+                          ////////console.log(result.credential);
                           if (result.credential) {
                             // This gives you a Facebook Access Token. You can use it to access the Facebook API.
                             var token = result.credential.accessToken;
@@ -515,12 +515,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                 hideLoading();
                                 proceedLogin(result);   
                                 // bind to scope
-                                //////console.log(ProfileData);
+                                //////////console.log(ProfileData);
                                 if(ProfileData == null) {
                                     $http.get('https://graph.facebook.com/v2.5/me?access_token='+token+'&fields=id,name,friends{name,gender,picture},birthday,email,cover,link,age_range,first_name,last_name')
                                     .success(function(jsonService){
                                        $scope.user= jsonService;
-                                       //////console.log(result.user);
+                                       //////////console.log(result.user);
                                       // ...
                                       Auth.CargarPerfil(result,jsonService)
                                     });
@@ -551,7 +551,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 if($scope.loginData.userEmail && $scope.loginData.userPassword) {
                   Auth.signInPassword($scope.loginData.userEmail, $scope.loginData.userPassword).then(
                     function(AuthData){
-                      ////console.log(AuthData)
+                      ////////console.log(AuthData)
                       
                       // -->
                       hideLoading();
@@ -587,7 +587,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             };
 
             $scope.openTermsModal = function () {
-              //////console.log('clicked');
+              //////////console.log('clicked');
               $scope.termsModal.show();
             };
 
@@ -599,12 +599,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         showLoading();
         var auth = firebase.auth();
         var emailAddress = $scope.user.user_email;
-        //////console.log(emailAddress);
+        //////////console.log(emailAddress);
 
         auth.sendPasswordResetEmail(emailAddress).then(function() {
           $scope.resetError = null;
           $scope.resetSuccess = "Revisa tu correo electronico.";
-          //////console.log($scope.resetSuccess);
+          //////////console.log($scope.resetSuccess);
           hideLoading();
         }, function(error) {
           $scope.resetSuccess = null;
@@ -663,7 +663,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       $scope.$watch('sliderDelegate', function(newVal, oldVal){
         if(newVal != null){ 
           $scope.sliderDelegate.on('slideChangeEnd', function(){
-            ////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
+            ////////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
             $scope.$apply();
           });
         }
@@ -702,7 +702,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   }
               },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
                     $scope.cargado_destacados = false;
               }
           );
@@ -743,7 +743,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   }
               },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
                     $scope.cargado = false;
               }
           );
@@ -765,7 +765,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   }
               },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
               }
           );
       };
@@ -786,7 +786,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   }
               },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
               }
           );
       };
@@ -807,16 +807,16 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   }
               },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
               }
           );
       };
       $scope.SumarClick =  function(categoria, key){
         if(categoria == 'sponsor'){
-          ////console.log("Es Sponsor");
+          ////////console.log("Es Sponsor");
           Sponsor.sumarClicks(key);
         }else{
-          ////console.log("Es Destacado");
+          ////////console.log("Es Destacado");
           Destacados.sumarClicks(key);
         }
       }
@@ -844,7 +844,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                   $scope.layout = 'grid'; // for layout controll
                               $scope.$on("$ionicView.enter", function(event, data){
                                  // handle event
-                                 //////console.log("State Params: ", data.stateParams);
+                                 //////////console.log("State Params: ", data.stateParams);
 
                                  $scope.categoryName = data.stateParams.catagoryName;
 
@@ -852,13 +852,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                 //$pinroUiService.showLoading();
 
                               Maestro.$getProductsByCategory(data.stateParams.categoryId).then(function(res){
-                                //////console.log(res.data); 
+                                //////////console.log(res.data); 
                                 $scope.productList = res.data;
                                // $ionicLoading.hide();
                                $pinroUiService.hideLoading();
                                  // $scope.loading = false; //hide ionicLoading
                               }, function(err){
-                                //////console.log(err);
+                                //////////console.log(err);
                                 //$ionicLoading.hide();
                                 $pinroUiService.hideLoading();
                                  // $scope.loading = false; //hide ionicLoading
@@ -873,7 +873,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
                                   $scope.goToProduct = function (id) { //close all open modal and go to product page
-                                    //////console.log('clicked');
+                                    //////////console.log('clicked');
                                     $scope.cartModal.isShown() ? $scope.cartModal.hide() : null;
                                     $scope.searchModal.isShown() ? $scope.searchModal.hide() : null;
                                     $scope.profileModal.isShown() ? $scope.profileModal.hide() : null;
@@ -887,7 +887,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 .controller('SingleProductCtrl', function ($scope, $stateParams, $window, $timeout, $ionicLoading, $ionicScrollDelegate, Maestro, CartService, WishlistService, $pinroUiService) {
 
-                //////console.log($stateParams);
+                //////////console.log($stateParams);
 
                 $scope.selectedProduct = {}; // to get Selected Product to Cart
                 $scope.productImages = []; // to show data on slider
@@ -900,7 +900,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
                 Maestro.$getProductsById($stateParams.id).then(function (res) {
-                  //////console.log(res.data)
+                  //////////console.log(res.data)
                   if(res.data.id){
 
                     $scope.product = res.data;
@@ -929,7 +929,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
                 }, function (err) {
-                  //////console.log(err);
+                  //////////console.log(err);
                   // $scope.loading = false;
                    $pinroUiService.hideLoading();
                 })
@@ -958,7 +958,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       })
 
                       if (selectedColor && selectedSize) {
-                        //////console.log(variation.id);
+                        //////////console.log(variation.id);
                         $scope.selectedProduct.variation_id = variation.id; // set selected product variation id;
                         $scope.selectedProduct.price = variation.price; //update price with variation
                         keepGoing = false;
@@ -981,7 +981,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
                   //add item to cart
                     $scope.addToCart = function (selectedProduct) {
-                      //////console.log(selectedProduct);
+                      //////////console.log(selectedProduct);
 
                   var itemToPushToCart = angular.copy(selectedProduct);
                       //$scope.updatePriceAndVariation(selectedProduct);
@@ -1036,7 +1036,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
           //Get CartItemList function
           var getCartItems = function(){
-              //////console.log('cart');
+              //////////console.log('cart');
               if(CartService.getAll().length){
                   $scope.CartItemList = CartService.getAll();
                   addToCartAnimation();
@@ -1044,7 +1044,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             }
 
             $scope.$on('modal.shown', function(event, data) {
-            //////console.log('Modal is shown!'+ data.id);
+            //////////console.log('Modal is shown!'+ data.id);
             if(data.id === 'cart'){
 
               getCartItems(); //populate CartItemList from CartService
@@ -1152,13 +1152,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
          //$scope.countryList = countries;
-         ////////console.log($scope.countryList);
+         ////////////console.log($scope.countryList);
 
         var getUserInfo = function(user_id){
            //$scope.loading = true;
            $pinroUiService.showLoading();
             Maestro.$getCustomerById(user_id).then(function(res){
-            //////console.log(res);
+            //////////console.log(res);
          //$scope.loading = false;
          $pinroUiService.hideLoading();
         if(res.data.id){
@@ -1175,7 +1175,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           }, function(err){
             // $scope.loading = false;
             $pinroUiService.hideLoading();
-            //////console.log(err);
+            //////////console.log(err);
           })
         }
 
@@ -1183,16 +1183,16 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
          $scope.$on("$ionicView.enter", function(event, data){
            // handle event
-           //////console.log(StorageService.getUserObj());
-           //////console.log("State Params: ", data.stateParams);
+           //////////console.log(StorageService.getUserObj());
+           //////////console.log("State Params: ", data.stateParams);
 
            //get user_id
            var user = StorageService.getUserObj();
-           //////console.log(user);
+           //////////console.log(user);
               if(user && user.user_id){
 
               $scope.order.customer_id = StorageService.getUserObj().user_id; //assing customer id
-              //////console.log($scope.order);
+              //////////console.log($scope.order);
               getUserInfo($scope.order.customer_id); //get user info
               }
 
@@ -1216,7 +1216,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           if(item.variation_id){
             itemToPush.variation_id = item.variation_id;
           }
-          //////console.log(itemToPush);
+          //////////console.log(itemToPush);
 
           $scope.order.line_items.push(itemToPush);
 
@@ -1238,10 +1238,10 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         }
 
          // $scope.order.billing = $scope.order.shipping;
-        //////console.log($scope.order);
+        //////////console.log($scope.order);
 
         Maestro.$createOrder($scope.order).then(function(res){
-          //////console.log(res);
+          //////////console.log(res);
           if(res.data.id){
             CartService.removeAll(); //remove all item in cart
             $state.go('app.payment_step2', {orderId: res.data.id, amount: res.data.total, currency: res.data.currency});
@@ -1252,7 +1252,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         $pinroUiService.hideLoading();
 
         }, function(err){
-          //////console.log(err);
+          //////////console.log(err);
           $pinroUiService.hideLoading();
         })
 
@@ -1282,7 +1282,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
        $scope.$on("$ionicView.enter", function(event, data){
          // handle event
-         //////console.log("State Params: ", data.stateParams);
+         //////////console.log("State Params: ", data.stateParams);
 
          orderId = data.stateParams.orderId;
 
@@ -1297,7 +1297,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
          $scope.makeStripePayment =  function (_cardInformation) {
 
-            //////console.log('clicked');
+            //////////console.log('clicked');
            // $scope.loading = true;
       $pinroUiService.showLoading();
 
@@ -1308,7 +1308,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   "cvc": _cardInformation.cvc,
                   "name": _cardInformation.name
                 }
-                //////console.log(dataForStripe);
+                //////////console.log(dataForStripe);
 
             if (!window.stripe) {
               alert("stripe plugin not installed");
@@ -1325,7 +1325,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               function(response) {
                // $scope.loading = false;
                $pinroUiService.hideLoading();
-                //////console.log(JSON.stringify(response, null, 2));
+                //////////console.log(JSON.stringify(response, null, 2));
                 //alert(JSON.stringify(response, null, 2));
                 $state.go('app.payment_step3', {orderId: orderId, transactionId: response.id});
               },
@@ -1345,7 +1345,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           $cordovaNgCardIO.scanCard()
               .then(function (response) {
                       //Success response - it`s an object with card data
-                      //////console.log(response);
+                      //////////console.log(response);
                       $scope.card.number = response.card_number;
                       $scope.card.exp_month = response.expiry_month;
                       $scope.card.exp_year = response.short_expiry_year;
@@ -1356,7 +1356,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     function (response) {
                       //We will go there only when user cancel a scanning.
                       //response always null
-                      //////console.log(response);
+                      //////////console.log(response);
                     }
               );
       }
@@ -1374,11 +1374,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       $pinroUiService.showLoading();
       //$scope.loading = true;
       Maestro.$updateOrder(data).then(function(res){
-        //////console.log(res)
+        //////////console.log(res)
        // $scope.loading = false;
        $pinroUiService.hideLoading();
       }, function(err){
-        //////console.log(err);
+        //////////console.log(err);
         //$scope.loading = false;
         $pinroUiService.hideLoading();
       })
@@ -1389,7 +1389,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
      $scope.$on("$ionicView.enter", function(event, data){
        // handle event
-       //////console.log("State Params: ", data.stateParams);
+       //////////console.log("State Params: ", data.stateParams);
 
         if(data.stateParams.payByCash){
             order = {
@@ -1446,7 +1446,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         }
 
         $scope.$on('modal.shown', function(event, data) {
-        //////console.log('Modal is shown!'+ data.id);
+        //////////console.log('Modal is shown!'+ data.id);
         if(data.id === 'wishlist'){
 
           getWishlistItems(); //populate WishListItems from WishlistService
@@ -1473,7 +1473,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       //go to product
 
           $scope.goToProduct = function (id) { //close all open modal and go to product page
-            //////console.log('clicked');
+            //////////console.log('clicked');
             $scope.wishlistModal.isShown() ? $scope.wishlistModal.hide() : null;
             $state.go('app.single', {
               id: id
@@ -1518,11 +1518,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       Buscador.GetComercios().then(function(success){
         $scope.productList = Buscador.CentrosComerciales;
         angular.forEach($scope.productList,function (detalles, slug) {
-          //////console.log(slug);
+          //////////console.log(slug);
           $scope.comercios.push({detalles:detalles.perfil,categoria:'centros_comerciales',slug:slug});
           if(detalles.locales){
             angular.forEach(detalles.locales,function (datos, key) {
-              ////console.log(datos);
+              ////////console.log(datos);
               $scope.comercios.push({detalles:datos.perfil,categoria:'locales',slug:key,'shopping':slug});
               angular.forEach(datos.promociones,function (success) {
                 var timeNow = new Date();
@@ -1552,7 +1552,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         }); 
         hideLoading();
       }, function(err){
-        //////console.log(err);
+        //////////console.log(err);
         hideLoading();
       })
 
@@ -1560,7 +1560,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       Buscador.GetMultimarcas().then(function(success){
         $scope.productList = Buscador.Multimarcas;
         angular.forEach($scope.productList,function (detalles, slug) {
-          //////console.log(slug);
+          //////////console.log(slug);
           $scope.comercios.push({detalles:detalles,categoria:'multimarcas',slug:slug});
           if(detalles.promociones){
             angular.forEach(detalles.promociones,function (success) {
@@ -1593,7 +1593,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         }); 
         hideLoading();
       }, function(err){
-        //////console.log(err);
+        //////////console.log(err);
         hideLoading();
       })
 
@@ -1601,7 +1601,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       Buscador.GetSupermercados().then(function(success){
         $scope.productList = Buscador.Supermercados;
         angular.forEach($scope.productList,function (detalles, slug) {
-          //////console.log(slug);
+          //////////console.log(slug);
           $scope.comercios.push({detalles:detalles,categoria:'supermercados',slug:slug});
           if(detalles.promociones){
             angular.forEach(detalles.promociones,function (success) {
@@ -1634,18 +1634,18 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         }); 
         hideLoading();
       }, function(err){
-        //////console.log(err);
+        //////////console.log(err);
         hideLoading();
       })
     }
     
     $scope.showFilterBar = function () {
-      ////console.log($scope.comercios);
+      ////////console.log($scope.comercios);
       $ionicFilterBar.show({
         items: $scope.comercios,
         update: function (filteredItems) {
           $scope.comercios = filteredItems;
-          //////console.log($scope.promos)
+          //////////console.log($scope.promos)
         }
       });
     };
@@ -1688,7 +1688,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       }, 1000);
     };
     $scope.goToProduct = function (id) { //close open modal and go to product page
-          //////console.log(id);
+          //////////console.log(id);
           
           $scope.searchModal.isShown() ? $scope.searchModal.hide() : null;
           
@@ -1717,9 +1717,9 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 .controller('ConsultasCtrl', function ($scope, $stateParams, $state, $ionicScrollDelegate, $ionicLoading, $ionicPopup, $timeout, $http, Auth) {
     $scope.consulta = {};
     $scope.EnviarMensaje = function (mensaje) { 
-      //////console.log(mensaje);
+      //////////console.log(mensaje);
       var usuario = Auth.AuthData.uid + " - " + Auth.AuthData.displayName+ " - " + Auth.AuthData.providerData[0].providerId;
-      ////console.log(usuario);
+      ////////console.log(usuario);
       var link = 'http://www.dezling.com/app/consultas.php';
       var mensaje_nuevo = mensaje + "\n" + usuario ;
       showLoading();
@@ -1732,8 +1732,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
       var response = $http(config);
       response.success(function(data,status){
-          ////console.log('Done', data);
-          ////console.log('Done', status);
+          ////////console.log('Done', data);
+          ////////console.log('Done', status);
 
           hideLoading();
           if(data.error == 'true'){
@@ -1763,7 +1763,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       });
 
       response.error(function(data,status){
-          //////console.log('Error');
+          //////////console.log('Error');
           hideLoading();
           $ionicPopup.alert({
            template: '<div class="content">'
@@ -1835,7 +1835,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     };
   };
   	function loadProfileData() {
-      //console.log($scope.AuthData);
+      //////console.log($scope.AuthData);
 	    if($scope.AuthData.hasOwnProperty('uid')){
 	      Profile.get($scope.AuthData.uid).then(
 	        function(ProfileData) {	          
@@ -1844,12 +1844,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 setTimeout(function(){
                     $scope.ProfileData = ProfileData;
                     $scope.$apply();
-                    //////console.log($scope.ProfileData);
+                    //////////console.log($scope.ProfileData);
                     $q.all($scope.ProfileData).then(function(){
                       if($scope.ProfileData.hasOwnProperty('favoritos')){
                         //window.plugins.OneSignal.sendTags({Favoritos: ProfileData.favoritos});
                         $scope.Favoritos = ProfileData.favoritos;
-                        ////console.log($scope.Favoritos);
+                        ////////console.log($scope.Favoritos);
                         //Obtenemos el detalle de cada favorito de la base de datos Comercios, en base a su categoria
                         $scope.detalle_Favorito = [];
                         $scope.quitar_fav = [];
@@ -1858,10 +1858,14 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             $timeout(function() {
                               CentrosComerciales.getShopping(detalles.slug).then(
                                 function(success){
-                                  if(success.perfil.online == true){
-                                    $scope.detalle_Favorito.push(CentrosComerciales.shopping);
-                                    //Guardamos en un Scope el slug para quitar del fav luego
-                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  if(success != null){
+                                    if(success.perfil.online == true){
+                                      $scope.detalle_Favorito.push(CentrosComerciales.shopping);
+                                      //Guardamos en un Scope el slug para quitar del fav luego
+                                      $scope.quitar_fav.push( {slug: detalles.slug});
+                                    }
+                                  }else{
+                                    //console.log("Es NULL Shopp");
                                   }
                               });
                             }, 500);
@@ -1870,11 +1874,18 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             $timeout(function() {
                               CentrosComerciales.getLocal(detalles.slug,detalles.comercio).then(
                                 function(success){
-                                  console.log(success);
-                                  if(success.perfil.online == true){
-                                    $scope.detalle_Favorito.push(CentrosComerciales.local);
-                                    //Guardamos en un Scope el slug para quitar del fav luego
-                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  if(success != null){
+                                    //console.log(success);
+                                    if(success.perfil.nombre == 'Hallmark'){
+                                      console.log(success.perfil.online);
+                                    }
+                                    if(success.perfil.online === true){
+                                      $scope.detalle_Favorito.push(CentrosComerciales.local);
+                                      //Guardamos en un Scope el slug para quitar del fav luego
+                                      $scope.quitar_fav.push( {slug: detalles.slug});
+                                    }
+                                  }else{
+                                    //console.log("Es NULL Shopp Local");
                                   }
                               });
                             }, 500);
@@ -1883,21 +1894,33 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             $timeout(function() {
                               Multimarcas.getShopping(detalles.slug).then(
                                 function(success){
-                                  //////console.log(Multimarcas.shopping);
-                                  $scope.detalle_Favorito.push(Multimarcas.shopping);
-                                  //Guardamos en un Scope el slug para quitar del fav luego
-                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                  if(success != null){
+                                    if(success.perfil.online == true){
+                                      $scope.detalle_Favorito.push(Multimarcas.shopping);
+                                      //Guardamos en un Scope el slug para quitar del fav luego
+                                      $scope.quitar_fav.push( {slug: detalles.slug});
+                                    }
+                                  }else{
+                                    //console.log("Es NULL Multi");
+                                  }
                               });
                             }, 500);
                           }
                           if(detalles.categoria == "multimarcas_local"){
                             $timeout(function() {
-                              //////console.log(detalles.slug,detalles.comercio);
+                              //////////console.log(detalles.slug,detalles.comercio);
                               Multimarcas.getLocal(detalles.slug,detalles.comercio).then(
                                 function(success){
-                                  $scope.detalle_Favorito.push(Multimarcas.local);
-                                  //Guardamos en un Scope el slug para quitar del fav luego
-                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                  if(success != null){
+                                    //console.log(success);
+                                    if(success.perfil.online == true){
+                                      $scope.detalle_Favorito.push(Multimarcas.local);
+                                      //Guardamos en un Scope el slug para quitar del fav luego
+                                      $scope.quitar_fav.push( {slug: detalles.slug});
+                                    }
+                                  }else{
+                                    //console.log("Es NULL Multi Local");
+                                  }
                               });
                             }, 500);
                           }
@@ -1905,32 +1928,40 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             $timeout(function() {
                               Supermercados.getShopping(detalles.slug).then(
                                 function(success){
-                                  //////console.log(Multimarcas.shopping);
-                                  $scope.detalle_Favorito.push(Supermercados.shopping);
-                                  //Guardamos en un Scope el slug para quitar del fav luego
-                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                  if(success != null){
+                                    //////////console.log(Multimarcas.shopping);
+                                    $scope.detalle_Favorito.push(Supermercados.shopping);
+                                    //Guardamos en un Scope el slug para quitar del fav luego
+                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  }else{
+                                    //console.log("Es NULL Super");
+                                  }
                               });
                             }, 500);
                           }
                           if(detalles.categoria == "supermercados_local"){
                             $timeout(function() {
-                              //////console.log(detalles.slug,detalles.comercio);
+                              //////////console.log(detalles.slug,detalles.comercio);
                               Supermercados.getLocal(detalles.slug,detalles.comercio).then(
                                 function(success){
-                                  $scope.detalle_Favorito.push(Supermercados.local);
-                                  //Guardamos en un Scope el slug para quitar del fav luego
-                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                  if(success != null){
+                                    $scope.detalle_Favorito.push(Supermercados.local);
+                                    //Guardamos en un Scope el slug para quitar del fav luego
+                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  }else{
+                                    //console.log("Es NULL Super Local");
+                                  }
                               });
                             }, 500);
                           }
                           
                         });
-                        ////console.log($scope.detalle_Favorito);
+                        //console.log($scope.detalle_Favorito);
                       }else{
-                        //////console.log("No tiene favs");
+                        //////////console.log("No tiene favs");
                         $scope.Favoritos=false;
                       }
-                      //////console.log($scope.AuthData.providerData[0].providerId);
+                      //////////console.log($scope.AuthData.providerData[0].providerId);
                       if($scope.AuthData.providerData[0].providerId == 'facebook.com'){
                         setTimeout(function(){
                             $scope.foto_perfil =  'https://graph.facebook.com/'+$scope.AuthData.providerData[0].uid+'/picture?width=500';
@@ -1947,7 +1978,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             $scope.$apply();
                         }, 0);
                       }
-                      //////console.log(ProfileData);
+                      //////////console.log(ProfileData);
                       if($scope.ProfileData.hasOwnProperty(['perfil.nacimiento'])){
                         $scope.ProfileData.perfil.nacimiento = new Date($scope.ProfileData.perfil.nacimiento);
                       }
@@ -1959,15 +1990,15 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 user.providerData.forEach(function (profile) {
                   if(profile.providerId == "facebook.com"){
                       $scope.LogeadoConFacebook = false;
-                      //////console.log("Logeado con Facebook");
+                      //////////console.log("Logeado con Facebook");
                   }
                   if(profile.providerId == "password"){
                       $scope.LogeadoConPassword = true;
-                      //////console.log("Logeado con Email");
+                      //////////console.log("Logeado con Email");
                       if($scope.LogeadoConFacebook){
                         $scope.LogeadoConFacebook = true;
                         $scope.LogeadoConPassword = false;
-                        //////console.log("Logeado con Facebook y Correo");
+                        //////////console.log("Logeado con Facebook y Correo");
                       }else{
                         $scope.LogeadoConFacebook = false;
                       }
@@ -2055,11 +2086,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 	  // fn change username
 	  $scope.UpdatePerfil = function() {
-      //////console.log($scope.ProfileData.hasOwnProperty(['perfil.nombre']));
+      //////////console.log($scope.ProfileData.hasOwnProperty(['perfil.nombre']));
         if($scope.ProfileData.hasOwnProperty(['perfil.nombre']) || ($scope.ProfileData.perfil.nombre != undefined && $scope.ProfileData.perfil.nombre != null)) {
           Profile.UpdatePerfil($scope.AuthData.uid,$scope.ProfileData.perfil).then(
             function(success){
-              //////console.log("Actualizado");
+              //////////console.log("Actualizado");
               var mensaje = $ionicPopup.show({
                 title: 'Perfil',
                 template: 'Actualizado',
@@ -2095,7 +2126,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   if(Profile.notificacion != null) {
                     $scope.notificaciones.promociones = Profile.notificacion;
           
-                    //////console.log($scope.notificaciones.promociones);
+                    //////////console.log($scope.notificaciones.promociones);
                     if($scope.notificaciones.promociones.activada == true){
                       $scope.notificaciones.mensaje = "Activada";
                       $scope.notificaciones.promociones = true;
@@ -2104,12 +2135,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       $scope.notificaciones.promociones = false;
                     }
                   }else if(Profile.notificacion == null){
-                    //////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
+                    //////////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
                     Profile.UpdateNotificaciones($scope.AuthData.uid,true);
                   }
               },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
                   $scope.notificaciones.mensaje = "Activada";
               }
           );
@@ -2117,7 +2148,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     }
 
     $scope.CambiarNotificaciones = function(){
-          //////console.log("Cambiamos Noti",$scope.notificaciones.promociones);
+          //////////console.log("Cambiamos Noti",$scope.notificaciones.promociones);
           Profile.UpdateNotificaciones($scope.AuthData.uid,$scope.notificaciones.promociones);
           if($scope.notificaciones.promociones == true){
             $scope.notificaciones.mensaje = "Activada";
@@ -2180,7 +2211,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               }, 2000);
     },
               function(error){
-                  //////console.log(error);
+                  //////////console.log(error);
                   if(error.code =="auth/credential-already-in-use"){
                         var mensaje = $ionicPopup.show({
                           title: 'Conexion a Facebook',
@@ -2203,9 +2234,9 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       // Chequeamos cuando fue la ultima vez que hice check
       $scope.last_check = localStorage.getItem('last_check');
       $scope.CheckOk = true;
-      ////console.log($scope.last_check);
+      ////////console.log($scope.last_check);
       $scope.hora = new Date().getTime();
-      ////console.log($scope.hora);
+      ////////console.log($scope.hora);
       
       if($scope.last_check == null){
           $scope.CheckOk = true;
@@ -2214,9 +2245,9 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         //localStorage.setItem('completar_perfil',true); ||
         var horaInicial = $scope.last_check;
         var horaFinal = $scope.hora;
-        ////console.log((horaFinal-horaInicial)/1000/60);
+        ////////console.log((horaFinal-horaInicial)/1000/60);
         if(((horaFinal-horaInicial)/1000/60) >= 15){
-          ////console.log(horaFinal-horaInicial);
+          ////////console.log(horaFinal-horaInicial);
           $scope.CheckOk = true;
           CargarCentros();
         }else{
@@ -2243,7 +2274,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             function(success){
                 if(CentrosComerciales.all != null) {
                   $scope.comercios = CentrosComerciales.all;
-                  ////console.log($scope.comercios);
+                  ////////console.log($scope.comercios);
                   // Obtenemos la distacia
                     //Obtenemos la ubicacion actual
                     navigator.geolocation.getCurrentPosition(function(pos) {
@@ -2252,7 +2283,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
                           angular.forEach(detalles.locales,function (locales,key) {
                             var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+locales.perfil.mapa.latitud || 0+','+locales.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
-                            //////console.log(dist);
+                            //////////console.log(dist);
                             var service = new google.maps.DistanceMatrixService;
                             service.getDistanceMatrix({
                               origins: [pos.coords.latitude+","+ pos.coords.longitude],
@@ -2265,7 +2296,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                               if (status !== google.maps.DistanceMatrixStatus.OK) {
                                 //alert('Error was: ' + status);
                               } else {
-                                //console.log(response);
+                                //////console.log(response);
                                 if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
                                   if(response.rows[0].elements[0].distance.value <= 250){
                                     setTimeout(function(){
@@ -2280,7 +2311,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             });
                           });
                           var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
-                          //////console.log(dist);
+                          //////////console.log(dist);
                           var service = new google.maps.DistanceMatrixService;
                           service.getDistanceMatrix({
                             origins: [pos.coords.latitude+","+ pos.coords.longitude],
@@ -2307,12 +2338,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           });
                         });
                     });
-                  //////console.log($scope.items);
+                  //////////console.log($scope.items);
                   //comercios.CategoriesForm = CentrosComerciales.all;
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
         Multimarcas.get().then(
@@ -2323,11 +2354,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     //Obtenemos la ubicacion actual
                     navigator.geolocation.getCurrentPosition(function(pos) {
                         $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
-                          //////console.log($scope.multimarcas);
+                          //////////console.log($scope.multimarcas);
                         angular.forEach($scope.multimarcas,function (detalles1,multimarca) {
-                          //////console.log(detalles1);
+                          //////////console.log(detalles1);
                           angular.forEach(detalles1.locales,function (detalles,key) {
-                            ////////console.log(detalles);
+                            ////////////console.log(detalles);
                             detalles.perfil.icono = detalles1.perfil.icono;
                             var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
                             var service = new google.maps.DistanceMatrixService;
@@ -2358,12 +2389,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           //hideLoading();  
                         });
                     });
-                  ////console.log($scope.items);
+                  ////////console.log($scope.items);
                   //comercios.CategoriesForm = CentrosComerciales.all;
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
         Supermercados.get().then(
@@ -2374,11 +2405,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     //Obtenemos la ubicacion actual
                     navigator.geolocation.getCurrentPosition(function(pos) {
                         $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
-                          //////console.log($scope.supermercados);
+                          //////////console.log($scope.supermercados);
                         angular.forEach($scope.supermercados,function (detalles1,multimarca) {
-                          //////console.log(detalles1);
+                          //////////console.log(detalles1);
                           angular.forEach(detalles1.locales,function (detalles,key) {
-                            ////////console.log(detalles);
+                            ////////////console.log(detalles);
                             detalles.perfil.icono = detalles1.perfil.icono;
                             var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
                             var service = new google.maps.DistanceMatrixService;
@@ -2409,21 +2440,21 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           hideLoading();  
                         });
                     });
-                  ////console.log($scope.items);
+                  ////////console.log($scope.items);
                   //comercios.CategoriesForm = CentrosComerciales.all;
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
     // A confirm dialog
    $scope.showConfirm = function(puntos,item) {
         var ultimo_check = localStorage.getItem(item.slug);
-        ////console.log(ultimo_check);
+        ////////console.log(ultimo_check);
         var timeNow = new Date().getTime();
-        ////console.log(timeNow);
+        ////////console.log(timeNow);
 
 
         if(ultimo_check == null){
@@ -2435,7 +2466,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 type: 'button-default boton-cerrar-2',
                 onTap: function(e) {
                   // e.preventDefault() will stop the popup from closing when tapped.
-                  //////console.log('You are not sure');
+                  //////////console.log('You are not sure');
                   //e.preventDefault();
                 }
               },{
@@ -2443,7 +2474,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 type: 'button-positive button-celeste',
                 onTap: function(e) {
                   //Sumamos el punto en el perfil del usuario, seccion CHECKS, asi como dentro del perfil del local, en la parte de Checks
-                  //////console.log('You are  sure');
+                  //////////console.log('You are  sure');
                   LocalesAdheridos.checkin(item);
 
                           $ionicPopup.confirm({
@@ -2480,7 +2511,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 type: 'button-default boton-cerrar-2',
                 onTap: function(e) {
                   // e.preventDefault() will stop the popup from closing when tapped.
-                  //////console.log('You are not sure');
+                  //////////console.log('You are not sure');
                   //e.preventDefault();
                 }
               },{
@@ -2505,7 +2536,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           }
         }else{
           var diferencia = ((timeNow - ultimo_check)/1000/60/60);
-          ////console.log(diferencia);
+          ////////console.log(diferencia);
           if(diferencia >= 12){
             if(puntos == true || puntos == 'true'){
                var confirmPopup = $ionicPopup.confirm({
@@ -2515,7 +2546,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   type: 'button-default boton-cerrar-2',
                   onTap: function(e) {
                     // e.preventDefault() will stop the popup from closing when tapped.
-                    //////console.log('You are not sure');
+                    //////////console.log('You are not sure');
                     //e.preventDefault();
                   }
                 },{
@@ -2523,7 +2554,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   type: 'button-positive button-celeste',
                   onTap: function(e) {
                     //Sumamos el punto en el perfil del usuario, seccion CHECKS, asi como dentro del perfil del local, en la parte de Checks
-                    //////console.log('You are  sure');
+                    //////////console.log('You are  sure');
                     LocalesAdheridos.checkin(item);
 
                       $ionicPopup.confirm({
@@ -2560,7 +2591,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   type: 'button-default boton-cerrar-2',
                   onTap: function(e) {
                     // e.preventDefault() will stop the popup from closing when tapped.
-                    //////console.log('You are not sure');
+                    //////////console.log('You are not sure');
                     //e.preventDefault();
                   }
                 },{
@@ -2604,31 +2635,31 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.showDelete = false;
     $scope.listCanSwipe = true;
     $scope.show_eliminar =function(){
-      ////console.log($scope.showDelete);
+      ////////console.log($scope.showDelete);
       if($scope.showDelete){
         setTimeout(function(){
             $scope.showDelete = false;
             $scope.$apply();
-            ////console.log($scope.showDelete);
+            ////////console.log($scope.showDelete);
         }, 0);
       }else{
         setTimeout(function(){
             $scope.showDelete = true;
             $scope.$apply();
-            ////console.log($scope.showDelete);
+            ////////console.log($scope.showDelete);
         }, 0);
       }
-      //////console.log($scope.showDelete);
+      //////////console.log($scope.showDelete);
     }
     $scope.AuthData = Auth.AuthData;
     $scope.eliminar = function(item){
-      ////console.log($scope.quitar_fav[item]);
+      ////////console.log($scope.quitar_fav[item]);
       $scope.detalle_Favorito.splice(item, 1);
       Favoritos.buttonPressed($scope.AuthData, $scope.quitar_fav[item].slug).then(
       function(success){
-        ////console.log("No Fav"+Favoritos.CachedList);
+        ////////console.log("No Fav"+Favoritos.CachedList);
       }, function(error){
-        ////console.log(error);
+        ////////console.log(error);
         //hideLoading();
       })
     }
@@ -2646,16 +2677,16 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         angular.forEach($scope.checks,function (detalles,key) {
           // Le agregamos el Key para buscar dentro de Checks del perfil del usuario
           detalles.key = key ;
-          ////console.log(detalles);
+          ////////console.log(detalles);
           setTimeout(function(){
               $scope.puntos.push(detalles);
               $scope.$apply();
           }, 0);
         });
-        //////console.log($scope.puntos);
+        //////////console.log($scope.puntos);
         //hideLoading();
       }, function(err){
-        ////console.log(err);
+        ////////console.log(err);
         //hideLoading();
       })
 
@@ -2666,29 +2697,29 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         angular.forEach($scope.coupons,function (detalles, key) {
           detalles.slug = key;
           var timeNow = new Date();
-          ////console.log(detalles);
+          ////////console.log(detalles);
           var diferencia = (timeNow.getTime() - detalles.time_generado)/1000/60/60
-          ////console.log(diferencia);
+          ////////console.log(diferencia);
           // Filtramos por diferencia de 4 horas, si ya paso el tiempo procedemos a eliminar del perfil
           if(diferencia <= 4){
-            ////console.log("Tiene cupon");
+            ////////console.log("Tiene cupon");
             setTimeout(function(){
                 $scope.cupones.push(detalles);
                 $scope.$apply();
             }, 0);
-            ////console.log($scope.cupones);
+            ////////console.log($scope.cupones);
           }else{
             LocalesAdheridos.eliminarCupon(key);
           }
         });
-        //////console.log($scope.puntos);
+        //////////console.log($scope.puntos);
         hideLoading();
       }, function(err){
-        ////console.log(err);
+        ////////console.log(err);
         hideLoading();
       })
       $q.all($scope.puntos).then(function(){
-        ////console.log($scope.puntos);
+        ////////console.log($scope.puntos);
         hideLoading();
       })
 
@@ -2729,7 +2760,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             type: 'button-default boton-popup',
             onTap: function(e) {
               // e.preventDefault() will stop the popup from closing when tapped.
-              //////console.log('You are not sure');
+              //////////console.log('You are not sure');
               //e.preventDefault();
             }
           },{
@@ -2738,7 +2769,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             onTap: function(e) {
               // Canjear puntos por cupones
               $scope.BeneficiosModal.hide();
-              ////console.log(item, key);
+              ////////console.log(item, key);
               LocalesAdheridos.canjear(item, key).then(function(success){
                 //Regcargamos la pagina llamando a la funcion puntos
                 $ionicPopup.alert({
@@ -2766,7 +2797,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.cupon = function(item){
 
             $scope.item = item;
-            ////console.log($scope.item.detalle_beneficio);
+            ////////console.log($scope.item.detalle_beneficio);
 
             $scope.BeneficiosModal.show();
     }
@@ -2799,7 +2830,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
   //Chequea si el usuario esta logeado
   function checkAuth() {
-    //////console.log("Controlamos la sesion");
+    //////////console.log("Controlamos la sesion");
     $scope.AuthData = Auth.AuthData;
     if(!$scope.AuthData.hasOwnProperty('uid')){
       Auth.getAuthState().then(
@@ -2836,7 +2867,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
     $interval(function(){
       ReCargarCentros();
-      //////console.log("Re Cargamos los Comercios");
+      //////////console.log("Re Cargamos los Comercios");
     }, 60000)
 
    /*
@@ -2868,7 +2899,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
                 hideLoading();  
             }
         );
@@ -2883,7 +2914,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -2897,7 +2928,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -2908,7 +2939,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     };
 
               $scope.swipe = function (direction) {
-                  //////console.log("Back");
+                  //////////console.log("Back");
                  if(direction == 'right') 
                    $ionicHistory.goBack()
                }
@@ -2940,7 +2971,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       $scope.$watch('sliderDelegate', function(newVal, oldVal){
         if(newVal != null){ 
           $scope.sliderDelegate.on('slideChangeEnd', function(){
-            ////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
+            ////////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
             $scope.$apply();
           });
         }
@@ -2972,7 +3003,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
     $scope.doRefresh = function() {
       $timeout( function() {
-        //////console.log("Actualizando");
+        //////////console.log("Actualizando");
         DatosShopping(shoppings.datos);
 
         //Stop the ion-refresher from spinning
@@ -3047,7 +3078,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -3068,20 +3099,20 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 if(CentrosComerciales.locales != null) {
                   $scope.shopp = shopping;
                   $scope.locales = CentrosComerciales.locales;
-                  //////console.log($scope.locales);
+                  //////////console.log($scope.locales);
                   // Cargamos el avatar de cada Comercio
                   hideLoading();  
                   //comercios.CategoriesForm = CentrosComerciales.all;
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
 
     $scope.local = function () {
-      ////console.log($scope.shopping);
+      ////////console.log($scope.shopping);
       DatosLocal($stateParams.local,$stateParams.slug);
     }
     
@@ -3089,8 +3120,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         Funcion para cargar detalles del Local
     */
     function DatosLocal(local,slug) {
-        console.log(local);
-        ////console.log(slug);
+        ////console.log(local);
+        ////////console.log(slug);
         $scope.promociones = [];
         $scope.banners_destacados = [];
         // Verificamos si esta como favorito, le pasamos el slug del local
@@ -3102,7 +3133,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 if(CentrosComerciales.local != null) {
                   $scope.shopp = slug;
                   $scope.local = CentrosComerciales.local;
-                  console.log($scope.local);
+                  ////console.log($scope.local);
                   // Cargamos el avatar de cada Comercio
                   if($scope.local.perfil.hasOwnProperty('destacado')){
                     setTimeout(function(){
@@ -3132,11 +3163,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
                   if (now >= day[1] && now <= day[2]) {
                       $scope.abierto = true
-                      //////console.log("Esta ABIERTO");
+                      //////////console.log("Esta ABIERTO");
                   }
                    else {
                       $scope.abierto = false
-                      //////console.log("Esta CERRADO");
+                      //////////console.log("Esta CERRADO");
 
                   }
                   angular.forEach($scope.local.perfil.banners_destacados, function(value,key) {
@@ -3163,7 +3194,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -3178,10 +3209,10 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.GuardarFav = function(categoria, comercio, local) {
       $scope.favorito_slug = local;
       var check = local;
-      ////console.log($scope.AuthData);
+      ////////console.log($scope.AuthData);
       Favoritos.buttonPressed($scope.AuthData, local, categoria, comercio).then(
         function(success){
-          ////console.log(success);
+          ////////console.log(success);
           if(success.hasOwnProperty(check)){
             if(success[check] == false){
               $timeout(function() {
@@ -3198,13 +3229,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
    $scope.walletPressedCSS = function(slug) {
     $scope.roto = false;
-    //////console.log(slug);
+    //////////console.log(slug);
     //Recargamos los Favoritos 
     $scope.AuthData = Auth.AuthData;
     Favoritos.load($scope.AuthData).then(
       function(success){
         $scope.WalletList = Favoritos.CachedList;
-        //////console.log($scope.WalletList);
+        //////////console.log($scope.WalletList);
         if($scope.WalletList.hasOwnProperty(slug)){
           if($scope.WalletList[slug]) {
             $timeout(function() {
@@ -3305,7 +3336,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       $scope.$watch('sliderDelegate', function(newVal, oldVal){
         if(newVal != null){ 
           $scope.sliderDelegate.on('slideChangeEnd', function(){
-            ////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
+            ////////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
             $scope.$apply();
           });
         }
@@ -3337,7 +3368,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
     $scope.doRefresh = function() {
       $timeout( function() {
-        //////console.log("Actualizando");
+        //////////console.log("Actualizando");
         DatosShopping(shoppings.datos);
 
         //Stop the ion-refresher from spinning
@@ -3407,7 +3438,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -3429,21 +3460,21 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   $scope.shopp = shopping;
                   $scope.locales = Multimarcas.locales;
                   $scope.shopping = Multimarcas.shopping;
-                  //////console.log($scope.shopping);
+                  //////////console.log($scope.shopping);
                   // Cargamos el avatar de cada Comercio
                   hideLoading();  
                   //comercios.CategoriesForm = CentrosComerciales.all;
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
 
     $scope.local = function () {
       $scope.variable =$stateParams.local;
-      //////console.log($stateParams.slug);
+      //////////console.log($stateParams.slug);
       DatosLocal($stateParams.local,$stateParams.slug);
     }
     
@@ -3455,7 +3486,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         $scope.banners_destacados = [];
         // Verificamos si esta como favorito, le pasamos el slug del local
         $scope.walletPressedCSS(local);
-        //////console.log("Nombre de la Sucursal " + slug);
+        //////////console.log("Nombre de la Sucursal " + slug);
         $scope.local1= local ;
         showLoading();
         Multimarcas.getLocal2(local,slug).then(
@@ -3487,11 +3518,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       ["Friday", $scope.local.perfil.horario.viernes.desde, $scope.local.perfil.horario.viernes.hasta],
                       ["Saturday", $scope.local.perfil.horario.sabado.desde,$scope.local.perfil.horario.sabado.hasta] // we are closed, sorry!
                   ];
-                  //////console.log(weekdays[n]);
-                  //////console.log(now);
+                  //////////console.log(weekdays[n]);
+                  //////////console.log(now);
                   var day = weekdays[n];
-                  //////console.log(day[1]);
-                  //////console.log(day[2]);
+                  //////////console.log(day[1]);
+                  //////////console.log(day[2]);
 
 
                   $scope.feriado = null;
@@ -3503,16 +3534,16 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     var fecha = new Date(year, month - 1, day);
                     var fecha2 = new Date(anho, mes, dia); 
                     if(fecha2.getTime() == fecha.getTime()){
-                      //console.log("Hoy hay feriado");
+                      //////console.log("Hoy hay feriado");
                       if(value.allday == true){
-                        //console.log("Hoy es feriado todo el dia");
+                        //////console.log("Hoy es feriado todo el dia");
                         $scope.feriado = value;
                       }else{
                         if(value.diferenciado == true && (now >= value.desde && now <= value.hasta)){
-                          //console.log("Hoy es feriado parcialmente");
+                          //////console.log("Hoy es feriado parcialmente");
                           $scope.feriado = value;
                         }else{
-                          //console.log("Ya termino");
+                          //////console.log("Ya termino");
                         }
                       }
                     }
@@ -3520,11 +3551,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
                   if (now >= day[1] && now <= day[2]) {
                       $scope.abierto = true
-                      //////console.log("Esta ABIERTO");
+                      //////////console.log("Esta ABIERTO");
                   }
                    else {
                       $scope.abierto = false
-                      //////console.log("Esta CERRADO");
+                      //////////console.log("Esta CERRADO");
 
                   }
                   angular.forEach($scope.local.perfil.banners_destacados, function(value,key) {
@@ -3549,7 +3580,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -3566,11 +3597,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       var check = local;
       Favoritos.buttonPressed($scope.AuthData, local, categoria, comercio).then(
         function(success){
-            ////console.log(success);
+            ////////console.log(success);
           if(success.hasOwnProperty(check)){
-            //////console.log("Esta en la lista" + success[check]);
+            //////////console.log("Esta en la lista" + success[check]);
             if(success[check] == false){
-              //////console.log("Vamos a poner corazon roto");
+              //////////console.log("Vamos a poner corazon roto");
               $timeout(function() {
                 $scope.$apply(function () {
                   $scope.roto = true;
@@ -3585,13 +3616,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
    $scope.walletPressedCSS = function(slug) {
     $scope.roto = false;
-    //////console.log(slug);
+    //////////console.log(slug);
     //Recargamos los Favoritos 
     $scope.AuthData = Auth.AuthData;
     Favoritos.load($scope.AuthData).then(
       function(success){
         $scope.WalletList = Favoritos.CachedList;
-        //////console.log($scope.WalletList);
+        //////////console.log($scope.WalletList);
         if($scope.WalletList.hasOwnProperty(slug)){
           if($scope.WalletList[slug]) {
             $timeout(function() {
@@ -3692,7 +3723,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       $scope.$watch('sliderDelegate', function(newVal, oldVal){
         if(newVal != null){ 
           $scope.sliderDelegate.on('slideChangeEnd', function(){
-            ////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
+            ////////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
             $scope.$apply();
           });
         }
@@ -3724,7 +3755,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
     $scope.doRefresh = function() {
       $timeout( function() {
-        //////console.log("Actualizando");
+        //////////console.log("Actualizando");
         DatosShopping(shoppings.datos);
 
         //Stop the ion-refresher from spinning
@@ -3794,7 +3825,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -3816,21 +3847,21 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   $scope.shopp = shopping;
                   $scope.locales = Supermercados.locales;
                   $scope.shopping = Supermercados.shopping;
-                  //////console.log($scope.shopping);
+                  //////////console.log($scope.shopping);
                   // Cargamos el avatar de cada Comercio
                   hideLoading();  
                   //comercios.CategoriesForm = CentrosComerciales.all;
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
 
     $scope.local = function () {
       $scope.variable =$stateParams.local;
-      //////console.log($stateParams.slug);
+      //////////console.log($stateParams.slug);
       DatosLocal($stateParams.local,$stateParams.slug);
     }
     
@@ -3842,7 +3873,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         $scope.banners_destacados = [];
         // Verificamos si esta como favorito, le pasamos el slug del local
         $scope.walletPressedCSS(local);
-        //////console.log("Nombre de la Sucursal " + slug);
+        //////////console.log("Nombre de la Sucursal " + slug);
         $scope.local1= local ;
         showLoading();
         Supermercados.getLocal2(local,slug).then(
@@ -3874,11 +3905,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       ["Friday", $scope.local.perfil.horario.viernes.desde, $scope.local.perfil.horario.viernes.hasta],
                       ["Saturday", $scope.local.perfil.horario.sabado.desde,$scope.local.perfil.horario.sabado.hasta] // we are closed, sorry!
                   ];
-                  //////console.log(weekdays[n]);
-                  //////console.log(now);
+                  //////////console.log(weekdays[n]);
+                  //////////console.log(now);
                   var day = weekdays[n];
-                  //////console.log(day[1]);
-                  //////console.log(day[2]);
+                  //////////console.log(day[1]);
+                  //////////console.log(day[2]);
 
 
                   $scope.feriado = null;
@@ -3890,16 +3921,16 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     var fecha = new Date(year, month - 1, day);
                     var fecha2 = new Date(anho, mes, dia); 
                     if(fecha2.getTime() == fecha.getTime()){
-                      //console.log("Hoy hay feriado");
+                      //////console.log("Hoy hay feriado");
                       if(value.allday == true){
-                        //console.log("Hoy es feriado todo el dia");
+                        //////console.log("Hoy es feriado todo el dia");
                         $scope.feriado = value;
                       }else{
                         if(value.diferenciado == true && (now >= value.desde && now <= value.hasta)){
-                          //console.log("Hoy es feriado parcialmente");
+                          //////console.log("Hoy es feriado parcialmente");
                           $scope.feriado = value;
                         }else{
-                          //console.log("Ya termino");
+                          //////console.log("Ya termino");
                         }
                       }
                     }
@@ -3908,11 +3939,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
                   if (now >= day[1] && now <= day[2]) {
                       $scope.abierto = true
-                      ////console.log("Esta ABIERTO");
+                      ////////console.log("Esta ABIERTO");
                   }
                    else {
                       $scope.abierto = false
-                      ////console.log("Esta CERRADO");
+                      ////////console.log("Esta CERRADO");
 
                   }
                   angular.forEach($scope.local.perfil.banners_destacados, function(value,key) {
@@ -3937,7 +3968,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 }
             },
             function(error){
-                //////console.log(error);
+                //////////console.log(error);
             }
         );
     };
@@ -3952,15 +3983,15 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.GuardarFav = function(categoria, comercio, local) {
       $scope.favorito_slug = local;
       var check = local;
-      ////console.log(local + ' - ' + check);
-      ////console.log(categoria + ' - ' + comercio + ' - ' + local);
+      ////////console.log(local + ' - ' + check);
+      ////////console.log(categoria + ' - ' + comercio + ' - ' + local);
       Favoritos.buttonPressed($scope.AuthData, local, categoria, comercio).then(
         function(success){
-            //////console.log(success);
+            //////////console.log(success);
           if(success.hasOwnProperty(check)){
-            //////console.log("Esta en la lista" + success[check]);
+            //////////console.log("Esta en la lista" + success[check]);
             if(success[check] == false){
-              //////console.log("Vamos a poner corazon roto");
+              //////////console.log("Vamos a poner corazon roto");
               $timeout(function() {
                 $scope.$apply(function () {
                   $scope.roto = true;
@@ -3975,13 +4006,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
    $scope.walletPressedCSS = function(slug) {
     $scope.roto = false;
-    //////console.log(slug);
+    //////////console.log(slug);
     //Recargamos los Favoritos 
     $scope.AuthData = Auth.AuthData;
     Favoritos.load($scope.AuthData).then(
       function(success){
         $scope.WalletList = Favoritos.CachedList;
-        //////console.log($scope.WalletList);
+        //////////console.log($scope.WalletList);
         if($scope.WalletList.hasOwnProperty(slug)){
           if($scope.WalletList[slug]) {
             $timeout(function() {
@@ -4141,7 +4172,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           }
 
           function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-            //////console.log("Ahora calculamos la direccion");
+            //////////console.log("Ahora calculamos la direccion");
             directionsService.route({
               origin: $scope.pos,
               destination: $scope.latLng,
@@ -4161,8 +4192,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           $scope.svg             =  $stateParams.svg;
           $scope.local           =  $stateParams.local;
           $scope.pisos           =  [];
-          ////console.log($scope.categoria);
-          ////console.log($scope.slug );
+          ////////console.log($scope.categoria);
+          ////////console.log($scope.slug );
           /*
           if($scope.categoria == 'shopping'){
             CentrosComerciales.getShopping($scope.slug).then(
@@ -4188,7 +4219,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
   $scope.$on("$ionicView.beforeEnter", function (event, data) {
 
     
-    //////console.log("Renderiza el Mapa");
+    //////////console.log("Renderiza el Mapa");
 
     if($state.current.name == "app.mapaPromociones") {
       $scope.render_mapa();
@@ -4211,7 +4242,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         $scope.promo = '';
         var items = [];
         MapaPromociones.GetShoppings().then(function(res){
-          ////////console.log(res);
+          ////////////console.log(res);
           angular.forEach(res, function(key,index) {
             if(key.promociones){
               var promo = key.promociones;
@@ -4228,7 +4259,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       detalle.longitud = key.perfil.mapa.longitud;
                       detalle.slug = index;
                       $scope.lista_buscador.push(detalle);
-                      //////console.log(promo[llave]);
+                      //////////console.log(promo[llave]);
                       var marker = new google.maps.Marker({
                           position: new google.maps.LatLng(key.perfil.mapa.latitud, key.perfil.mapa.longitud),
                           map: $scope.mapa,
@@ -4242,7 +4273,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           $scope.direccion = key.perfil.direccion;
                           $scope.latLng = new google.maps.LatLng(key.perfil.mapa.latitud,key.perfil.mapa.longitud);
                           var promos = key.promociones;
-                          ////console.log(promos);
+                          ////////console.log(promos);
                             $scope.array = '';
                             $scope.promocion = [];
                             Object.keys(promos).forEach(function(key,index) {
@@ -4262,7 +4293,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                                 '</ion-item>'
                                 }
                             });
-                              ////console.log($scope.promocion);
+                              ////////console.log($scope.promocion);
                               setTimeout(() => {
                                 $ionicPopup.alert({
                                   scope: $scope,
@@ -4285,11 +4316,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             }
 
             angular.forEach(key.locales,function (detalles,llaves) {
-              //////console.log(detalles.perfil.nombre)
+              //////////console.log(detalles.perfil.nombre)
               if(detalles.promociones){
                 var promo = detalles.promociones;
                 angular.forEach(promo, function(detalle,index) {
-                  //////console.log(detalle);
+                  //////////console.log(detalle);
                   var timeNow = new Date();
                   const [day, month, year] = detalle.fechainicio.split("/");
                   const [day1, month1, year1] = detalle.fechafin.split("/");
@@ -4302,7 +4333,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                         detalle.longitud = detalles.perfil.mapa.longitud;
                         detalle.slug = llaves;
                         $scope.lista_buscador.push(detalle);
-                        //////console.log(detalle);
+                        //////////console.log(detalle);
                         
                         var marker = new google.maps.Marker({
                             position: new google.maps.LatLng(detalles.perfil.mapa.latitud || 0, detalles.perfil.mapa.longitud || 0),
@@ -4336,7 +4367,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                                 '</ion-item>'
                                 }
                             });
-                              ////console.log($scope.promocion);
+                              ////////console.log($scope.promocion);
                               setTimeout(() => {
                                 $ionicPopup.alert({
                                   scope: $scope,
@@ -4359,22 +4390,22 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 });
 
                 hideLoading();
-                ////////console.log($scope.lista_buscador);
+                ////////////console.log($scope.lista_buscador);
 
               }
             });
           });
 
       }, function(err){
-        ////////console.log(err);
+        ////////////console.log(err);
       })
 
         MapaPromociones.GetMultimarcas().then(function(res){
-          //////console.log(res);
+          //////////console.log(res);
           angular.forEach(res, function(key,index) {
-            //////console.log(res[key].perfil.icono);
+            //////////console.log(res[key].perfil.icono);
             angular.forEach(key.locales,function (detalles,llaves) {
-              //////console.log(llaves);
+              //////////console.log(llaves);
               if(detalles.promociones){
                 var promo = detalles.promociones;
                 angular.forEach(promo, function(detalle,index) {
@@ -4390,7 +4421,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           detalle.longitud = detalles.perfil.mapa.longitud;
                            detalle.slug = llaves;
                           $scope.lista_buscador.push(detalle);
-                          //////console.log($scope.lista_buscador);
+                          //////////console.log($scope.lista_buscador);
 
                           var marker = new google.maps.Marker({
                               position: new google.maps.LatLng(detalles.perfil.mapa.latitud || 0, detalles.perfil.mapa.longitud || 0),
@@ -4408,8 +4439,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                               $scope.array = '';
                               $scope.promocion = [];
                               Object.keys(promos).forEach(function(key,index) {
-                                ////console.log(key);
-                                ////console.log(index);
+                                ////////console.log(key);
+                                ////////console.log(index);
                                 var timeNow = new Date();
                                 const [day, month, year] = promos[key].fechainicio.split("/");
                                 const [day1, month1, year1] = promos[key].fechafin.split("/");
@@ -4426,7 +4457,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                                 '</ion-item>'
                                 }
                               });
-                                ////console.log($scope.promocion);
+                                ////////console.log($scope.promocion);
                                 setTimeout(() => {
                                   $ionicPopup.alert({
                                     scope: $scope,
@@ -4449,23 +4480,23 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     });
 
                     hideLoading();
-                    ////////console.log($scope.lista_buscador);
+                    ////////////console.log($scope.lista_buscador);
 
                   }
             });
           });
 
       }, function(err){
-        ////////console.log(err);
+        ////////////console.log(err);
         hideLoading();
       })
 
         MapaPromociones.GetSupermercados().then(function(res){
-          //////console.log(res);
+          //////////console.log(res);
           angular.forEach(res, function(key,index) {
-            //////console.log(res[key].perfil.icono);
+            //////////console.log(res[key].perfil.icono);
             angular.forEach(key.locales,function (detalles,llaves) {
-              //////console.log(llaves);
+              //////////console.log(llaves);
               if(detalles.promociones){
                 var promo = detalles.promociones;
                 angular.forEach(promo, function(detalle,index) {
@@ -4481,7 +4512,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           detalle.longitud = detalles.perfil.mapa.longitud;
                           detalle.slug = llaves;
                           $scope.lista_buscador.push(detalle);
-                          //////console.log($scope.lista_buscador);
+                          //////////console.log($scope.lista_buscador);
 
                           var marker = new google.maps.Marker({
                               position: new google.maps.LatLng(detalles.perfil.mapa.latitud || 0, detalles.perfil.mapa.longitud || 0),
@@ -4515,7 +4546,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                                 '</ion-item>'
                                 }
                               });
-                                ////console.log($scope.promocion);
+                                ////////console.log($scope.promocion);
                                 setTimeout(() => {
                                   $ionicPopup.alert({
                                     scope: $scope,
@@ -4538,14 +4569,14 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                     });
 
                     hideLoading();
-                    ////////console.log($scope.lista_buscador);
+                    ////////////console.log($scope.lista_buscador);
 
                   }
             });
           });
 
       }, function(err){
-        ////////console.log(err);
+        ////////////console.log(err);
         hideLoading();
       })
     };
@@ -4559,7 +4590,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
   }
 
   function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-    //////console.log("Ahora calculamos la direccion");
+    //////////console.log("Ahora calculamos la direccion");
     directionsService.route({
       origin: $scope.pos,
       destination: $scope.latLng,
@@ -4609,18 +4640,18 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
     
     $scope.showFilterBar = function () {
-      //////console.log("Buscador de Promociones " + $scope.lista_buscador);
+      //////////console.log("Buscador de Promociones " + $scope.lista_buscador);
       $ionicFilterBar.show({
         items: $scope.lista_buscador,
         update: function (filteredItems) {
           $scope.lista_buscador = filteredItems;
-          //////console.log("Actualizado " + $scope.lista_buscador);
+          //////////console.log("Actualizado " + $scope.lista_buscador);
         }
       });
     };
 
   $scope.buscar = function(detalles){
-    //////console.log(detalles);
+    //////////console.log(detalles);
     $scope.InfoMapa = true;
     $scope.mapa.setCenter(new google.maps.LatLng(detalles.perfil.mapa.latitud,detalles.perfil.mapa.longitud));
     $scope.shopping = detalles.perfil.nombre;
@@ -4646,8 +4677,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         maximumAge: 0
       };
       navigator.geolocation.getCurrentPosition(function(pos) {
-      //////console.log("Obtenemos la ubicacion");
-        //////console.log(pos);
+      //////////console.log("Obtenemos la ubicacion");
+        //////////console.log(pos);
         var latitud = pos.coords.latitude || '0';
         var longitud = pos.coords.longitude || '0';
         var myLatlng = new google.maps.LatLng(latitud, longitud);
@@ -4685,7 +4716,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 hideLoading();
                 $scope.GetPromociones();
       }, function(error) {
-        ////console.log(error);
+        ////////console.log(error);
         hideLoading();
               $ionicPopup.alert({
                template: '<div class="content">'
@@ -4699,7 +4730,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
              });
       },options);
     }else{
-      //////console.log("No funciona la geolocalizacion");
+      //////////console.log("No funciona la geolocalizacion");
     }
 
       
@@ -4718,7 +4749,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.popup.close();
   }
    $scope.getClearButtonClass = function(){
-    ////console.log("limpiar");
+    ////////console.log("limpiar");
     $scope.$broadcast('angucomplete-alt:clearInput');
    }
 
@@ -4733,7 +4764,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       var getUserInfo = function(user_id){
          $scope.loading = true;
           Maestro.$getCustomerById(user_id).then(function(res){
-          //////console.log(res);
+          //////////console.log(res);
        $scope.loading = false;
       if(res.data.id){
           $scope.user = res.data;
@@ -4743,19 +4774,19 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           }
           
       }else{
-          //////console.log("No funca");
+          //////////console.log("No funca");
       }
 
         }, function(err){
            $scope.loading = false;
-          //////console.log(err);
+          //////////console.log(err);
         })
       }
 
       $scope.updateProfile = function(){
         $scope.loading = true;
         Maestro.$updateCustomer($scope.user).then(function(res){
-          //////console.log(res.data);
+          //////////console.log(res.data);
 
           if(res.data.id){
              $scope.loading = false;
@@ -4772,7 +4803,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           }
 
         }, function(err){
-          //////console.log(err);
+          //////////console.log(err);
            $scope.loading = false;
 
       //error pop up dialog
@@ -4810,12 +4841,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
   $scope.$on('modal.shown', function(event, data) {
-    ////////console.log('Modal is shown!'+ data.id);
+    ////////////console.log('Modal is shown!'+ data.id);
     if(data.id === 'notificaciones'){
 
       //Chequeamos si tiene notificacion de completar perfil
       $scope.notificaciones = JSON.parse(localStorage.getItem('notificaciones'));
-      //////console.log($scope.notificaciones);
+      //////////console.log($scope.notificaciones);
       if($scope.notificaciones == '' || $scope.notificaciones == null){
         // No tiene notificaciones, entonces vamos a enviar la notificacion de completar perfil
         $scope.array.push({titulo:'Completa tu perfil', mensaje:'¡Podes ganarte puntos en los locales adheridos!',estado:'nuevas', hora:'11:00', fecha:'05/10/2017',funcion:'irPerfil()',logo:'img/dezling-logo.png'});
@@ -4839,6 +4870,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
             var alertPopup = $ionicPopup.alert({
              template: '<div class="content">'
+                          +'<img width="25%" src="'+imagen+'">'
                           +'<h4 class="normal-font">'+titulo+'</h4>'
                           +'<h4 class="light-font" style="text-align:justify"><br><br>'+descripcion+'<br><br></h4>'
                           +'</div>',
@@ -4905,20 +4937,20 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         /** Funcion encargada de obtener la lista de firebase */
         $scope.AuthData = Auth.AuthData;
         $scope.CargarListado = function () {
-              ////console.log("Cargando Listado");
+              ////////console.log("Cargando Listado");
               $scope.Listado = [];
               showLoading();
               ListaCompras.getListado($scope.AuthData.uid).then(
                   function(success){
                       if(ListaCompras.lista != null) {
                         angular.forEach(ListaCompras.lista,function (detalles,key) {
-                          //////console.log($scope.Listado);
+                          //////////console.log($scope.Listado);
                           setTimeout(function(){
                               $scope.Listado.push({detalle:detalles,key:key});
                               $scope.$apply();
                           }, 0);
                         });
-                        ////console.log($scope.Listado);
+                        ////////console.log($scope.Listado);
                         //$scope.Listado.timestamp =new Date($scope.Listado.timestamp * 1000);
                         // Cargamos el avatar de cada Comercio
                         hideLoading();  
@@ -4926,7 +4958,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       }
                   },
                   function(error){
-                      ////console.log("ERROR " + error);
+                      ////////console.log("ERROR " + error);
                   }
               );
 
@@ -4935,7 +4967,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
         $scope.AuthData = Auth.AuthData;
         $scope.editar_nombre = function(id, nombre){
-          ////console.log(id, nombre);
+          ////////console.log(id, nombre);
           $scope.data = {};
           $scope.data.toDoNuevo = nombre ;
           var myPopup = $ionicPopup.show({
@@ -4951,14 +4983,14 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 type: 'button-positive button-celeste boton-no-border',
                 onTap: function(e) {
 
-                  //////console.log($scope.data.toDoNuevo);
+                  //////////console.log($scope.data.toDoNuevo);
                   if (!$scope.data.toDoNuevo) {
-                    //////console.log("No ingreso nada");
+                    //////////console.log("No ingreso nada");
                     //don't allow the user to close unless he enters wifi password
                     $scope.mensaje_error = "Debes completar el nombre de la lista";
                     e.preventDefault();
                   } else {
-                    //////console.log("Ingreso " +  $scope.data.toDoNuevo);
+                    //////////console.log("Ingreso " +  $scope.data.toDoNuevo);
 
                     ListaCompras.EditarNombreLista($scope.AuthData.uid,$scope.data.toDoNuevo, id).then(
                         function(success){
@@ -4996,14 +5028,14 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                 $scope.$apply();
             }, 0);
           }
-          //////console.log($scope.showDelete);
+          //////////console.log($scope.showDelete);
         }
 
 
         $scope.AuthData = Auth.AuthData;
         $scope.eliminar = function(item){
-          //////console.log(item);
-          //////console.log($scope.ListaTodo[item]);
+          //////////console.log(item);
+          //////////console.log($scope.ListaTodo[item]);
             
             ListaCompras.eliminarTodo($scope.AuthData.uid,$scope.ListaTodo[item].llave,$scope.ListaTodo[item].key).then(
                           function(success){
@@ -5013,7 +5045,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             }, 0);
                           },
                           function(error){
-                              //////console.log(error);
+                              //////////console.log(error);
                           }
                       );
                       
@@ -5022,7 +5054,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
         $scope.AuthData = Auth.AuthData;
         $scope.eliminar_lista = function(item){
-          //////console.log(item);
+          //////////console.log(item);
             
             ListaCompras.eliminarLista($scope.AuthData.uid,item).then(
                           function(success){
@@ -5032,7 +5064,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             }, 0);
                           },
                           function(error){
-                              //////console.log(error);
+                              //////////console.log(error);
                           }
                       );
                       
@@ -5057,14 +5089,14 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                   type: 'button-positive button-celeste boton-no-border',
                   onTap: function(e) {
 
-                    //////console.log($scope.data.toDoNuevo);
+                    //////////console.log($scope.data.toDoNuevo);
                     if (!$scope.data.toDoNuevo) {
-                      //////console.log("No ingreso nada");
+                      //////////console.log("No ingreso nada");
                       //don't allow the user to close unless he enters wifi password
                       $scope.mensaje_error = "Debes completar el nombre de la lista";
                       e.preventDefault();
                     } else {
-                      //////console.log("Ingreso " +  $scope.data.toDoNuevo);
+                      //////////console.log("Ingreso " +  $scope.data.toDoNuevo);
 
                       ListaCompras.crearLista($scope.AuthData.uid,$scope.data.toDoNuevo).then(
                           function(success){
@@ -5088,24 +5120,24 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         $scope.CargarTodo = function(){
               $scope.ListaTodo = [];
               showLoading();
-              //////console.log($stateParams.id);
+              //////////console.log($stateParams.id);
               $scope.key = $stateParams.id;
               ListaCompras.getListadoTodo($scope.AuthData.uid,$stateParams.id).then(
                   function(success){
-                    ////console.log(success);
+                    ////////console.log(success);
                       if(ListaCompras.listaTodo != null) {
                         angular.forEach(success,function (detalles,key) {
                               $scope.ListaTodo.push({detalles:detalles,key:key,llave:$scope.key});
                         });
-                        ////console.log($scope.ListaTodo);
+                        ////////console.log($scope.ListaTodo);
                         hideLoading();  
                       }else{
-                        ////console.log("error");
+                        ////////console.log("error");
                         hideLoading();  
                       }
                   },
                   function(error){
-                      ////console.log(error);
+                      ////////console.log(error);
                       hideLoading();  
                   }
               );
@@ -5127,7 +5159,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                               $scope.CargarTodo();
                           },
                           function(error){
-                              //////console.log(error);
+                              //////////console.log(error);
                               hideLoading();  
                           }
                       );
@@ -5136,15 +5168,15 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
         $scope.AuthData = Auth.AuthData;
         $scope.marcar = function(index,item) {
-          //////console.log(item);
-          //////console.log(index);
-          //////console.log($scope.key);
-          //////console.log($scope.ListaTodo[item].detalles);
+          //////////console.log(item);
+          //////////console.log(index);
+          //////////console.log($scope.key);
+          //////////console.log($scope.ListaTodo[item].detalles);
             ListaCompras.marcarDone($scope.AuthData.uid,index,$scope.key,$scope.ListaTodo[item].detalles.done).then(
                           function(success){ 
                           },
                           function(error){
-                              //////console.log(error);
+                              //////////console.log(error);
                           }
                       );
         }
@@ -5155,13 +5187,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     return {        
         restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment 
         link: function($scope, iElm, iAttrs, controller) {
-          //console.log(iElm);
-          //console.log(iAttrs);
+          //////console.log(iElm);
+          //////console.log(iAttrs);
           if($scope.svg != '' && $scope.svg != undefined){
-            ////console.log("Cargo desde firebase");
+            ////////console.log("Cargo desde firebase");
             iAttrs.link = $scope.svg;
           }else{
-            ////console.log("Cargo desde local")
+            ////////console.log("Cargo desde local")
             $scope.svg = 'img/map10082017.svg';
           }
 
@@ -5179,11 +5211,11 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             // maxZoom : 3.0,
             // onZoom : function(e){          
             //  if(e <= 1.0){
-            //    ////console.log("disabled ",e);
+            //    ////////console.log("disabled ",e);
             //    JSMap.disableMouseWheelZoom();
             //  }
             //  if(e >= 1.0 && !JSMap.isMouseWheelZoomEnabled()){
-            //    ////console.log("enabled ",e);
+            //    ////////console.log("enabled ",e);
             //    JSMap.enableMouseWheelZoom();
             //  }
             // }
@@ -5204,7 +5236,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               
 
           $scope.zoom = function(z) {
-            ////console.log("zoom");
+            ////////console.log("zoom");
             if(z === 2){         
               JSMap.zoomIn();
             }else{
@@ -5221,7 +5253,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           JSMap.zoomAtPointBy(0, {x: 150, y: 150})
 
           $scope.find = function(id) {
-            //console.log("Buscamos el local");
+            //////console.log("Buscamos el local");
               
               iElm.find('[class^="map-item--selected"]').attr('class','');
               iElm.find("#local-"+id).attr('class','map-item--selected');
@@ -5233,15 +5265,15 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
           if($scope.local != '' && $scope.local != undefined){
-            //console.log($scope.local);
+            //////console.log($scope.local);
             $scope.find($scope.local);
           }
 
 
         },
         templateUrl: function(iElm,iAttrs, $scope) {
-          ////console.log(iAttrs);
-          ////console.log(iElm);
+          ////////console.log(iAttrs);
+          ////////console.log(iElm);
           //return $scope.svg || 'img/map10082017.svg'
           return iAttrs.link || 'img/map10082017.svg'
         }

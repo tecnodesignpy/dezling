@@ -108,8 +108,11 @@
       "cordova-android-play-services-gradle-release": {},
       "cordova-plugin-spinner": {},
       "onesignal-cordova-plugin": {},
-      "cordova-plugin-compat": {}
+      "cordova-plugin-compat": {},
+      "cordova-plugin-actionsheet": {}
     },
-    "platforms": []
+    "platforms": [
+      "ios"
+    ]
   }
 }

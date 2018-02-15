@@ -20,7 +20,7 @@ angular.module('jett.ionic.filter.bar', ['ionic']);
 
                   '<div class="row">'+
                     '<div class="col-10 item-input-wrapper" style="background:transparent;">'+
-                      '<i class="filter-bar-cancel button button-icon icon {{::config.back}}" ui-sref="app.editorial"></i>' +
+                      '<i style="padding-left: 0px;" class="filter-bar-cancel button button-icon icon {{::config.back}}" ui-sref="app.editorial"></i>' +
                     '</div>'+
                     '<div class="col-80 item-input-wrapper" style="display:flex !important;">'+
                       '<input type="search" class="filter-bar-search" ng-model="data.filterText" placeholder="{{::config.placeholder}}" />' +
