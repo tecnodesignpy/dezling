@@ -11,7 +11,7 @@
     </ion-nav-bar>
 
 	<ion-content class="has-header">
-		<div ng-show="Favoritos">
+		<div ng-show="detalle_Favorito.length != 0">
 		    <ion-list
 		              show-delete="showDelete"
 		              can-swipe="listCanSwipe">
@@ -29,7 +29,7 @@
 		      </ion-item>
 		    </ion-list>
 		</div>
-		<div ng-show="!Favoritos">
+		<div ng-show="detalle_Favorito.length == 0">
 			<img style="margin-top: 10%" width="30%" src="img/favoritos.svg">
 			<h3>No tiene favoritos</h3>
 			<p style="margin: 10px">Selecciona y marca como favorito a tus comercios de preferencia para recibir novedades.</p>

@@ -12,7 +12,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     Auth.getAuthState().then(function(user){
         $state.go('app.editorial');
     },function(AUTH_LOGGED_OUT){
-        console.log("No esta logeado");
     })
     /*
     window.onerror = function (errorMsg, url, lineNumber) {
@@ -75,7 +74,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   $ionicConfigProvider.navBar.alignTitle('center');
   $ionicConfigProvider.views.swipeBackEnabled(true);
   $ionicConfigProvider.scrolling.jsScrolling(true);
-
+  $ionicConfigProvider.views.maxCache(0);
     
     $ionicFilterBarConfigProvider.theme('stable');
     $ionicFilterBarConfigProvider.backdrop(false);
@@ -96,6 +95,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     .state('app', {
     url: '/app',
     abstract: true,
+    cache: false,
     templateUrl: 'templates/tabs.html',
     controller: 'AppCtrl'
   })
@@ -459,7 +459,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     console.log("Verificamos que vista mostramos");
     var $state = $injector.get('$state')
     var onboarding = localStorage.getItem('onboarding');
-    console.log("ONBOARDING ",onboarding);
     if(onboarding === true || onboarding == 'true'){
       $state.go('app.editorial');
     }else{

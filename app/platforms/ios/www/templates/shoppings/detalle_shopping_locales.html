@@ -1,4 +1,4 @@
-<ion-view hide-back-button="false" title="Locales"  hide-nav-bar="false"  can-swipe-back="true"  on-swipe-right="swipe('right')">
+<ion-view ng-init="locales()" hide-back-button="false" title="Locales"  hide-nav-bar="false"  can-swipe-back="true"  on-swipe-right="swipe('right')">
 
 	<ion-nav-bar class="bar-light pinro-header header-shadow">
       <ion-nav-back-button class="button-icon button-clear">
@@ -7,7 +7,7 @@
 
     </ion-nav-bar>
 
-	<ion-content ng-init="locales()">
+	<ion-content>
 
 		<ion-refresher
 		    pulling-text="Actualizar..."

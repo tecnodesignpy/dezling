@@ -1522,18 +1522,19 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           $scope.comercios.push({detalles:detalles.perfil,categoria:'centros_comerciales',slug:slug});
           if(detalles.locales){
             angular.forEach(detalles.locales,function (datos, key) {
-              ////////console.log(datos);
-              $scope.comercios.push({detalles:datos.perfil,categoria:'locales',slug:key,'shopping':slug});
-              angular.forEach(datos.promociones,function (success) {
-                var timeNow = new Date();
-                const [day, month, year] = success.fechainicio.split("/");
-                const [day1, month1, year1] = success.fechafin.split("/");
-                var date1 = new Date(year, month - 1, day); 
-                var date2 = new Date(year1, month1 - 1, day1);
-                if(date1 <= new Date() && date2 >= new Date()){
-                  $scope.comercios.push({detalle:success, perfil:datos.perfil, categoria:'promocion'});
-                }
-              });
+              if(datos.perfil.online === true){
+                $scope.comercios.push({detalles:datos.perfil,categoria:'locales',slug:key,'shopping':slug});
+                angular.forEach(datos.promociones,function (success) {
+                  var timeNow = new Date();
+                  const [day, month, year] = success.fechainicio.split("/");
+                  const [day1, month1, year1] = success.fechafin.split("/");
+                  var date1 = new Date(year, month - 1, day); 
+                  var date2 = new Date(year1, month1 - 1, day1);
+                  if(date1 <= new Date() && date2 >= new Date()){
+                    $scope.comercios.push({detalle:success, perfil:datos.perfil, categoria:'promocion'});
+                  }
+                });
+              }
             });
           }
 
@@ -3012,6 +3013,15 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       
       }, 1000);
     };
+
+    $scope.doRefreshLocal = function() {
+      $timeout( function() {
+        DatosLocal($stateParams.local,$stateParams.slug);
+        //Stop the ion-refresher from spinning
+        $scope.$broadcast('scroll.refreshComplete');
+      
+      }, 1000);
+    };
     
     /*
         Funcion para cargar Centro Comercial
@@ -3087,30 +3097,24 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
   $scope.locales = function () {
-      carga_locales($stateParams.slug);
+      var shopping = $stateParams.slug;
+      showLoading();
+      CentrosComerciales.getLocales(shopping).then(
+          function(success){
+              if(CentrosComerciales.locales != null) {
+                $scope.shopp = shopping;
+                $scope.locales = CentrosComerciales.locales;
+                //////////console.log($scope.locales);
+                // Cargamos el avatar de cada Comercio
+                hideLoading();  
+                //comercios.CategoriesForm = CentrosComerciales.all;
+              }
+          },
+          function(error){
+              //////////console.log(error);
+          }
+      );
    }
-    
-    /*
-        Funcion para cargar Locales del Centro Comercial
-    */
-    function carga_locales(shopping) {
-        showLoading();
-        CentrosComerciales.getLocales(shopping).then(
-            function(success){
-                if(CentrosComerciales.locales != null) {
-                  $scope.shopp = shopping;
-                  $scope.locales = CentrosComerciales.locales;
-                  //////////console.log($scope.locales);
-                  // Cargamos el avatar de cada Comercio
-                  hideLoading();  
-                  //comercios.CategoriesForm = CentrosComerciales.all;
-                }
-            },
-            function(error){
-                //////////console.log(error);
-            }
-        );
-    };
 
     $scope.local = function () {
       ////////console.log($scope.shopping);

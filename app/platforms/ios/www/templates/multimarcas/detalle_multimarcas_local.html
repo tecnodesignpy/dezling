@@ -77,7 +77,7 @@
 	        	<div class="col">
      				<button class="button button-dark button-block button-outline" ng-click="openHorario()"><i class="icon_set_1_icon-83" style="font-size: 16px"></i> HORARIOS DE ATENCIÓN</button>
      				<button class="button button-dark button-block button-outline" ui-sref="app.mapa_complejo({categoria:'supermercado',slug:slug,svg:local.perfil.mapa_complejo})"><i class="icon_set_1_icon-37" style="font-size: 16px"></i> MAPA DEL COMPLEJO</button>
-     				<button ng-show="local.perfil.puntos == 'true' || local.perfil.puntos == true" class="button button-dark button-block button-outline" ng-click="openBeneficiosModal()">BENEFICIOS</button>
+     				<button ng-show="local.perfil.puntos == 'true' || local.perfil.puntos == true" class="button button-dark button-block button-outline" ng-click="openBeneficiosModal(local.beneficios)">BENEFICIOS</button>
 	        	</div>
 	        </div>
 

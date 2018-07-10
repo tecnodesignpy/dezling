@@ -208,6 +208,15 @@ angular.module('starter.services', [])
         });
         return qGet.promise;
       };
+      self.onValueIf = function(childRef) {
+        var qGet = $q.defer();
+        firebase.database().ref(childRef).orderByChild("/perfil/online").equalTo(true).on('value', function(snapshot) {
+            qGet.resolve(snapshot.val());
+        }, function(error){
+            qGet.reject(error);
+        });
+        return qGet.promise;
+      };
       self.GetComercios = function(childRef) {
         var qGet = $q.defer();
         firebase.database().ref(childRef).orderByChild("/perfil/online").equalTo(true).on('value', function(snapshot) {
@@ -1145,7 +1154,7 @@ angular.module('starter.services', [])
 
       self.getLocales = function(shopping) {
         var qCat = $q.defer();
-        FireFunc.onValue('categorias/centros_comerciales/comercios/'+shopping+'/locales').then(function(result){
+        FireFunc.onValueIf('categorias/centros_comerciales/comercios/'+shopping+'/locales').then(function(result){
           if(result != null) {
             self.locales = result;
           } else {
@@ -1164,7 +1173,6 @@ angular.module('starter.services', [])
         FireFunc.onValue('categorias/centros_comerciales/comercios/'+shopping+'/locales/'+local).then(function(result){
           if(result != null) {
             FireFunc.onValue('categorias/centros_comerciales/comercios/'+shopping).then(function(resultado){
-              console.log(resultado.perfil.nombre, result.perfil.nombre , resultado.perfil.online);
               if(resultado.perfil.online == true){
                 result.perfil.online = true;
                 self.local = result;
@@ -1324,7 +1332,7 @@ angular.module('starter.services', [])
 
       self.getLocales = function(shopping) {
         var qCat = $q.defer();
-        FireFunc.onValue('categorias/multimarcas/comercios/'+shopping+'/locales').then(function(result){
+        FireFunc.onValueIf('categorias/multimarcas/comercios/'+shopping+'/locales').then(function(result){
           if(result != null) {
             self.locales = result;
           } else {
@@ -1502,7 +1510,7 @@ angular.module('starter.services', [])
 
       self.getLocales = function(shopping) {
         var qCat = $q.defer();
-        FireFunc.onValue('categorias/supermercados/comercios/'+shopping+'/locales').then(function(result){
+        FireFunc.onValueIf('categorias/supermercados/comercios/'+shopping+'/locales').then(function(result){
           if(result != null) {
             self.locales = result;
           } else {

@@ -1,4 +1,4 @@
-<ion-view hide-back-button="false" title=""  hide-nav-bar="false"  can-swipe-back="true"  on-swipe-right="swipe('right')">
+<ion-view ng-init="local()" hide-back-button="false" title=""  hide-nav-bar="false"  can-swipe-back="true"  on-swipe-right="swipe('right')">
 
 	<ion-nav-bar class="bar-light pinro-header header-shadow">
 		<!--
@@ -22,10 +22,10 @@
 
     </ion-nav-bar>
 
-	<ion-content class="cart"  ng-init="local()" >
+	<ion-content class="cart">
 		   <ion-refresher
 		      pulling-text="Actualizar..."
-		      on-refresh="doRefresh()">
+		      on-refresh="doRefreshLocal()">
 		    </ion-refresher>
 		    <div ng-show="es_destacado && local.perfil.banners_destacados.banner1 != '' "><!--ng-show="es_destacado"-->
 				<ion-slides options="options" slider="sliderDelegate" style="height: 220px !important;">
@@ -44,7 +44,7 @@
                 </div>
                 -->
                 <span class="card-header">{{local.perfil.nombre}}</span>
-                <div class="card-content" style="background: url(https://maps.googleapis.com/maps/api/staticmap?center={{shopping.perfil.mapa.latitud}},{{shopping.perfil.mapa.longitud}}&zoom=15&markers=icon:https://image.flaticon.com/icons/png/24/61/61159.png|{{shopping.perfil.mapa.latitud}},{{shopping.perfil.mapa.longitud}}&size=555x140&markers=size:tiny); background-size:cover;background-clip: padding-box;box-shadow: inset 350px -110px 100px -100px rgba(255,255,255,1);">
+                <div class="card-content" style="background: url(https://maps.googleapis.com/maps/api/staticmap?center={{local.perfil.mapa.latitud}},{{local.perfil.mapa.longitud}}&zoom=15&markers=icon:https://image.flaticon.com/icons/png/24/61/61159.png|{{local.perfil.mapa.latitud}},{{local.perfil.mapa.longitud}}&size=555x140&markers=size:tiny&key=AIzaSyAVxmHunOxxbJtuZsByVrgWBWnMrVzTzPE); background-size:cover;background-clip: padding-box;box-shadow: inset 350px -110px 100px -100px rgba(255,255,255,1);">
                 	<!-- <div class="card-image">
                     	<img class="img-responsive" src="https://maps.googleapis.com/maps/api/staticmap?center=-25.342142, -57.556289&zoom=16&markers=color:transparent|-25.342142,-57.556289&size=555x80&markers=size:tiny"> 
                     </div>
@@ -76,7 +76,7 @@
 	        	<div class="col">
      				<button class="button button-dark button-block button-outline" ng-click="openHorario()"><i class="icon_set_1_icon-83" style="font-size: 16px"></i> HORARIOS DE ATENCIÓN</button>
      				<button class="button button-dark button-block button-outline" ui-sref="app.mapa_complejo({categoria:'shopping',slug:slug,svg:shopping.perfil.mapa_complejo})"><i class="icon_set_1_icon-37" style="font-size: 16px"></i> MAPA DEL COMPLEJO</button>
-     				<button ng-show="local.perfil.puntos == 'true' || local.perfil.puntos == true" class="button button-dark button-block button-outline" ng-click="openBeneficiosModal()">BENEFICIOS</button>
+     				<button ng-show="local.perfil.puntos == 'true' || local.perfil.puntos == true" class="button button-dark button-block button-outline" ng-click="openBeneficiosModal(local.beneficios)">BENEFICIOS</button>
 	        	</div>
 	        </div>
 

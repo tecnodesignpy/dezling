@@ -1522,18 +1522,19 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           $scope.comercios.push({detalles:detalles.perfil,categoria:'centros_comerciales',slug:slug});
           if(detalles.locales){
             angular.forEach(detalles.locales,function (datos, key) {
-              ////////console.log(datos);
-              $scope.comercios.push({detalles:datos.perfil,categoria:'locales',slug:key,'shopping':slug});
-              angular.forEach(datos.promociones,function (success) {
-                var timeNow = new Date();
-                const [day, month, year] = success.fechainicio.split("/");
-                const [day1, month1, year1] = success.fechafin.split("/");
-                var date1 = new Date(year, month - 1, day); 
-                var date2 = new Date(year1, month1 - 1, day1);
-                if(date1 <= new Date() && date2 >= new Date()){
-                  $scope.comercios.push({detalle:success, perfil:datos.perfil, categoria:'promocion'});
-                }
-              });
+              if(datos.perfil.online === true){
+                $scope.comercios.push({detalles:datos.perfil,categoria:'locales',slug:key,'shopping':slug});
+                angular.forEach(datos.promociones,function (success) {
+                  var timeNow = new Date();
+                  const [day, month, year] = success.fechainicio.split("/");
+                  const [day1, month1, year1] = success.fechafin.split("/");
+                  var date1 = new Date(year, month - 1, day); 
+                  var date2 = new Date(year1, month1 - 1, day1);
+                  if(date1 <= new Date() && date2 >= new Date()){
+                    $scope.comercios.push({detalle:success, perfil:datos.perfil, categoria:'promocion'});
+                  }
+                });
+              }
             });
           }
 
@@ -1849,7 +1850,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       if($scope.ProfileData.hasOwnProperty('favoritos')){
                         //window.plugins.OneSignal.sendTags({Favoritos: ProfileData.favoritos});
                         $scope.Favoritos = ProfileData.favoritos;
-                        ////////console.log($scope.Favoritos);
+                        //console.log($scope.Favoritos);
                         //Obtenemos el detalle de cada favorito de la base de datos Comercios, en base a su categoria
                         $scope.detalle_Favorito = [];
                         $scope.quitar_fav = [];
@@ -1863,6 +1864,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                       $scope.detalle_Favorito.push(CentrosComerciales.shopping);
                                       //Guardamos en un Scope el slug para quitar del fav luego
                                       $scope.quitar_fav.push( {slug: detalles.slug});
+                                    }else{
+                                      //console.log("No esta Online ", success);
                                     }
                                   }else{
                                     //console.log("Es NULL Shopp");
@@ -1875,17 +1878,16 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                               CentrosComerciales.getLocal(detalles.slug,detalles.comercio).then(
                                 function(success){
                                   if(success != null){
-                                    //console.log(success);
-                                    if(success.perfil.nombre == 'Hallmark'){
-                                      console.log(success.perfil.online);
-                                    }
-                                    if(success.perfil.online === true){
+                                    //console.log(success.perfil.nombre, success.perfil.online);
+                                    if(success.perfil.online === true && success.perfil.online != false && success.perfil.online != 'false'){
                                       $scope.detalle_Favorito.push(CentrosComerciales.local);
                                       //Guardamos en un Scope el slug para quitar del fav luego
                                       $scope.quitar_fav.push( {slug: detalles.slug});
+                                    }else{
+                                      //console.log("No esta Online ", success);
                                     }
                                   }else{
-                                    //console.log("Es NULL Shopp Local");
+                                    //console.log("Es NULL ", success);
                                   }
                               });
                             }, 500);
@@ -1956,7 +1958,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           }
                           
                         });
-                        //console.log($scope.detalle_Favorito);
+                        console.log($scope.detalle_Favorito);
                       }else{
                         //////////console.log("No tiene favs");
                         $scope.Favoritos=false;
@@ -3011,6 +3013,15 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       
       }, 1000);
     };
+
+    $scope.doRefreshLocal = function() {
+      $timeout( function() {
+        DatosLocal($stateParams.local,$stateParams.slug);
+        //Stop the ion-refresher from spinning
+        $scope.$broadcast('scroll.refreshComplete');
+      
+      }, 1000);
+    };
     
     /*
         Funcion para cargar Centro Comercial
@@ -3086,30 +3097,24 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
   $scope.locales = function () {
-      carga_locales($stateParams.slug);
+      var shopping = $stateParams.slug;
+      showLoading();
+      CentrosComerciales.getLocales(shopping).then(
+          function(success){
+              if(CentrosComerciales.locales != null) {
+                $scope.shopp = shopping;
+                $scope.locales = CentrosComerciales.locales;
+                //////////console.log($scope.locales);
+                // Cargamos el avatar de cada Comercio
+                hideLoading();  
+                //comercios.CategoriesForm = CentrosComerciales.all;
+              }
+          },
+          function(error){
+              //////////console.log(error);
+          }
+      );
    }
-    
-    /*
-        Funcion para cargar Locales del Centro Comercial
-    */
-    function carga_locales(shopping) {
-        showLoading();
-        CentrosComerciales.getLocales(shopping).then(
-            function(success){
-                if(CentrosComerciales.locales != null) {
-                  $scope.shopp = shopping;
-                  $scope.locales = CentrosComerciales.locales;
-                  //////////console.log($scope.locales);
-                  // Cargamos el avatar de cada Comercio
-                  hideLoading();  
-                  //comercios.CategoriesForm = CentrosComerciales.all;
-                }
-            },
-            function(error){
-                //////////console.log(error);
-            }
-        );
-    };
 
     $scope.local = function () {
       ////////console.log($scope.shopping);
@@ -3491,6 +3496,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         showLoading();
         Multimarcas.getLocal2(local,slug).then(
             function(success){
+              console.log(success);
                 if(Multimarcas.local != null) {
                   $scope.shopp = slug;
                   $scope.local = Multimarcas.local;
@@ -3691,7 +3697,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.BeneficioModal.hide();
   };
 
-  $scope.openBeneficiosModal = function () {
+  $scope.openBeneficiosModal = function (beneficios) {
+    $scope.beneficios = beneficios;
     $scope.BeneficioModal.show();
   };
 
@@ -4081,7 +4088,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.BeneficioModal.hide();
   };
 
-  $scope.openBeneficiosModal = function () {
+  $scope.openBeneficiosModal = function (beneficios) {
+    $scope.beneficios = beneficios;
     $scope.BeneficioModal.show();
   };
 

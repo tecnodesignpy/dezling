@@ -89,7 +89,7 @@
     <allow-navigation href="http://192.168.0.27:8100" />
     <universal-links>
         <host name="a9w6b.app.goo.gl" scheme="https" />
-        <host name="ezling-405c6.firebaseapp.com" scheme="https">
+        <host name="dezling-405c6.firebaseapp.com" scheme="https">
             <path url="/__/auth/callback" />
         </host>
     </universal-links>
