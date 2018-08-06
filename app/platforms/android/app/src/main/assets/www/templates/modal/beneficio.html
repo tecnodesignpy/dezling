@@ -1,0 +1,14 @@
+<ion-modal-view class="image-modal" on-swipe-down="closeBeneficiosModal()" title="Horarios" on-swipe-right="closeBeneficiosModal()">
+
+	<ion-header-bar class="pinro-header header-shadow">
+    	<button class="button button-icon icon ion-ios-arrow-back" ng-click="closeBeneficiosModal()"></button>
+  	</ion-header-bar>
+  	<ion-content class="has-header">
+  		<div class="business-hours">
+			<p class="script"><span>BENEFICIOS</span></p>
+			<button ng-repeat="(key, beneficio) in beneficios" class="button button-dark button-block button-outline row"><span class="col-80" style="float: left; font-size: 70%; line-height: 1.5; padding-right: 5px; text-align: left;">{{ beneficio.beneficios }} </span><span class="col-20" style="float: right; font-size: 70%; line-height: 1.5;">{{ beneficio.puntos }} puntos</span></button>
+		</div>
+  	</ion-content>
+
+
+</ion-modal-view>

@@ -1,0 +1,37 @@
+<ion-view view-title="{{categoryName}}" class="product">
+
+	<div class="bar bar-subheader">
+		<div class="button-bar bar-light">
+		<div class="row">
+			<div class="col">
+				<a  class="button" ng-click="order = 'name'; scrollToTop()" ng-class="{'color-black': order=='name'}">name</a>
+			</div>
+			<div class="col">
+				<a class="button"  ng-click="order = 'price'; scrollToTop()" ng-class="{'color-black': order=='price'}">price</a>
+			</div>
+			<div class="col">
+				<a class="button button-icon"  ng-click="layout = 'list'; scrollToTop()" ng-class="{'color-grapefruit': layout=='list'}"><i class="icon ion-ios-list-outline"></i></a>
+				<a class="button button-icon"  ng-click="layout = 'grid'; scrollToTop()" ng-class="{'color-grapefruit': layout=='grid'}"><i class="icon ion-grid"></i></a>
+			</div>
+		</div>
+		
+		</div>
+	</div>
+
+
+
+	<ion-content class="has-subheader">
+
+		<div class="product-list" ng-class="{'list-view': layout=='list'}"  ng-show="!loading">
+			<ul>
+				<li class="list-item" ng-repeat="item in productList | orderBy:order track by $index" ui-sref="app.single({id: item.id})">
+					<div class="product-image" style="background: url('{{item.images[0].src}}');">
+					</div>
+					<h5>{{item.name}}</h5>
+					<small class="category-name">{{item.categories[0].name}}</small>
+					<small class="price">{{item.price}} GBP</small>
+				</li>
+			</ul>
+		</div>
+	</ion-content>
+</ion-view>

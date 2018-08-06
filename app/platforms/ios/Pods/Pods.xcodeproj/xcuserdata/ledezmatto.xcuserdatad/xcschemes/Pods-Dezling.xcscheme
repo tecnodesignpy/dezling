@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '5E9D82985B238CC2C7C6EE4BB954E7C3'
-               BlueprintName = 'Pods-Dezling'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'libPods-Dezling.a'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1CDEA4DFA24EF6A7FDC64C33508FCDAA"
+               BlueprintName = "Pods-Dezling"
+               ReferencedContainer = "container:Pods.xcodeproj"
+               BuildableName = "libPods-Dezling.a">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

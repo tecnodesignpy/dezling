@@ -1,0 +1,128 @@
+<ion-view ng-controller="SearchCtrl">
+		<div class="bar bar-subheader" ng-init="tab = 'shoppings'">
+			<div class="button-bar bar-light">
+			<div class="row">
+				<div class="col" ng-class="{'top-black': tab=='shoppings'}">
+					<a  class="button" ng-click="tab = 'shoppings'; scrollToTop(); showFilterBar(); " ng-class="{'color-black': tab=='shoppings'}">Comercios</a>
+				</div>
+				<div class="col" ng-class="{'top-black': tab=='multimarcas'}">
+					<a class="button"  ng-click="tab = 'multimarcas'; scrollToTop(); showFilterBar2(); " ng-class="{'color-black': tab=='multimarcas'}">Promociones</a>
+				</div>
+			</div>
+			
+			</div>
+		</div>
+
+
+		<ion-content class="has-subheader">
+		   <ion-refresher
+		      pulling-text="Actualizar..."
+		      on-refresh="refreshItems()">
+		    </ion-refresher>
+
+			<div class="product-list" ng-class="{'list-view': layout=='list'}"  ng-show="tab =='shoppings'">
+				<div ng-repeat="comercio in comercios | orderBy: 'perfil.nombre' | filter: { categoria:'centros_comerciales' } ">
+					<div class="card">
+						<a ui-sref="app.shoppings({slug:comercio.slug})">
+						  	<div class="item item-divider"  style="/*background-image: url('img/01-02.png'); background-position: 235px; background-repeat: no-repeat; background-size: contain;*/">
+						      	<div class="row">
+						          	<div class="col text-center">
+						              	<img src="{{ comercio.detalles.avatar || 'img/dezling-logo.png' }}" width="auto" height="70px">
+						          	</div>
+						      	</div>
+						  	</div>
+						</a>
+					</div>
+				</div>
+				<div ng-repeat="comercio in comercios | orderBy: 'perfil.nombre' | filter: { categoria:'locales' } ">
+					<div class="card">
+						<a ui-sref="app.local({slug:comercio.shopping,local:comercio.slug})">
+						  	<div class="item item-divider"  style="/*background-image: url('img/01-02.png'); background-position: 235px; background-repeat: no-repeat; background-size: contain;*/">
+						      	<div class="row">
+						          	<div class="col text-center">
+						              	<img src="{{ comercio.detalles.avatar || 'img/dezling-logo.png' }}" width="auto" height="70px">
+						          	</div>
+						      	</div>
+						  	</div>
+						</a>
+					</div>
+				</div>
+
+				<div class="card" ng-repeat="comercio in comercios | orderBy: 'perfil.nombre' | filter: { categoria:'multimarcas' } ">
+					<a ui-sref="app.multimarcas({slug:comercio.slug})">
+					  	<div class="item item-divider"  style="/*background-image: url('img/01-02.png'); background-position: 235px; background-repeat: no-repeat; background-size: contain;*/">
+					      	<div class="row">
+					          	<div class="col text-center">
+					              	<img src="{{ comercio.detalles.perfil.avatar || 'img/dezling-logo.png' }}" width="auto" height="70px">
+					          	</div>
+					      	</div>
+					  	</div>
+					</a>
+				</div>
+
+				<div class="card" ng-repeat="comercio in comercios | orderBy: 'perfil.nombre' | filter: { categoria:'supermercados' } ">
+					<a ui-sref="app.supermercados({slug:comercio.slug})">
+					  	<div class="item item-divider"  style="/*background-image: url('img/01-02.png'); background-position: 235px; background-repeat: no-repeat; background-size: contain;*/">
+					      	<div class="row">
+					          	<div class="col text-center">
+					              	<img src="{{ comercio.detalles.perfil.avatar || 'img/dezling-logo.png' }}" width="auto" height="70px">
+					          	</div>
+					      	</div>
+					  	</div>
+					</a>
+				</div>
+				<div ng-show="comercios.length == 0">
+					<img style="margin-bottom: 10%; margin-top: 5%;" width="30%" src="img/sad-face.svg">
+					<h3>No se encontraron resultados</h3>
+				</div>
+			</div>
+
+			<div class="product-list" ng-class="{'list-view': layout=='list'}"  ng-show="tab =='multimarcas'">
+				<div ng-repeat="items in comercios | filter: { categoria:'promocion' }">
+					<!-- PROMOCIONES DEL COMERCIO  -->
+					<div class="card" style="background-color: #f5f5f5">
+						<a ng-click="openPromocion(items.detalle.texto.titulo,items.detalle.texto.descripcion_larga || items.detalle.texto.descripcion,items.perfil.icono || items.avatar)">
+						  	<div class="item item-divider"  style="background-image: url(img/promociones/{{ items.detalle.categoria || '08' }}.png ); background-position: right; background-repeat: no-repeat; background-size: cover; padding: 0px !important; background-color: white; max-height: 100px; min-height: 100px;">
+						      	<div class="row">
+						          	<div class="col text-left">
+									      <ion-item class="item-thumbnail-left item-text-wrap" style="background-color: transparent !important; padding-left: 115px;">
+							              	<img src="{{ items.perfil.icono || items.avatar ||'img/dezling-logo.png' }}" width="auto" height="70px">
+									        <h2 class="text-right">{{items.perfil.nombre}}</h2>
+									        <p class="text-right" style="margin-left: 12px;">{{(items.detalle.texto.descripcion | limitTo: 50) + (items.detalle.texto.descripcion.length > 45 ? '...' : '')}}</p>
+									      </ion-item>
+						          	</div>
+						      	</div>
+						  	</div>
+							<span class="card-footer" style="background-color: rgba(245, 245, 245, 0.5) !important; font-weight: bold;">{{items.detalle.texto.titulo}}</span>
+						</a>
+					</div>
+
+					<!-- PROMOCIONES DE LOS LOCALES/SUCURSALES 
+					<div ng-repeat="item in items.detalles.locales">
+						<div class="card" ng-repeat="datos in item.promociones" style="background-color: #f5f5f5">
+							<a ng-click="openPromocion(datos.texto.titulo,datos.texto.descripcion_larga || datos.texto.descripcion,item.perfil.icono || items.detalles.perfil.icono)">
+							  	<div class="item item-divider"  style="background-image: url(img/promociones/{{ datos.categoria || '08' }}.png ); background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white; max-height: 109px;">
+							      	<div class="row">
+							          	<div class="col text-left">
+										      <ion-item class="item-thumbnail-left item-text-wrap" style="background-color: transparent !important;padding-left: 115px;">
+								              	<img src="{{ item.perfil.icono || items.detalles.perfil.icono ||'img/dezling-logo.png' }}" width="auto" height="70px">
+										        <h2 class="text-right">{{items.detalles.perfil.nombre}}
+										        <p class="text-right" style="margin-left: 12px;">{{(datos.texto.descripcion | limitTo: 50) + (datos.texto.descripcion.length > 45 ? '...' : '')}}</p>
+										      </ion-item>
+							          	</div>
+							      	</div>
+							  	</div>
+								<span class="card-footer" style="background-color: rgba(245, 245, 245, 0.5) !important; font-weight: bold;">{{datos.texto.titulo}}</span>
+							</a>
+						</div>
+					</div>
+				</div>
+				-->
+
+				<div ng-show="comercios.length == 0">
+					<img style="margin-bottom: 10%; margin-top: 5%;" width="30%" src="img/sad-face.svg">
+					<h3>No se encontraron resultados</h3>
+				</div>
+			</div>
+		</ion-content>
+</ion-view>

@@ -51,11 +51,15 @@ import com.onesignal.OneSignal.NotificationReceivedHandler;
 import com.onesignal.OneSignal.GetTagsHandler;
 import com.onesignal.OneSignal.IdsAvailableHandler;
 import com.onesignal.OneSignal.PostNotificationResponseHandler;
+import com.onesignal.OneSignal.EmailUpdateHandler;
+import com.onesignal.OneSignal.EmailUpdateError;
 
 import com.onesignal.OSPermissionObserver;
+import com.onesignal.OSEmailSubscriptionObserver;
 import com.onesignal.OSSubscriptionObserver;
 import com.onesignal.OSPermissionStateChanges;
 import com.onesignal.OSSubscriptionStateChanges;
+import com.onesignal.OSEmailSubscriptionStateChanges;
 
 public class OneSignalPush extends CordovaPlugin {
   private static final String TAG = "OneSignalPush";
@@ -85,18 +89,30 @@ public class OneSignalPush extends CordovaPlugin {
   private static final String POST_NOTIFICATION = "postNotification";
   private static final String PROMPT_LOCATION = "promptLocation";
   private static final String CLEAR_ONESIGNAL_NOTIFICATIONS = "clearOneSignalNotifications";
+    
+  private static final String SET_EMAIL = "setEmail";
+  private static final String SET_UNAUTHENTICATED_EMAIL = "setUnauthenticatedEmail";
+  private static final String LOGOUT_EMAIL = "logoutEmail";
+  private static final String ADD_EMAIL_SUBSCRIPTION_OBSERVER = "addEmailSubscriptionObserver";
   
   private static final String SET_LOG_LEVEL = "setLogLevel";
 
+  private static final String SET_LOCATION_SHARED = "setLocationShared";
+    
+  private static final String USER_PROVIDED_CONSENT = "userProvidedPrivacyConsent";
+  private static final String SET_REQUIRES_CONSENT = "setRequiresUserPrivacyConsent";
+  private static final String GRANT_CONSENT = "provideUserConsent";
   
   private static CallbackContext notifReceivedCallbackContext;
   private static CallbackContext notifOpenedCallbackContext;
   
   private static CallbackContext jsPermissionObserverCallBack;
   private static CallbackContext jsSubscriptionObserverCallBack;
+  private static CallbackContext jsEmailSubscriptionObserverCallBack;
   
   private static OSPermissionObserver permissionObserver;
   private static OSSubscriptionObserver subscriptionObserver;
+  private static OSEmailSubscriptionObserver emailSubscriptionObserver;
 
   // This is to prevent an issue where if two Javascript calls are made to OneSignal expecting a callback then only one would fire.
   private static void callbackSuccess(CallbackContext callbackContext, JSONObject jsonObject) {
@@ -104,6 +120,12 @@ public class OneSignalPush extends CordovaPlugin {
       jsonObject = new JSONObject();
 
     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonObject);
+    pluginResult.setKeepCallback(true);
+    callbackContext.sendPluginResult(pluginResult);
+  }
+    
+  private static void callbackSuccessBoolean(CallbackContext callbackContext, boolean param) {
+    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, param);
     pluginResult.setKeepCallback(true);
     callbackContext.sendPluginResult(pluginResult);
   }
@@ -197,6 +219,19 @@ public class OneSignalPush extends CordovaPlugin {
           }
         };
         OneSignal.addSubscriptionObserver(subscriptionObserver);
+      }
+      result = true;
+    }
+    else if (ADD_EMAIL_SUBSCRIPTION_OBSERVER.equals(action)) {
+      jsEmailSubscriptionObserverCallBack = callbackContext;
+      if (emailSubscriptionObserver == null) {
+        emailSubscriptionObserver = new OSEmailSubscriptionObserver() {
+          @Override
+          public void onOSEmailSubscriptionChanged(OSEmailSubscriptionStateChanges stateChanges) {
+            callbackSuccess(jsEmailSubscriptionObserverCallBack, stateChanges.toJSONObject());
+          }
+        };
+        OneSignal.addEmailSubscriptionObserver(emailSubscriptionObserver);
       }
       result = true;
     }
@@ -335,6 +370,104 @@ public class OneSignalPush extends CordovaPlugin {
       }
       catch(Throwable t) {
         t.printStackTrace();
+      }
+    }
+    else if (SET_EMAIL.equals(action)) {
+      final CallbackContext jsSetEmailContext = callbackContext;
+        try {
+            OneSignal.setEmail(data.getString(0), data.getString(1), new EmailUpdateHandler() {
+              @Override
+              public void onSuccess() {
+                callbackSuccess(jsSetEmailContext, null);
+              }
+
+              @Override
+              public void onFailure(EmailUpdateError error) {
+                try {
+                  JSONObject errorObject = new JSONObject("{'error' : '" + error.getMessage() + "'}");
+                  callbackError(jsSetEmailContext, errorObject);
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
+            });
+
+          result = true;
+        } catch(Throwable t) {
+            t.printStackTrace();
+        }
+    }
+    else if (SET_UNAUTHENTICATED_EMAIL.equals(action)) {
+      final CallbackContext jsSetEmailContext = callbackContext;
+
+        try {
+            OneSignal.setEmail(data.getString(0), null, new EmailUpdateHandler() {
+              @Override
+              public void onSuccess() {
+                callbackSuccess(jsSetEmailContext, null);
+              }
+
+              @Override
+              public void onFailure(EmailUpdateError error) {
+                try {
+                  JSONObject errorObject = new JSONObject("{'error' : '" + error.getMessage() + "'}");
+                  callbackError(jsSetEmailContext, errorObject);
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
+            });
+
+          result = true;
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+    else if (LOGOUT_EMAIL.equals(action)) {
+      final CallbackContext jsSetEmailContext = callbackContext;
+        OneSignal.logoutEmail(new EmailUpdateHandler() {
+          @Override
+          public void onSuccess() {
+            callbackSuccess(jsSetEmailContext, null);
+          }
+
+          @Override
+          public void onFailure(EmailUpdateError error) {
+            try {
+              JSONObject errorObject = new JSONObject("{'error' : '" + error.getMessage() + "'}");
+              callbackError(jsSetEmailContext, errorObject);
+            } catch (JSONException e) {
+              e.printStackTrace();
+            }
+          }
+        });
+
+      result = true;
+    } 
+    else if (SET_LOCATION_SHARED.equals(action)) {
+      try {
+         OneSignal.setLocationShared(data.getBoolean(0));
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
+    } else if (USER_PROVIDED_CONSENT.equals(action)) {
+      boolean providedConsent = OneSignal.userProvidedPrivacyConsent();
+      final CallbackContext jsUserProvidedConsentContext = callbackContext;
+      callbackSuccessBoolean(callbackContext, providedConsent);
+      result = true;
+    } else if (SET_REQUIRES_CONSENT.equals(action)) {
+      try {
+         OneSignal.setRequiresUserPrivacyConsent(data.getBoolean(0));
+         result = true;
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
+    } else if (GRANT_CONSENT.equals(action)) {
+      try {
+         OneSignal.provideUserConsent(data.getBoolean(0));
+         result = true;
+      } catch (JSONException e) {
+         e.printStackTrace();
       }
     }
     else {

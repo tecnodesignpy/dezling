@@ -1,0 +1,43 @@
+<ion-view hide-back-button="false" title="Lista de Compras"  hide-nav-bar="false"  can-swipe-back="true"  on-swipe-right="swipe('right')" ng-init="CargarTodo()">
+
+	<ion-nav-bar class="bar-light pinro-header header-shadow">
+      <ion-nav-back-button class="button-icon button-clear">
+        <i><img src="img/icons/icon_back.png" width="24px"></i>
+      </ion-nav-back-button>
+      <ion-nav-buttons side="right">
+        <button title="Editar Lista" class="button button-icon button-clear" ng-click="show_eliminar()" style="font-size: 12px">Editar</button>
+      </ion-nav-buttons>
+
+    </ion-nav-bar>
+
+  <ion-content class="has-header">
+    <ion-list>
+      <ul class="list">
+        <label class="item item-input">
+          <input type="text" placeholder="Item" ng-model="todo.item" maxlength="25">
+        </label>
+        <label class="item item-input">
+          <input type="text" placeholder="Cantidad" ng-model="todo.cantidad">
+        </label>
+        <button class="button button-block gradiente-1" style="padding: 5px" ng-click="addTodo(todo)">
+        Agregar
+        </button>
+        <ion-list show-delete="showDelete"
+                  show-reorder="shouldShowReorder"
+                  can-swipe="listCanSwipe">
+
+              <ion-item ng-click="marcar(item.key, $index)" class="item item-checkbox" style="padding: 8px" ng-repeat="item in ListaTodo | orderBy:'detalles.lista'">
+                <ion-delete-button  class="ion-minus-circled" 
+                          ng-click="eliminar($index)">
+                </ion-delete-button>
+                <label class="checkbox">
+                  <input type="checkbox" ng-model="item.detalles.done" ng-checked={{item.detalles.done}}>
+                </label> 
+                <p ng-show="item.detalles.done == true"><span style="text-decoration: line-through; float: left; padding-left: 35px">{{item.detalles.lista | limitTo: 25 }}</span> <span style="float: right;text-decoration: line-through;">{{item.detalles.cantidad}}</span></p>
+                <p ng-show="item.detalles.done == false"><span style="text-decoration: none; float: left; padding-left: 35px">{{item.detalles.lista | limitTo: 25 }}</span> <span style="float: right">{{item.detalles.cantidad}}</span></p>
+              </ion-item>
+        </ion-list>
+      </ul>
+    </ion-list>
+  </ion-content>
+</ion-view>

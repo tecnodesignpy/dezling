@@ -1,5 +1,17 @@
 ## ChangeLog
 
+#### Version 0.8.7 (24.01.2018)
+- Added `appShortcutBadgerCustom` gradle switch.
+- Upgrades ShortcutBadger to v1.1.21
+- Added `isSupported` to check support at runtime (on Android).
+
+#### Version 0.8.6 (02.01.2018)
+- Added polyfill for Object.assign to fix issue on Android.
+
+#### Version 0.8.5 (23.10.2017)
+- Upgrade ShortcutBadger to v1.1.19
+- BadgeImpl class can now be used from other Android plugins. 
+
 #### Version 0.8.4 (17.10.2017)
 - Fix _autoClear_ for desktop platforms.
 - Support for _download_ and _circular_ indicator on OSX.

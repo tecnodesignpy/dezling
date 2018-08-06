@@ -20,18 +20,18 @@ package de.appplant.cordova.plugin.badge;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.PluginResult;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.leolin.shortcutbadger.ShortcutBadger;
 
+import static me.leolin.shortcutbadger.ShortcutBadger.isBadgeCounterSupported;
+
 /**
  * Implementation of the badge interface methods.
  */
-class BadgeImpl {
+@SuppressWarnings("WeakerAccess")
+public final class BadgeImpl {
 
     // The name for the shared preferences key
     private static final String BADGE_KEY = "badge";
@@ -39,76 +39,83 @@ class BadgeImpl {
     // The name for the shared preferences key
     private static final String CONFIG_KEY = "badge.config";
 
+    // The application context
+    private final Context ctx;
+
+    // if the device does support native badges
+    private final boolean isSupported;
+
+    /**
+     * Initializes the impl with the context of the app.
+     *
+     * @param context The app context.
+     */
+    public BadgeImpl (Context context) {
+        if (isBadgeCounterSupported(context)) {
+            ctx         = context;
+            isSupported = true;
+        } else {
+            ctx         = context.getApplicationContext();
+            isSupported = isBadgeCounterSupported(ctx);
+        }
+
+        ShortcutBadger.applyCount(ctx, getBadge());
+    }
+
     /**
      * Clear the badge number.
-     *
-     * @param ctx The application context.
      */
-    void clearBadge (Context ctx) {
-        saveBadge(0, ctx);
+    public void clearBadge() {
+        saveBadge(0);
         ShortcutBadger.removeCount(ctx);
     }
 
     /**
      * Get the badge number.
      *
-     * @param ctx      The application context.
-     * @param callback The function to be exec as the callback.
+     * @return The badge number
      */
-    void getBadge (CallbackContext callback, Context ctx) {
-        SharedPreferences settings = getSharedPreferences(ctx);
-        int badge = settings.getInt(BADGE_KEY, 0);
-        PluginResult result;
+    public int getBadge() {
+        return getPrefs().getInt(BADGE_KEY, 0);
+    }
 
-        result = new PluginResult(PluginResult.Status.OK, badge);
-
-        callback.sendPluginResult(result);
+    /**
+     * Check if the device/launcher does support badges.
+     */
+    public boolean isSupported() {
+        return isSupported;
     }
 
     /**
      * Set the badge number.
      *
-     * @param args The number to set as the badge number.
-     * @param ctx  The application context
+     * @param badge The number to set as the badge number.
      */
-    void setBadge (JSONArray args, Context ctx) {
-        int badge = args.optInt(0);
-
-        saveBadge(badge, ctx);
+    public void setBadge (int badge) {
+        saveBadge(badge);
         ShortcutBadger.applyCount(ctx, badge);
     }
 
     /**
      * Get the persisted config map.
-     *
-     * @param ctx      The application context.
-     * @param callback The function to be exec as the callback.
      */
-    void loadConfig(CallbackContext callback, Context ctx) {
-        SharedPreferences settings = getSharedPreferences(ctx);
-        String json       = settings.getString(CONFIG_KEY, "{}");
-        JSONObject config;
+    public JSONObject loadConfig() {
+        String json = getPrefs().getString(CONFIG_KEY, "{}");
 
         try {
-            config = new JSONObject(json);
+            return new JSONObject(json);
         } catch (JSONException e) {
-            config = new JSONObject();
+            return new JSONObject();
         }
-
-        PluginResult result;
-        result = new PluginResult(PluginResult.Status.OK, config);
-
-        callback.sendPluginResult(result);
     }
 
     /**
      * Persist the config map so that `autoClear` has same value after restart.
      *
      * @param config The config map to persist.
-     * @param ctx    The application context.
      */
-    void saveConfig(JSONObject config, Context ctx) {
-        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+    public void saveConfig (JSONObject config) {
+        SharedPreferences.Editor editor = getPrefs().edit();
 
         editor.putString(CONFIG_KEY, config.toString());
         editor.apply();
@@ -119,10 +126,9 @@ class BadgeImpl {
      * the badge number back to the client.
      *
      * @param badge The badge number to persist.
-     * @param ctx   The application context.
      */
-    private void saveBadge (int badge, Context ctx) {
-        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+    private void saveBadge (int badge) {
+        SharedPreferences.Editor editor = getPrefs().edit();
 
         editor.putInt(BADGE_KEY, badge);
         editor.apply();
@@ -131,8 +137,8 @@ class BadgeImpl {
     /**
      * The Local storage for the application.
      */
-    private SharedPreferences getSharedPreferences (Context context) {
-        return context.getSharedPreferences(BADGE_KEY, Context.MODE_PRIVATE);
+    private SharedPreferences getPrefs() {
+        return ctx.getSharedPreferences(BADGE_KEY, Context.MODE_PRIVATE);
     }
 
 }

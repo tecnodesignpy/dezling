@@ -7,7 +7,7 @@ google-analytics-plugin
 Cordova (PhoneGap) 3.0+ Plugin to connect to Google's native Universal Analytics SDK
 
 Prerequisites:
-* A Cordova 3.0+ project for iOS, Android, browser (PWA), and/or Windows Phone 8
+* A Cordova 3.0+ project for iOS, Android, browser (PWA), Windows Phone 8 and/or Windows 10 (UWP)
 * A Mobile App property through the Google Analytics Admin Console
 * (Android) Google Play Services SDK installed via [Android SDK Manager](https://developer.android.com/sdk/installing/adding-packages.html)
 
@@ -30,11 +30,21 @@ cordova plugin add com.danielcwilson.plugins.googleanalytics
 
 *Important Note* If the latest versions (0.8.0+) of this plugin are not working for you with Android on Cordova 5.0+, please try the suggestions in [Issues 123](https://github.com/danwilson/google-analytics-plugin/issues/123#issuecomment-151145095). Google Play Services has been very confusing to integrate, but in recent months it has been simplified.  This plugin uses the new simpler way (including it as a framework instead of bundling it which can conflict with other plugins bundling it), but if you previously installed this plugin some old files might still be lingering.
 
-The plugin.xml file will add the Google Analytics SDK files for Android, iOS, browser (PWA) and/or Windows Phone 8.  Follow [Google's steps](#sdk-files) if you need to update these later.  Also make sure to review the Google Analytics [terms](http://www.google.com/analytics/terms/us.html) and [SDK Policy](https://developers.google.com/analytics/devguides/collection/protocol/policy)
+The plugin.xml file will add the Google Analytics SDK files for Android, iOS, browser (PWA), Windows Phone 8 and/or Windows 10 (UWP).  Follow [Google's steps](#sdk-files) if you need to update these later.  Also make sure to review the Google Analytics [terms](http://www.google.com/analytics/terms/us.html) and [SDK Policy](https://developers.google.com/analytics/devguides/collection/protocol/policy)
 
 If you are not using the CLI, follow the steps in the section [Installing Without the CLI](#nocli)
 
 Windows Phone users have to manually add the [Google Analytics SDK for Windows 8 and Windows Phone](https://googleanalyticssdk.codeplex.com/) to your solution. To do this, just open your Cordova solution in Visual Studio, and add the [GoogleAnalyticsSDK package via NuGet](http://nuget.org/packages/GoogleAnalyticsSDK). This plugin requires v1.3.0 or higher.
+
+Windows 10 (UWP) users have to manually add the [Windows SDK for Google Analytics](https://github.com/dotnet/windows-sdk-for-google-analytics) to your solution. To do this, just open your Cordova solution in Visual Studio, and add the [UWP.SDKforGoogleAnalytics.Native package via NuGet](http://nuget.org/packages/UWP.SDKforGoogleAnalytics.Native). This plugin requires v1.5.2 or higher.
+
+# Configuring `play-services` Version
+
+Many other plugins require Google Play Services and/or Firebase libraries. This is a common source of Android build-failures, since the `play-services` library version must be aligned to the same version for **all** plugins. For example, when one plugin imports version `11.0.1` and another one imports `11.2.0`, a gradle build failure will occur. Use the `GMS_VERSION` to align the required play-services version with other plugins.
+
+```
+cordova plugin add cordova-plugin-google-analytics --variable GMS_VERSION=11.0.1
+```
 
 # Release note
 
@@ -47,82 +57,97 @@ these wrapper interfaces don't have the new parameters at the time we did the ch
 
 v1.7.11 -- since this version there is back compatibility with the new and old parameters in the method `startTrackerWithId('UA-XXXX-YY', 30)` to avoid loading issues reported.
 
+v1.8.4 -- fix conflicting versions of google play services due to multiple implementations.
+
+v1.9.0 -- since this version the windows platform is supported.
 
 # JavaScript Usage
 
 **All the following methods accept optional success and error callbacks after all other available parameters.**
 
-In your 'deviceready' handler, set up your Analytics tracker:
-* `window.ga.startTrackerWithId('UA-XXXX-YY', 30)` where UA-XXXX-YY is your Google Analytics Mobile App property and 30 is the dispatch period (optional)
+```js
+//In your 'deviceready' handler, set up your Analytics tracker:
+window.ga.startTrackerWithId('UA-XXXX-YY', 30)
+//where UA-XXXX-YY is your Google Analytics Mobile App property and 30 is the dispatch period (optional)
 
-To track a Screen (PageView):
-* `window.ga.trackView('Screen Title')`
+//To track a Screen (PageView):
+window.ga.trackView('Screen Title')
 
-To track a Screen (PageView) w/ campaign details:
-* `window.ga.trackView('Screen Title', 'my-scheme://content/1111?utm_source=google&utm_campaign=my-campaign')`
+//To track a Screen (PageView) w/ campaign details:
+window.ga.trackView('Screen Title', 'my-scheme://content/1111?utm_source=google&utm_campaign=my-campaign')
 
-To track a Screen (PageView) and create a new session:
-* `window.ga.trackView('Screen Title', '', true)`
+//To track a Screen (PageView) and create a new session:
+window.ga.trackView('Screen Title', '', true)
 
-To track an Event:
-* `window.ga.trackEvent('Category', 'Action', 'Label', Value)` Label and Value are optional, Value is numeric
+//To track an Event:
+window.ga.trackEvent('Category', 'Action', 'Label', Value)// Label and Value are optional, Value is numeric
 
-To track an Event and create a new session:
-* `window.ga.trackEvent('Category', 'Action', 'Label', Value, true)` Label, Value and newSession are optional, Value is numeric, newSession is true/false
+//To track an Event and create a new session:
+window.ga.trackEvent('Category', 'Action', 'Label', Value, true)// Label, Value and newSession are optional, Value is numeric, newSession is true/false
 
-To track custom metrics:
-* `window.ga.trackMetric('key', Value)` Value is optional
+//To track custom metrics:
+//(trackMetric doesn't actually send a hit, it's behaving more like the addCustomDimension() method.
+// The metric is afterwards added to every hit (view, event, error, etc...) sent, but the defined scope of the custom metric in analytics backend
+//   (hit or product) will determine, at processing time, which hits are associated with the metric value.)
+window.ga.trackMetric(Key, Value) // Key and value are numeric type, Value is optional (omit value to unset metric)
 
-To track an Exception:
-* `window.ga.trackException('Description', Fatal)` where Fatal is boolean
+//To track an Exception:
+window.ga.trackException('Description', Fatal)//where Fatal is boolean
 
-To track User Timing (App Speed):
-* `window.ga.trackTiming('Category', IntervalInMilliseconds, 'Variable', 'Label')` where IntervalInMilliseconds is numeric
+//To track User Timing (App Speed):
+window.ga.trackTiming('Category', IntervalInMilliseconds, 'Variable', 'Label') // where IntervalInMilliseconds is numeric
 
-To add a Transaction (Ecommerce)
-* `window.ga.addTransaction('ID', 'Affiliation', Revenue, Tax, Shipping, 'Currency Code')` where Revenue, Tax, and Shipping are numeric
+//To add a Transaction (Ecommerce) -- Deprecated on 1.9.0 will be removed on next minor version (1.10.0).
+window.ga.addTransaction('ID', 'Affiliation', Revenue, Tax, Shipping, 'Currency Code')// where Revenue, Tax, and Shipping are numeric
 
-To add a Transaction Item (Ecommerce)
-* `window.ga.addTransactionItem('ID', 'Name', 'SKU', 'Category', Price, Quantity, 'Currency Code')` where Price and Quantity are numeric
+//To add a Transaction Item (Ecommerce) -- Deprecated on 1.9.0 will be removed on next minor version (1.10.0).
+window.ga.addTransactionItem('ID', 'Name', 'SKU', 'Category', Price, Quantity, 'Currency Code')// where Price and Quantity are numeric
 
-To add a Custom Dimension
-* `window.ga.addCustomDimension('Key', 'Value', success, error)`
-* Key should be integer index of the dimension i.e. send `1` instead of `dimension1` for the first custom dimension you are tracking.
-* e.g. `window.ga.addCustomDimension(1, 'Value', success, error)`
+//To add a Custom Dimension
+//(The dimension is afterwards added to every hit (view, event, error, etc...) sent, but the defined scope of the custom dimension in analytics backend
+//   (hit or product) will determine, at processing time, which hits are associated with the dimension value.)
+window.ga.addCustomDimension(Key, 'Value', success, error)
+//Key should be integer index of the dimension i.e. send `1` instead of `dimension1` for the first custom dimension you are tracking. e.g. `window.ga.addCustomDimension(1, 'Value', success, error)`
+//Use empty string as value to unset custom dimension.
 
-To set a UserId:
-* `window.ga.setUserId('my-user-id')`
+//To set a UserId:
+window.ga.setUserId('my-user-id')
 
-To set a specific app version:
-* `window.ga.setAppVersion('1.33.7')`
+//To set a specific app version:
+window.ga.setAppVersion('1.33.7')
 
-To get a specific variable using this key list https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters:
-for example to get campaign name:
-* `window.ga.getVar('cn', function(result){ console.log(result);})`
+//To get a specific variable using this key list https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters:
+//for example to get campaign name:
+window.ga.getVar('cn', function(result){ console.log(result);})
 
-To set a specific variable using this key list https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters:
-for example to set session control:
-* `window.ga.setVar('sc', 'end', function(result){ console.log(result);})`
+//To set a specific variable using this key list https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters:
+//for example to set session control:
+window.ga.setVar('sc', 'end', function(result){ console.log(result);})
 
-To manually dispatch any data (this is not implemented in browser platform):
-* `window.ga.dispatch()`
+//To manually dispatch any data (this is not implemented in browser platform):
+window.ga.dispatch()
 
-To set a anonymize Ip address:
-* `window.ga.setAnonymizeIp(true)`
+//To set a anonymize Ip address:
+window.ga.setAnonymizeIp(true)
 
-To set Opt-out:
-* `window.ga.setOptOut(true)`
+//To set Opt-out:
+window.ga.setOptOut(true)
 
-To enabling Advertising Features in Google Analytics allows you to take advantage of Remarketing, Demographics & Interests reports, and more:
-* `window.ga.setAllowIDFACollection(true)`
+//To enabling Advertising Features in Google Analytics allows you to take advantage of Remarketing, Demographics & Interests reports, and more:
+window.ga.setAllowIDFACollection(true)
 
 To enable verbose logging:
-* `window.ga.debugMode()`
+window.ga.debugMode()
+// set's dry run mode on Android and Windows platform, so that all hits are only echoed back by the google analytics service and no actual hit is getting tracked!
+// **Android quirk**: verbose logging within javascript console is not supported. To see debug responses from analytics execute 
+// `adb shell setprop log.tag.GAv4 DEBUG` and then `adb logcat -v time -s GAv4` to list messages 
+// (see https://developers.google.com/android/reference/com/google/android/gms/analytics/Logger)
 
-To enable/disable automatic reporting of uncaught exceptions
-* `window.ga.enableUncaughtExceptionReporting(Enable, success, error)` where Enable is boolean
+//To enable/disable automatic reporting of uncaught exceptions
+window.ga.enableUncaughtExceptionReporting(Enable, success, error)// where Enable is boolean
+```
 
-# Example use ionic 2 (Ionic Native)
+# Example use ionic (Ionic Native)
 ```shell
 npm i --save @ionic-native/google-analytics
 ```
@@ -148,6 +173,9 @@ import { Platform } from 'ionic-angular';
   }
 ```
 
+**Issue for using trackMetric in Ionic**: currently `@ionic-native/google-analytics` defines the typescript signature with `trackMetric(key: string, value?: any)`.
+So be aware to pass the metric index as a string formatted integer and a non empty string as a value, like `window.ga.trackMetric('1', 'Value', success, error)`!
+
 # Installing Without the CLI <a name="nocli"></a>
 
 Copy the files manually into your project and add the following to your config.xml files:
@@ -172,6 +200,7 @@ You also will need to manually add the Google Analytics SDK files:
 * For iOS, add the downloaded Google Analytics SDK header files and libraries according to the [Getting Started](https://developers.google.com/analytics/devguides/collection/ios/v3) documentation
 * For Android, add `libGoogleAnalyticsServices.jar` to your Cordova Android project's `/libs` directory and build path
 * For Windows Phone, add the [GoogleAnalyticsSDK package via NuGet](http://nuget.org/packages/GoogleAnalyticsSDK)
+* For Windows 10 (UWP), add the [UWP.SDKforGoogleAnalytics.Native package via NuGet](http://nuget.org/packages/UWP.SDKforGoogleAnalytics.Native)
 
 # Integrating with Lavaca
 
@@ -201,3 +230,17 @@ window['GoogleAnalyticsObject'] = 'fooGa';
 ```
 
 The plugin will pick up the new name.
+
+# Windows 10 (UWP)
+
+The following plugin methods are (currently) not supported by the UWP.SDKforGoogleAnalytics.Native package:
+* `setAllowIDFACollection()`
+* `addTransaction()`
+* `addTransactionItem()`
+
+Unexpected behaviour may occur on the following methods:
+* `trackView()`: campaign details are currently not supported and therefore not tracked.
+* `trackMetric()`: there is currently a bug in version 1.5.2 of the [UWP.SDKforGoogleAnalytics.Native package via NuGet](http://nuget.org/packages/UWP.SDKforGoogleAnalytics.Native),
+that the wrong data specifier `cd` is taken for metrics, whereas `cm` should be the correct specifier.
+So as long as this bug is not fixed, trackMetrics will overwrite previous addCustomDimension with same index!!
+

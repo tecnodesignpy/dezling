@@ -31,7 +31,7 @@
 
 #import <OneSignal/OneSignal.h>
 
-@interface OneSignalPush : CDVPlugin <OSPermissionObserver, OSSubscriptionObserver>
+@interface OneSignalPush : CDVPlugin <OSPermissionObserver, OSSubscriptionObserver, OSEmailSubscriptionObserver>
 
 - (void)setNotificationReceivedHandler:(CDVInvokedUrlCommand*)command;
 - (void)setNotificationOpenedHandler:(CDVInvokedUrlCommand*)command;
@@ -43,7 +43,7 @@
 
 - (void)addPermissionObserver:(CDVInvokedUrlCommand*)command;
 - (void)addSubscriptionObserver:(CDVInvokedUrlCommand*)command;
-
+- (void)addEmailSubscriptionObserver:(CDVInvokedUrlCommand *)command;
 
 - (void)getTags:(CDVInvokedUrlCommand*)command;
 - (void)getIds:(CDVInvokedUrlCommand*)command;
@@ -56,10 +56,21 @@
 - (void)setLogLevel:(CDVInvokedUrlCommand*)command;
 - (void)promptLocation:(CDVInvokedUrlCommand*)command;
 - (void)syncHashedEmail:(CDVInvokedUrlCommand*)command;
+- (void)setLocationShared:(CDVInvokedUrlCommand *)command;
+
+//email
+- (void)setEmail:(CDVInvokedUrlCommand *)command;
+- (void)setUnauthenticatedEmail:(CDVInvokedUrlCommand *)command;
+- (void)logoutEmail:(CDVInvokedUrlCommand *)command;
 
 // Android Only
 - (void)enableVibrate:(CDVInvokedUrlCommand*)command;
 - (void)enableSound:(CDVInvokedUrlCommand*)command;
 - (void)clearOneSignalNotifications:(CDVInvokedUrlCommand*)command;
 
+- (void)userProvidedPrivacyConsent:(CDVInvokedUrlCommand *)command;
+- (void)setRequiresUserPrivacyConsent:(CDVInvokedUrlCommand *)command;
+- (void)provideUserConsent:(CDVInvokedUrlCommand *)command;
+    
+    
 @end

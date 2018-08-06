@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
-    id="cordova-plugin-google-analytics"
-    version="1.8.3">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-google-analytics" version="1.8.6">
   <engines>
     <engine name="cordova" version=">=3.0.0" />
   </engines>
@@ -51,7 +50,8 @@
   </platform>
 
   <platform name="android">
-    <framework src="com.google.android.gms:play-services-analytics:+" />
+    <framework src="com.google.android.gms:play-services-analytics:$GMS_VERSION" />
+    <preference name="GMS_VERSION" default="11.0.1"/>
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="UniversalAnalytics">
@@ -88,12 +88,34 @@
     </config-file>
 
     <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
-        <Capability Name="ID_CAP_NETWORKING" />
+      <Capability Name="ID_CAP_NETWORKING" />
     </config-file>
 
     <source-file src="wp8/UniversalAnalytics.cs" />
     <source-file src="wp8/PhoneHelpers.cs" />
     <source-file src="wp8/PhoneNameResolver.cs" />
     <source-file src="wp8/PlatformInfoProvider.WP.cs" />
+  </platform>
+
+  <!-- windows -->
+  <platform name="windows">
+    <js-module src="windows/GoogleAnalyticsProxy.js" name="UniversalAnalyticsPlugin">
+      <runs />
+    </js-module>
+
+    <config-file target="package.windows10.appxmanifest" parent="/Package/Capabilities" versions=">=10.0" device-target="win">
+      <Capability Name="internetClient" />
+    </config-file>
+    <config-file target="package.windows.appxmanifest" parent="/Package/Capabilities" versions=">=8.1.0" device-target="win">
+      <Capability Name="internetClient" />
+    </config-file>
+    <config-file target="package.phone.appxmanifest" parent="/Package/Capabilities" versions=">=8.1.0" device-target="phone">
+      <Capability Name="internetClientServer" />
+    </config-file>
+
+    <info>
+      You need to install Windows SDK for Google Analytics™ (UWP.SDKforGoogleAnalytics.Native) via nuget package manager
+      and set target to either x86 or x64!
+    </info>
   </platform>
 </plugin>

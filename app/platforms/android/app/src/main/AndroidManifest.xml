@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<manifest android:hardwareAccelerated="true" android:versionCode="10083" android:versionName="1.0.83" package="com.tecnodesign.dezling" xmlns:android="http://schemas.android.com/apk/res/android">
+  <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE"/>
+  <uses-permission android:name="com.tecnodesign.dezling.permission.RECEIVE_ADM_MESSAGE"/>
+  <application android:hardwareAccelerated="true" android:icon="@mipmap/icon" android:label="@string/app_name" android:supportsRtl="true">
+    <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="@string/activity_name" android:launchMode="singleTop" android:name="MainActivity" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" android:windowSoftInputMode="adjustResize">
+      <intent-filter android:label="@string/launcher_name">
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="com.tecnodesign.dezling"/>
+      </intent-filter>
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:host="a9w6b.app.goo.gl" android:scheme="https"/>
+      </intent-filter>
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:host="dezling-405c6.firebaseapp.com" android:scheme="https" android:path="/__/auth/callback"/>
+      </intent-filter>
+    </activity>
+    <activity android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" android:label="@string/fb_app_name" android:name="com.facebook.FacebookActivity"/>
+    <provider android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true" android:name="android.support.v4.content.FileProvider">
+      <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
+    </provider>
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_app_id"/>
+    <meta-data android:name="com.facebook.sdk.ApplicationName" android:value="@string/fb_app_name"/>
+    <receiver android:enabled="true" android:name="com.google.android.gms.analytics.AnalyticsReceiver">
+      <intent-filter>
+        <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH"/>
+      </intent-filter>
+    </receiver>
+    <receiver android:enabled="true" android:exported="true" android:name="com.google.android.gms.analytics.CampaignTrackingReceiver">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER"/>
+      </intent-filter>
+    </receiver>
+    <receiver android:name="com.onesignal.ADMMessageHandler$Receiver" android:permission="com.amazon.device.messaging.permission.SEND">
+      <intent-filter>
+        <action android:name="com.amazon.device.messaging.intent.REGISTRATION"/>
+        <action android:name="com.amazon.device.messaging.intent.RECEIVE"/>
+        <category android:name="com.tecnodesign.dezling"/>
+      </intent-filter>
+    </receiver>
+    <service android:enabled="true" android:exported="false" android:name="com.google.android.gms.analytics.AnalyticsService"/>
+    <service android:enabled="true" android:exported="false" android:name="com.google.android.gms.analytics.CampaignTrackingService"/>
+    <service android:exported="false" android:name="com.onesignal.ADMMessageHandler"/>
+    <amazon:enable-feature android:name="com.amazon.device.messaging" android:required="false" xmlns:amazon="http://schemas.amazon.com/apk/res/android"/>
+  </application>
+  <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="28"/>
+  <uses-feature android:name="android.hardware.location.gps"/>
+  <permission android:name="com.tecnodesign.dezling.permission.RECEIVE_ADM_MESSAGE" android:protectionLevel="signature"/>
+</manifest>

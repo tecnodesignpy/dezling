@@ -1,0 +1,16 @@
+<ion-modal-view class="image-modal" on-swipe-down="closeHorarioModal()" title="Horarios" on-swipe-right="closeHorarioModal()">
+
+	<ion-header-bar class="pinro-header header-shadow">
+    	<button class="button button-icon icon ion-ios-arrow-back" ng-click="closeHorarioModal()"></button>
+  	</ion-header-bar>
+  	<ion-content class="has-header">
+  		<div class="business-hours">
+			<p class="script"><span>NUESTROS HORARIOS</span></p>
+			<ul class="list-unstyled opening-hours" style="white-space: pre-line;">
+				{{ shopping.perfil.horario }}
+			</ul>
+		</div>
+  	</ion-content>
+
+
+</ion-modal-view>

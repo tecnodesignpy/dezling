@@ -1,19 +1,19 @@
 {
-  "_from": "cordova-plugin-buildinfo@2.0.1",
+  "_from": "cordova-plugin-buildinfo@^2.0.1",
   "_id": "cordova-plugin-buildinfo@2.0.1",
   "_inBundle": false,
   "_integrity": "sha1-Y2bJggvkPQ0yL49L4Cp9LFpl/0g=",
   "_location": "/cordova-plugin-buildinfo",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "range",
     "registry": true,
-    "raw": "cordova-plugin-buildinfo@2.0.1",
+    "raw": "cordova-plugin-buildinfo@^2.0.1",
     "name": "cordova-plugin-buildinfo",
     "escapedName": "cordova-plugin-buildinfo",
-    "rawSpec": "2.0.1",
+    "rawSpec": "^2.0.1",
     "saveSpec": null,
-    "fetchSpec": "2.0.1"
+    "fetchSpec": "^2.0.1"
   },
   "_requiredBy": [
     "#USER",
@@ -21,8 +21,8 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-buildinfo/-/cordova-plugin-buildinfo-2.0.1.tgz",
   "_shasum": "6366c9820be43d0d322f8f4be02a7d2c5a65ff48",
-  "_spec": "cordova-plugin-buildinfo@2.0.1",
-  "_where": "/Users/tecnodesignpy/Desktop/dezling",
+  "_spec": "cordova-plugin-buildinfo@^2.0.1",
+  "_where": "/Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app",
   "author": {
     "name": "Mikihiro Hayashi"
   },

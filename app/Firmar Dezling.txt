@@ -1,0 +1,26 @@
+## Cambiamos la version en el config.xml
+## Cambiamos la version en login.ts
+
+## Para hacer deploy de la apk final ##
+ionic cordova build android --release --prod
+
+## Para firmar apk final ##
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore Dezling.keystore my-app-unsigned-aligned.apk dezling
+
+
+## Optimizar apk ##
+C:\android\sdk\build-tools\26.0.0
+C:\Users\Usuario\Desktop\controller\v2
+./zipalign -f -v 4 android-release-unsigned.apk my-app-unsigned-aligned.apk
+
+cd /Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app/
+cd /users/ledezmatto/library/android/sdk/build-tools/28.0.1
+
+keytool -genkey -v -keystore provity -keyalg RSA -keysize 2048 -validity 10000 -alias provity
+
+
+# PASOS para firmar Dezling
+
+./zipalign -v -p 4 app-release-unsigned.apk app-release-aligned.apk
+
+./apksigner sign --ks dezling.keystore --out dezling.apk app-release-aligned.apk

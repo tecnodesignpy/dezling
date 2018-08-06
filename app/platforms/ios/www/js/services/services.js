@@ -34,112 +34,6 @@ angular.module('starter.services', [])
             remove: _remove
         };
     })
-    
-    .factory('CartService', function ($localStorage) {
-
-        $localStorage.cart = $localStorage.cart || [];
-
-        var _getAll = function () {
-            ////////console.log($localStorage.cart);
-            return $localStorage.cart;
-        };
-        var _push = function (thing) {
-            $localStorage.cart.push(thing);
-            ////////console.log($localStorage.cart);
-        }
-        var _remove = function (thing) {
-            $localStorage.cart.splice($localStorage.cart.indexOf(thing), 1);
-            ////////console.log('removed, current length'+ $localStorage.cart.length);
-        }
-        
-        var _removeAll = function () {
-            $localStorage.cart = [];
-            ////////console.log('all items removed');
-        }
-        return {
-            getAll: _getAll,
-            push: _push,
-            remove: _remove,
-            removeAll: _removeAll
-        };
-    })
-    
-    .factory('WishlistService', function ($localStorage) {
-
-        $localStorage.wishlist = $localStorage.wishlist || [];
-
-        var _getAll = function () {
-            ////////console.log($localStorage.wishlist);
-            return $localStorage.wishlist;
-        };
-        var _push = function (thing) {
-            $localStorage.wishlist.push(thing);
-            ////////console.log($localStorage.wishlist);
-        }
-        var _remove = function (thing) {
-            $localStorage.wishlist.splice($localStorage.wishlist.indexOf(thing), 1);
-            ////////console.log('removed, current length'+ $localStorage.wishlist.length);
-        }
-        return {
-            getAll: _getAll,
-            push: _push,
-            remove: _remove
-        };
-    })
-    
-    .factory('$dataService', ['$http', '$constants', function ($http, $constants) {
-
-        var apiUrl = $constants.jsonApiUrl,
-       
-            header = {
-                'Content-Type': "application/json"
-            };
-
-        return {
-
-            $getNonce: function () {
-                return $http.post(apiUrl + '/get_nonce/?controller=user&method=register', {}, {
-                    header: header
-                })
-
-            },
-
-            $signup: function (data) {
-                return $http.get(apiUrl + '/user/register/', {
-                    header: header,
-                    params: data
-                })
-
-            },
-
-            $login: function (data) {
-                return $http.get(apiUrl + '/user/generate_auth_cookie/', {
-                    header: header,
-                    params: data
-                })
-            },
-
-            $passwordReset: function (params) {
-                ////////console.log(params);
-                return $http.get(apiUrl + '/user/retrieve_password/', {
-                    header: header,
-                    params: params
-                })
-            },
-
-            $getPosts: function (params) {
-                ////////console.log(params);
-                return $http.get(apiUrl + '/get_category_posts/', {
-                    header: header,
-                    params: params
-                })
-            }
-
-
-
-        }
-    }])
-
 
     .factory('CordovaCamera', function($q, $cordovaCamera) {
         var self = this;
@@ -288,7 +182,7 @@ angular.module('starter.services', [])
         var datos = [];
         var qGet = $q.defer();
         firebase.database().ref(childRef).orderByChild(sortNode).on('child_added', function(snapshot) {
-              ////////console.log(snapshot.key + " was " + snapshot.val().estadisticas.visitas + " meters tall");
+              //console.log(snapshot.key + " online  " + snapshot.val().perfil.online);
               datos.push({lugar:snapshot.key, visitas:snapshot.val().estadisticas.visitas, icono:snapshot.val().perfil.icono, nombre:snapshot.val().perfil.nombre, online:snapshot.val().perfil.online,})
             qGet.resolve(datos);
         }, function(error){
@@ -363,6 +257,17 @@ angular.module('starter.services', [])
             qDel.reject(error);
         });
         return qDel.promise;
+      };
+      // Get Sponsor
+      self.onValueSponsor = function(childRef) {
+        var qGet = $q.defer();
+        console.log(childRef);
+        firebase.database().ref(childRef).on('value', function(snapshot) {
+            qGet.resolve(snapshot.val());
+        }, function(error){
+            qGet.reject(error);
+        });
+        return qGet.promise;
       };
 
       return self;
@@ -1604,10 +1509,8 @@ angular.module('starter.services', [])
 
       self.get = function() {
         var qCat = $q.defer();
-        const numberOfUsers = 5;
-        const randomIndex = Math.floor(Math.random() * numberOfUsers);
-        //////console.log(randomIndex);
-        FireFunc.onValue('sponsors/').then(function(result){
+        FireFunc.onValueSponsor('/sponsors/').then(function(result){
+          console.log("Sponsor Get");
           if(result != null) {
             self.listado = result;
           } else {
@@ -1637,8 +1540,6 @@ angular.module('starter.services', [])
         })
       };
 
-
-
       return self;
     })
 
@@ -1649,7 +1550,7 @@ angular.module('starter.services', [])
 
       self.get = function() {
         var qCat = $q.defer();
-        FireFunc.onValue2('destacados/',7).then(function(result){
+        FireFunc.onValue('/destacados/').then(function(result){
           if(result != null) {
             self.listado = result;
           } else {
@@ -1977,7 +1878,7 @@ angular.module('starter.services', [])
       self.getShoppings = function() {
         self.shoppings = {};
         var qCat = $q.defer();
-        FireFunc.onValueSort('categorias/centros_comerciales/comercios/','-/estadisticas/visitas/', 5).then(function(result){
+        FireFunc.onValueSort('categorias/centros_comerciales/comercios/','/estadisticas/visitas/', 5).then(function(result){
           ////////console.log(result);
           if(result != null) {
             self.shoppings = result;

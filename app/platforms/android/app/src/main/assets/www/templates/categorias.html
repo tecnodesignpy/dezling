@@ -1,0 +1,72 @@
+<ion-view hide-back-button="true" title="Categorias"  hide-nav-bar="false">
+
+		<div class="bar bar-subheader" ng-init="tab = 'shoppings'">
+			<div class="button-bar bar-light">
+			<div class="row">
+				<div class="col col-33" ng-class="{'top-black': tab=='shoppings'}">
+					<a  class="button" style="font-size: 85%;" ng-click="tab = 'shoppings'; scrollToTop();" ng-class="{'color-black': tab=='shoppings'}">Shoppings</a>
+				</div>
+				<div class="col col-33" ng-class="{'top-black': tab=='multimarcas'}">
+					<a class="button" style="font-size: 85%;"  ng-click="tab = 'multimarcas'; scrollToTop();" ng-class="{'color-black': tab=='multimarcas'}">Multitiendas</a>
+				</div>
+				<div class="col col-33" ng-class="{'top-black': tab=='supermercados'}">
+					<a class="button" style="font-size: 85%;"  ng-click="tab = 'supermercados'; scrollToTop();" ng-class="{'color-black': tab=='supermercados'}">Supermercados</a>
+				</div>
+			</div>
+			
+			</div>
+		</div>
+
+
+		<ion-content class="has-subheader" lazy-scroll>
+		   <ion-refresher
+		      pulling-text="Actualizar..."
+		      on-refresh="doRefresh()">
+		    </ion-refresher>
+		    <!-- SHOPPING'S -->
+			<div class="product-list" ng-class="{'list-view': layout=='list'}"  ng-show="tab =='shoppings'">
+				<div class="card" ng-repeat="(slug, datos) in comercios">
+					<a ui-sref="app.shoppings({slug:slug})">
+					  	<div class="item item-divider"  style="/*background-image: url('img/01-02.png'); background-position: 235px; background-repeat: no-repeat; background-size: contain;*/">
+					      	<div class="row">
+					          	<div class="col text-center">
+					              	<img src="{{ datos.perfil.avatar || 'img/dezling-logo.png' }}" width="auto" height="70px">
+					          	</div>
+					      	</div>
+					  	</div>
+					</a>
+				</div>
+			</div>
+
+		    <!-- MULTITIENDAS -->
+			<div class="product-list" ng-class="{'list-view': layout=='list'}"  ng-show="tab =='multimarcas'">
+				<div class="card" ng-repeat="(slug, datos) in multimarcas">
+					<a ui-sref="app.multimarcas({slug:slug})">
+					  	<div class="item item-divider"  style="/*background-image: url('img/01-02.png'); background-position: 235px; background-repeat: no-repeat; background-size: contain;*/">
+					      	<div class="row">
+					          	<div class="col text-center">
+					              	<img src="{{ datos.perfil.avatar || 'img/dezling-logo.png' }}" width="auto" height="70px">
+					          	</div>
+					      	</div>
+					  	</div>
+					</a>
+				</div>
+			</div>
+
+		    <!-- SUPERMERCADOS -->
+			<div class="product-list" ng-class="{'list-view': layout=='list'}"  ng-show="tab =='supermercados'">
+				<div class="card" ng-repeat="(slug, datos) in supermercados">
+					<a ui-sref="app.supermercados({slug:slug})">
+					  	<div class="item item-divider"  style="/*background-image: url('img/01-02.png'); background-position: 235px; background-repeat: no-repeat; background-size: contain;*/">
+					      	<div class="row">
+					          	<div class="col text-center">
+					              	<img src="{{ datos.perfil.avatar || 'img/dezling-logo.png' }}" width="auto" height="70px">
+					          	</div>
+					      	</div>
+					  	</div>
+					</a>
+				</div>
+			</div>
+		</ion-content>
+
+</ion-view>

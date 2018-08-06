@@ -1,0 +1,9 @@
+<ion-modal-view class="image-modal transparent" on-swipe-down="closeGalleryModal()" on-swipe-right="closeGalleryModal()">
+
+	<ion-header-bar class="pinro-header header-shadow">
+    	<button class="button button-icon icon ion-ios-arrow-back" ng-click="closeGalleryModal()"></button>
+  	</ion-header-bar>
+
+      <div class="image img-responsive" style="background-image: url( {{allImages}} )"></div>
+
+</ion-modal-view>

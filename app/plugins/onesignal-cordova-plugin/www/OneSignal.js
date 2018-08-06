@@ -50,11 +50,11 @@ OneSignal._displayOption = OneSignal.prototype.OSInFocusDisplayOption.InAppAlert
 
 OneSignal._permissionObserverList = [];
 OneSignal._subscriptionObserverList = [];
+OneSignal._emailSubscriptionObserverList = [];
 
 
 // You must call init before any other OneSignal function.
-// options is a JSON object that includes:
-//  Android - googleProjectNumber: is required.
+//  Android - googleProjectNumber: Deprecated; pulled from dashboard, local value is ignored
 OneSignal.prototype.startInit = function(appId, googleProjectNumber) {
     OneSignal._appID = appId;
     OneSignal._googleProjectNumber = googleProjectNumber;
@@ -125,6 +125,14 @@ OneSignal.prototype.addSubscriptionObserver = function(callback) {
   };
   cordova.exec(subscriptionCallBackProcessor, function(){}, "OneSignalPush", "addSubscriptionObserver", []);
 };
+
+OneSignal.prototype.addEmailSubscriptionObserver = function(callback) {
+    OneSignal._emailSubscriptionObserverList.push(callback);
+    var emailSubscriptionCallbackProcessor = function(state) {
+        OneSignal._processFunctionList(OneSignal._emailSubscriptionObserverList, state);
+    };
+    cordova.exec(emailSubscriptionCallbackProcessor, function(){}, "OneSignalPush", "addEmailSubscriptionObserver", []);
+}
 
 OneSignal.prototype.setInFocusDisplaying = function(displayType) {
   OneSignal._displayOption = displayType;
@@ -221,6 +229,54 @@ OneSignal.prototype.syncHashedEmail = function(email) {
 OneSignal.prototype.setLogLevel = function(logLevel) {
     cordova.exec(function(){}, function(){}, "OneSignalPush", "setLogLevel", [logLevel]);
 };
+
+OneSignal.prototype.setLocationShared = function(shared) {
+   cordova.exec(function() {}, "OneSignalPush", "setLocationShared", [shared]);
+};
+
+//email
+
+OneSignal.prototype.setEmail = function(email, emailAuthToken, onSuccess, onFailure) {
+    if (onSuccess == null)
+        onSuccess = function() {};
+
+    if (onFailure == null)
+        onFailure = function() {};
+    
+    if (typeof emailAuthToken == 'function') {
+        onFailure = onSuccess;
+        onSuccess = emailAuthToken;
+        
+        cordova.exec(onSuccess, onFailure, "OneSignalPush", "setUnauthenticatedEmail", [email]);
+    } else if (emailAuthToken == undefined) {
+        cordova.exec(onSuccess, onFailure, "OneSignalPush", "setUnauthenticatedEmail", [email]);
+    } else {
+        cordova.exec(onSuccess, onFailure, "OneSignalPush", "setEmail", [email, emailAuthToken]);
+    }
+}
+
+OneSignal.prototype.logoutEmail = function(onSuccess, onFailure) {
+    if (onSuccess == null)
+        onSuccess = function() {};
+
+
+    if (onFailure == null)
+        onFailure = function() {};
+    
+    cordova.exec(onSuccess, onFailure, "OneSignalPush", "logoutEmail", []);
+}
+
+OneSignal.prototype.userProvidedPrivacyConsent = function(callback) {
+   cordova.exec(callback, function(){}, "OneSignalPush", "userProvidedPrivacyConsent", []);
+ }
+ 
+ OneSignal.prototype.setRequiresUserPrivacyConsent = function(required) {
+   cordova.exec(function() {}, function() {}, "OneSignalPush", "setRequiresUserPrivacyConsent", [required]);
+ }
+ 
+ OneSignal.prototype.provideUserConsent = function(granted) {
+   cordova.exec(function() {}, function() {}, "OneSignalPush", "provideUserConsent", [granted]);
+ }
 
 
 //-------------------------------------------------------------------

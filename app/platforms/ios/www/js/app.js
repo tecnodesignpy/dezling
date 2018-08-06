@@ -29,18 +29,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       cordova.plugins.Keyboard.close();
 
       // Enable to debug issues.
-      window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+      //window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
       
       var notificationOpenedCallback = function(jsonData) {
         console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
       };
-
+      //alert(JSON.stringify(Auth.AuthData));
+      /*
       window.plugins.OneSignal
         .startInit("3feef121-bc77-483a-adbe-98de478ab827")
-        .handleNotificationOpened(notificationOpenedCallback)
-        .sendTag("perfil", Profile.ProfileData)
+        .inFocusDisplaying(window.plugins.OneSignal.OSInFocusDisplayOption.None)
+        //.handleNotificationOpened(notificationOpenedCallback)
+        //.sendTag("perfil",JSON.stringify(Profile.ProfileData))
         .endInit();
-
+      */
 
     }
 
@@ -135,7 +137,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         'CategoriaContent': {
           templateUrl: 'templates/shoppings/detalle_shopping.html',
           controller: 'ShoppingCtrl',
-          resolve: {authResolve: authResolve}
+          resolve: {authResolve: authResolve,}
         }
       }
     })

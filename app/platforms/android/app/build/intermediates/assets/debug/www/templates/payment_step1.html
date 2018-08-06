@@ -1,0 +1,70 @@
+<ion-view view-title="Step 1" class="payment">
+	
+
+<div ng-include="'templates/common/loading.html'" ng-show="loading"></div>
+
+	<ion-content class="step1">
+
+        <h5>Shipping Address</h5>
+        <div class="line-holder">
+                <img src="img/icons/top-line-start.svg" width="50%">
+        </div>
+
+  <div class="card-input-holder">
+  
+  <ion-list>
+      <ion-item class="item-input ">
+          
+    <input type="text" placeholder="First Name" ng-model="order.shipping.first_name">
+
+      </ion-item>
+      <ion-item class="item-input ">
+          
+    <input type="text" placeholder="Last Name"  ng-model="order.shipping.last_name">
+
+      </ion-item>
+      <ion-item class="item-input ">
+          
+    <input type="text" placeholder="Phone" ng-model="order.shipping.phone">
+
+      </ion-item>
+      <ion-item class="item-input ">
+          
+    <input type="text" placeholder="Address" ng-model="order.shipping.address_1">
+
+      </ion-item>
+    
+      <ion-item class="item-input ">
+          
+    <input type="text" placeholder="Zip" ng-model="order.shipping.postcode">
+
+      </ion-item>
+      <ion-item class="item-input ">
+          
+    <input type="text" placeholder="City" ng-model="order.shipping.city">
+
+      </ion-item>
+      <ion-item class="item-input item-select ">
+          <div class="input-label">
+      Country
+    </div>
+          <country-select cs-required ng-model="order.shipping.country"></country-select>
+
+      </ion-item>
+      
+          
+    
+  </ion-list>
+
+  </div>
+
+<div class="footer-button">
+     <button class="button button-dark button-block button-round button-outline " ng-click="confirmOrder()">Next</button>
+     <!--<button class="button button-dark button-block button-round button-outline " ui-sref="app.payment_step2({orderId: 123})">Next</button>-->
+</div>
+</div>
+
+
+		
+	</ion-content>
+</ion-view>

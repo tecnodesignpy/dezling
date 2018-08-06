@@ -399,7 +399,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     };
 
 })
-.controller('LoginCtrl', function ($rootScope, $scope, IonicClosePopupService, $stateParams, $dataService, $ionicModal, StorageService, $state, $pinroUiService, Auth, Codes, Utils, $ionicPopup, $timeout,$http, Profile) {
+.controller('LoginCtrl', function ($rootScope, $scope, IonicClosePopupService, $stateParams, $ionicModal, StorageService, $state, $pinroUiService, Auth, Codes, Utils, $ionicPopup, $timeout,$http, Profile) {
 
 
     	// Revisamos si ya esta logrado, en el caso de que SI
@@ -489,31 +489,27 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               $scope.doLoginSocial = function() {
                 showLoading();
                 IonicClosePopupService.register($scope.popup);
-      		        var provider = new firebase.auth.FacebookAuthProvider();
-          		      provider.addScope('user_friends');
-                    provider.addScope('user_birthday');
-                    provider.addScope('public_profile');
-                    provider.setCustomParameters({
-                      'display': 'popup'
-                    });
-                    firebase.auth().signInWithRedirect(provider).then(function() {
-                      firebase.auth().getRedirectResult().then(function(result) {
-                        
-                        ////////console.log("Entro con Facebook");
-                          // This gives you a Google Access Token.
-                          // You can use it to access the Google API.
-                          var token = result.credential.accessToken;
-                          // The signed-in user info.
-                          var user = result.user;
-                          ////////console.log(result.credential);
-                          if (result.credential) {
-                            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-                            var token = result.credential.accessToken;
+      		      var provider = new firebase.auth.FacebookAuthProvider();
+      		      provider.addScope('user_friends');
+                provider.addScope('user_birthday');
+                provider.addScope('public_profile');
+                provider.setCustomParameters({
+                  'display': 'popup'
+                });
 
-                            Profile.get(result.user.uid).then(
-                              function(ProfileData) {    
-                                hideLoading();
-                                proceedLogin(result);   
+                var fbLoginSuccess = function (result) {
+                  facebookConnectPlugin.getAccessToken(function(token) {
+                    var token = token;
+                    facebookConnectPlugin.getLoginStatus(function(resultado){
+                      var resultado = JSON.stringify(resultado);
+
+                      var cred = firebase.auth.FacebookAuthProvider.credential(
+                          // `event` from the Facebook auth.authResponseChange callback.
+                          token
+                      );
+                      firebase.auth().signInWithCredential(cred).then(function(success) {
+                            Profile.get(JSON.stringify(success.uid)).then(
+                              function(ProfileData) {  
                                 // bind to scope
                                 //////////console.log(ProfileData);
                                 if(ProfileData == null) {
@@ -522,27 +518,119 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                                        $scope.user= jsonService;
                                        //////////console.log(result.user);
                                       // ...
-                                      Auth.CargarPerfil(result,jsonService)
+                                      Auth.CargarPerfil(JSON.stringify(success),jsonService)
                                     });
                           
                                 };
-                              }
-                              ),
+                                proceedLogin(JSON.stringify(success)); 
+                              }),
                               function(error){   
                                 hideLoading();
                               }
-                          }else{
-                            hideLoading();
-                          }
                       }).catch(function(error) {
                         hideLoading();
+                        $ionicPopup.alert({
+                         template: '<div class="content">'
+                                      +'<h4 class="normal-font">Error</h4>'
+                                      +'<h4 class="light-font"><br><br>No hemos logrado ingresar con tu facebook. <br>Intenta registrarte con un correo.<br><br>'+error+'</h4>'
+                                      +'</div>',
+                         buttons: [{ 
+                          text: 'Ok',
+                          type: 'button-default boton-cerrar',
+                        }]
+                       });
+                        //$state.go('app.editorial');
                       });
-                    }).catch(function(error) {
+                    })
+                  });
+                }
+                 
+                facebookConnectPlugin.login(["public_profile"], fbLoginSuccess,
+                  function loginError (error) {
+                    hideLoading();
+                    $ionicPopup.alert({
+                     template: '<div class="content">'
+                                  +'<h4 class="normal-font">Error</h4>'
+                                  +'<h4 class="light-font"><br><br>No hemos logrado ingresar con tu facebook. <br>Intenta registrarte con un correo.<br><br>'+error+'</h4>'
+                                  +'</div>',
+                     buttons: [{ 
+                      text: 'Ok',
+                      type: 'button-default boton-cerrar',
+                    }]
+                   });
+                  }
+                );
+                /*
+                firebase.auth().signInWithRedirect(provider).then(function() {
+                  firebase.auth().getRedirectResult().then(function(result) {
+                      console.log("Entro con Facebook");
+                      // This gives you a Google Access Token.
+                      // You can use it to access the Google API.
+                      var token = result.credential.accessToken;
+                      // The signed-in user info.
+                      var user = result.user;
+                      ////////console.log(result.credential);
+                      if (result.credential) {
+                        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                        var token = result.credential.accessToken;
+
+                        Profile.get(result.user.uid).then(
+                          function(ProfileData) {  
+                            // bind to scope
+                            //////////console.log(ProfileData);
+                            if(ProfileData == null) {
+                                $http.get('https://graph.facebook.com/v2.5/me?access_token='+token+'&fields=id,name,friends{name,gender,picture},birthday,email,cover,link,age_range,first_name,last_name')
+                                .success(function(jsonService){
+                                   $scope.user= jsonService;
+                                   //////////console.log(result.user);
+                                  // ...
+                                  Auth.CargarPerfil(result,jsonService)
+                                });
+                      
+                            };
+                            proceedLogin(result); 
+                          }
+                          ),
+                          function(error){   
+                            hideLoading();
+                          }
+                      }else{
                         hideLoading();
-                      });
+                      }
+                  }).catch(function(error) {
+                    hideLoading();
+                    $ionicPopup.alert({
+                     template: '<div class="content">'
+                                  +'<h4 class="normal-font">Error</h4>'
+                                  +'<h4 class="light-font"><br><br>No hemos logrado ingresar con tu facebook. <br>Intenta registrarte con un correo.<br><br>'+error+'</h4>'
+                                  +'</div>',
+                     buttons: [{ 
+                      text: 'Ok',
+                      type: 'button-default boton-cerrar',
+                    }]
+                   });
+                    //$state.go('app.editorial');
+                  });
+                }).catch(function(error) {
+                    hideLoading();
+                    $ionicPopup.alert({
+                     template: '<div class="content">'
+                                  +'<h4 class="normal-font">Error</h4>'
+                                  +'<h4 class="light-font"><br><br>No hemos logrado ingresar con tu facebook. <br>Intenta registrarte con un correo.<br><br>'+error+'</h4>'
+                                  +'</div>',
+                     buttons: [{ 
+                      text: 'Ok',
+                      type: 'button-default boton-cerrar',
+                    }]
+                   });
+                    //$state.go('app.editorial');
+                });
+                */  
               };
               /*
               ionic cordova -d plugin add https://github.com/Wizcorp/phonegap-facebook-plugin.git --variable APP_ID="1830593113933558"--variable APP_NAME="Dezling"
+              ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="1830593113933558" --variable APP_NAME="Dezling"
+
               */
 
               $scope.doLogin = function() {
@@ -568,12 +656,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 
               // wrapper for email and social login
-              function proceedLogin(AuthData) {
+              function proceedLogin(AuthData) { 
 
                 // handle logged in
                 $scope.AuthData = AuthData;
-                $state.go('app.editorial');
                 broadcastAuthChange();
+                hideLoading(); 
+                $state.go('app.editorial');
               };
 
             // Terms and conditions modal
@@ -613,21 +702,19 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         });
       };
  })
-.controller('MainCtrl', function ($scope, $state, $ionicHistory, $ionicScrollDelegate, Maestro, $dataService,
+.controller('MainCtrl', function ($scope, $state, $ionicHistory, $ionicScrollDelegate, Maestro,
  $pinroUiService, $ionicLoading, $ionicPopup, Sponsor, Visitas, Destacados, $window) {
 
       $scope.$on("$ionicView.enter", function (event, data) {
-        /*
-          Chequeamos si el usuario tiene alguna notificaion o mensaje en el buzon de entrada
-        */
-        // Cargamos los banners de sponsor
-          CargarBannerSponsors();
-        // Cargamos los banner de Destacados
-          CargarBannerDestacados()
+        
         // Obtenes los numeros de visita en cada categoria, ordenamos por cantidad y filtramos solo 5 por categorias
           VisitasShoppings();
           VisitasMultimarcas();
           VisitasSupermercados();
+        // Cargamos los banners de sponsor
+          CargarBannerSponsors();
+        // Cargamos los banner de Destacados
+          CargarBannerDestacados()
       });
 
       var showLoading = function(){
@@ -679,6 +766,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           Destacados.get().then(
               function(success){
                   if(Destacados.listado != null) {
+                    var contador = 1
                     angular.forEach(Destacados.listado, function(item, key){
                           var dt1   = parseInt(item.fechainicio.substring(0,2));
                           var mon1  = parseInt(item.fechainicio.substring(3,5));
@@ -688,21 +776,17 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           var mon1  = parseInt(item.fechafin.substring(3,5));
                           var yr1   = parseInt(item.fechafin.substring(6,10));
                           var date2 = new Date(yr1, mon1-1, dt1); 
-                          if(date1 <= new Date() && date2 >= new Date()){
+                          if(date1 <= new Date() && date2 >= new Date() && contador <=7){
                             var randomvalue = 0.5 - Math.random();
                             $scope.destacados.push({item:item, random:randomvalue, key:key});
-                          }
-                    });
+                            contador = contador + 1;
+                          }                    });
                     $scope.cargado_destacados = true;
-                    // Cargamos el avatar de cada Comercio
-                    //hideLoading();  
-                    //comercios.CategoriesForm = CentrosComerciales.all;
                   }else{
                     $scope.cargado_destacados = false;
                   }
               },
               function(error){
-                  //////////console.log(error);
                     $scope.cargado_destacados = false;
               }
           );
@@ -713,16 +797,13 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           Funcion para cargar Centro Comercial
       */
       function CargarBannerSponsors() {
-          $scope.listado = [];
           $scope.sponsors = [];
           $scope.cantidadSponsor = 1;
-          //showLoading();
           Sponsor.get().then(
               function(success){
-                  if(Sponsor.listado != null) {
+                  if(success != null) {
                     setTimeout(function() {
-                        //$scope.sponsors = Sponsor.listado;
-                        angular.forEach(Sponsor.listado, function(item, key){
+                        angular.forEach(success, function(item, key){
                           const [day, month, year] = item.fechainicio.split("/");
                           const [day1, month1, year1] = item.fechafin.split("/");
                           var date1 = new Date(year, month - 1, day); 
@@ -733,9 +814,9 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                             $scope.sponsors.push({item:item, random:randomvalue, key:key});
                             $scope.cantidadSponsor ++;
                           }
-                        });
 
                         $scope.$apply();
+                        });
                     });
                     $scope.cargado = true;
                   }else{
@@ -748,10 +829,10 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               }
           );
       };
+
       // Funcion para Visitas del Shopping
       function VisitasShoppings() {
-      $scope.visitas_shopping = [];
-          //showLoading();
+        $scope.visitas_shopping = [];
           Visitas.getShoppings().then(
               function(success){
                   if(Visitas.shoppings != null) {
@@ -760,19 +841,17 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                         $scope.visitas_shopping.push(item);
                       }
                     });
-
                     $scope.visitas_shopping.sort(function(a, b){return a.visitas-b.visitas}).reverse();
                   }
               },
               function(error){
-                  //////////console.log(error);
               }
           );
       };
+
       // Funcion para Visitas Multitiendas
       function VisitasMultimarcas() {
-      $scope.visitas_multimarcas = [];
-          //showLoading();
+        $scope.visitas_multimarcas = [];
           Visitas.getMultitiendas().then(
               function(success){
                   if(Visitas.multimarcas != null) {
@@ -781,19 +860,17 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                         $scope.visitas_multimarcas.push(item);
                       }
                     });
-
                     $scope.visitas_multimarcas.sort(function(a, b){return a.visitas-b.visitas}).reverse();
                   }
               },
               function(error){
-                  //////////console.log(error);
               }
           );
       };
+
       // Funcion para Visitas Supermercados
       function VisitasSupermercados() {
-      $scope.visitas_supermercados = [];
-          //showLoading();
+        $scope.visitas_supermercados = [];
           Visitas.getSupermercados().then(
               function(success){
                   if(Visitas.supermercados != null) {
@@ -802,27 +879,23 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                         $scope.visitas_supermercados.push(item);
                       }
                     });
-
                     $scope.visitas_supermercados.sort(function(a, b){return a.visitas-b.visitas}).reverse();
                   }
               },
               function(error){
-                  //////////console.log(error);
               }
           );
       };
+
       $scope.SumarClick =  function(categoria, key){
         if(categoria == 'sponsor'){
-          ////////console.log("Es Sponsor");
           Sponsor.sumarClicks(key);
         }else{
-          ////////console.log("Es Destacado");
           Destacados.sumarClicks(key);
         }
       }
 
       $scope.openSponsor = function (titulo,descripcion,imagen) {
-
               var alertPopup = $ionicPopup.alert({
                template: '<div class="content">'
                             +'<h4 class="normal-font">'+titulo+'</h4>'
@@ -834,651 +907,6 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               }]
              });
       };
-
-})
-.controller('ProductListCtrl', function ($scope, $stateParams, $state, $ionicScrollDelegate, $pinroUiService, Maestro) {
-                        $scope.order = 'name'; //for product list filtering
-
-                                 // $scope.loading = true;
-                               $scope.productList = []
-                                  $scope.layout = 'grid'; // for layout controll
-                              $scope.$on("$ionicView.enter", function(event, data){
-                                 // handle event
-                                 //////////console.log("State Params: ", data.stateParams);
-
-                                 $scope.categoryName = data.stateParams.catagoryName;
-
-                                // $ionicLoading.show(); // show ionicLoading
-                                //$pinroUiService.showLoading();
-
-                              Maestro.$getProductsByCategory(data.stateParams.categoryId).then(function(res){
-                                //////////console.log(res.data); 
-                                $scope.productList = res.data;
-                               // $ionicLoading.hide();
-                               $pinroUiService.hideLoading();
-                                 // $scope.loading = false; //hide ionicLoading
-                              }, function(err){
-                                //////////console.log(err);
-                                //$ionicLoading.hide();
-                                $pinroUiService.hideLoading();
-                                 // $scope.loading = false; //hide ionicLoading
-                              })
-
-                              });
-
-                                  $scope.scrollToTop = function () {
-                                    $ionicScrollDelegate.scrollTop();
-                                  }
-
-
-
-                                  $scope.goToProduct = function (id) { //close all open modal and go to product page
-                                    //////////console.log('clicked');
-                                    $scope.cartModal.isShown() ? $scope.cartModal.hide() : null;
-                                    $scope.searchModal.isShown() ? $scope.searchModal.hide() : null;
-                                    $scope.profileModal.isShown() ? $scope.profileModal.hide() : null;
-                                    $scope.wishlistModal.isShown() ? $scope.wishlistModal.hide() : null;
-                                    $state.go('app.single', {
-                                      id: id
-                                    });
-                                  }
-
-})
-
-.controller('SingleProductCtrl', function ($scope, $stateParams, $window, $timeout, $ionicLoading, $ionicScrollDelegate, Maestro, CartService, WishlistService, $pinroUiService) {
-
-                //////////console.log($stateParams);
-
-                $scope.selectedProduct = {}; // to get Selected Product to Cart
-                $scope.productImages = []; // to show data on slider
-
-                //$ionicLoading.show(); // show $ionicLoading
-               //$scope.loading = true;
-
-               $pinroUiService.showLoading();
-
-
-
-                Maestro.$getProductsById($stateParams.id).then(function (res) {
-                  //////////console.log(res.data)
-                  if(res.data.id){
-
-                    $scope.product = res.data;
-                    
-                    $scope.selectedProduct = { //populate selected product with initial data
-                      name: $scope.product.name,
-                      product_id: $scope.product.id,
-                      price: $scope.product.price, // selected product price, will be updated if it has variation
-                      imgUrl: $scope.product.images[0].src,
-                      quantity: 1
-                    }
-
-                   $scope.productImages = angular.copy($scope.product.images);
-
-                   // $ionicLoading.hide(); // hide $ionicLoading
-                    //$scope.loading = false;
-                    $pinroUiService.hideLoading();
-
-                  }else{
-                    alert('no product found');
-                    //$ionicLoading.hide(); //hide $ionicLoading
-                    // $scope.loading = false;
-                     $pinroUiService.hideLoading();
-                  }
-
-
-
-                }, function (err) {
-                  //////////console.log(err);
-                  // $scope.loading = false;
-                   $pinroUiService.hideLoading();
-                })
-
-
-                //update price and get variation details
-
-                $scope.updatePriceAndVariation = function (selectedProduct) {
-
-                  var keepGoing = true;
-                  angular.forEach($scope.product.variations, function (variation) {
-                    if (keepGoing) {
-                      var selectedSize = false,
-                        selectedColor = false;
-                      angular.forEach(variation.attributes, function (singleVariation) {
-                        if (selectedProduct.color && singleVariation.option === selectedProduct.color) {
-                          selectedColor = true;
-                          return
-                        }
-
-                        if (selectedProduct.size && singleVariation.option === selectedProduct.size) {
-                          selectedSize = true;
-                          return
-                        }
-
-                      })
-
-                      if (selectedColor && selectedSize) {
-                        //////////console.log(variation.id);
-                        $scope.selectedProduct.variation_id = variation.id; // set selected product variation id;
-                        $scope.selectedProduct.price = variation.price; //update price with variation
-                        keepGoing = false;
-
-                        if(variation.image.length){
-                          $scope.productImages = variation.image; // to show selected item images on slider
-                          $scope.selectedProduct.imgUrl = variation.image[0].src;
-                      }else{
-                          $scope.productImages = $scope.product.images;
-                        }
-                        
-                      }
-                    } else {
-                      return; //strop running forEach if variation id is found
-                    }
-                  })
-
-                }
-
-
-                  //add item to cart
-                    $scope.addToCart = function (selectedProduct) {
-                      //////////console.log(selectedProduct);
-
-                  var itemToPushToCart = angular.copy(selectedProduct);
-                      //$scope.updatePriceAndVariation(selectedProduct);
-                      CartService.push(itemToPushToCart);
-
-                      //Animation for Cart
-                      addToCartAnimation();
-
-                    }
-
-
-                  //wishlist
-                    $scope.wishListButtonText = "Add to wishlist";
-                    $scope.itemAddedToWishList = false;
-
-                    //add item to wishlist
-                    $scope.addToWishlist = function(selectedProduct){
-                      selectedProduct.category = $scope.product.categories[0].name;
-                      WishlistService.push(selectedProduct);
-                      $scope.wishListButtonText = "Added to wishlist";
-                    $scope.itemAddedToWishList = true;
-                    }
-
-                    //Animation function for Add to Cart
-                      var cart = angular.element(document.getElementsByClassName("shopping-cart"));
-                    var addToCartAnimation = function () {
-                      cart.css({
-                        'opacity': '1',
-                        'animation': 'bounceIn 0.5s linear'
-                      });
-                  $ionicScrollDelegate.scrollTop(); // scroll to Top
-
-                      $timeout(function () {
-                        cart.css({
-                          'animation': ''
-                        });
-                        
-                        //$scope.selectedProduct.reset();
-                        
-                      }, 500)
-                    }
-
-})
-
-.controller('CartCtrl', function ($scope, $state, $stateParams, $timeout, Maestro, CartService, StorageService, $pinroUiService) {
-
-          //CartService.getAll();
-          $scope.CartItemList = [];
-
-
-
-
-          //Get CartItemList function
-          var getCartItems = function(){
-              //////////console.log('cart');
-              if(CartService.getAll().length){
-                  $scope.CartItemList = CartService.getAll();
-                  addToCartAnimation();
-                }
-            }
-
-            $scope.$on('modal.shown', function(event, data) {
-            //////////console.log('Modal is shown!'+ data.id);
-            if(data.id === 'cart'){
-
-              getCartItems(); //populate CartItemList from CartService
-            }
-          });
-
-          //Animation function for Add to Cart
-              var cart = angular.element(document.getElementsByClassName("shopping-cart"));
-            var addToCartAnimation = function () {
-              cart.css({
-                'opacity': '1',
-                'animation': 'bounceIn 0.5s linear'
-              });
-
-              $timeout(function () {
-                cart.css({
-                  'animation': ''
-                });
-              }, 500)
-            }
-
-
-
-          $scope.goToCheckout = function(){ 
-            var user = StorageService.getUserObj();
-            if(user && user.cookie){
-              
-              $state.go('app.payment_step1');
-            }else{
-              $pinroUiService.showConfirm('signin', "Please login to continue with your order");
-            }
-            $scope.closeCartModal();
-          }
-
-            
-
-
-          //remove item from cart function
-          $scope.removeItem = function(item){
-            CartService.remove(item);
-
-            if(!$scope.CartItemList.length){
-              $scope.closeCartModal();
-              cart.css({
-                  'opacity': '0'
-                });
-            }
-
-          }
-
-
-
-          // get subtotal 
-          		$scope.getSubtotal = function () {
-          			var total = total || 0;
-          			angular.forEach($scope.CartItemList, function (item) {
-          				total += parseInt(item.price) * item.quantity;
-          			});
-          			return total;
-          		};
-
-
-          		// Calculates the tax of the invoice
-          		$scope.calculateTax = function (rate) {
-          			return ((rate * $scope.getSubtotal()) / 100);
-          		};
-
-          		// Calculates the grand total of the invoice
-          		$scope.calculateGrandTotal = function (vatRate) {
-          			
-          			if(vatRate){
-          				return ($scope.calculateTax(vatRate) + $scope.getSubtotal())
-          			} else{
-          				return $scope.getSubtotal();
-          			}
-          		};   
-
-})
-
-.controller('OrderCtrl', function ($scope, $stateParams, $ionicHistory, $state, StorageService, Maestro, CartService, $pinroUiService) {
-
-
-        $scope.user = {};
-
-        $scope.order = {
-          "status": "pending",
-          "set_paid": false,
-          "currency": "GBP",
-
-          "line_items": []
-        };
-
-        $scope.order.shipping = {};
-        $scope.order.billing = {};
-        $scope.order.line_items = [];
-
-
-        $scope.order.shipping_lines = [
-            {
-              "method_id": "flat_rate",
-              "method_title": "Flat Rate",
-              "total": 0
-            }
-          ];
-
-
-         //$scope.countryList = countries;
-         ////////////console.log($scope.countryList);
-
-        var getUserInfo = function(user_id){
-           //$scope.loading = true;
-           $pinroUiService.showLoading();
-            Maestro.$getCustomerById(user_id).then(function(res){
-            //////////console.log(res);
-         //$scope.loading = false;
-         $pinroUiService.hideLoading();
-        if(res.data.id){
-            $scope.user = res.data;
-            $scope.order.shipping = $scope.user.shipping || {};
-        }else{
-         // alert(`There's been an error`);
-        };
-
-        if(!$scope.order.shipping.country){
-              $scope.order.shipping.country = "GB";
-            }
-
-          }, function(err){
-            // $scope.loading = false;
-            $pinroUiService.hideLoading();
-            //////////console.log(err);
-          })
-        }
-
-        var user = {};
-
-         $scope.$on("$ionicView.enter", function(event, data){
-           // handle event
-           //////////console.log(StorageService.getUserObj());
-           //////////console.log("State Params: ", data.stateParams);
-
-           //get user_id
-           var user = StorageService.getUserObj();
-           //////////console.log(user);
-              if(user && user.user_id){
-
-              $scope.order.customer_id = StorageService.getUserObj().user_id; //assing customer id
-              //////////console.log($scope.order);
-              getUserInfo($scope.order.customer_id); //get user info
-              }
-
-
-         });
-
-
-
-
-        //get cart items
-
-
-
-        var cartItems = CartService.getAll();
-
-        angular.forEach(cartItems, function(item){
-          var itemToPush = {
-            product_id: item.product_id,
-            quantity: item.quantity
-          }
-          if(item.variation_id){
-            itemToPush.variation_id = item.variation_id;
-          }
-          //////////console.log(itemToPush);
-
-          $scope.order.line_items.push(itemToPush);
-
-        })
-
-
-
-
-        //confirm order
-        $scope.confirmOrder = function(){
-
-          $pinroUiService.showLoading();
-
-          $scope.order.billing = $scope.order.shipping;
-
-        if(user && user.user_id){
-          $scope.order.customer_id = user.user_id;
-
-        }
-
-         // $scope.order.billing = $scope.order.shipping;
-        //////////console.log($scope.order);
-
-        Maestro.$createOrder($scope.order).then(function(res){
-          //////////console.log(res);
-          if(res.data.id){
-            CartService.removeAll(); //remove all item in cart
-            $state.go('app.payment_step2', {orderId: res.data.id, amount: res.data.total, currency: res.data.currency});
-          }else{
-            alert(`Order couldn't be processed`);
-          }
-
-        $pinroUiService.hideLoading();
-
-        }, function(err){
-          //////////console.log(err);
-          $pinroUiService.hideLoading();
-        })
-
-        };
-
-
-        //go to main screen
-         $scope.goToMain = function () {
-            $ionicHistory.nextViewOptions({
-              disableBack: true
-            });
-
-            $state.go('app.editorial');
-          }
-
-})
-
-.controller('PaymentCtrl', function ($scope, $stateParams, $ionicHistory, $state, StorageService, Maestro, CartService,$cordovaNgCardIO, $pinroUiService ) {
-  
-
-      var orderId;
-
-       $scope.cardType = {};
-          $scope.card = {};
-
-          var dataForStripe = {};
-
-       $scope.$on("$ionicView.enter", function(event, data){
-         // handle event
-         //////////console.log("State Params: ", data.stateParams);
-
-         orderId = data.stateParams.orderId;
-
-        // pass order and amount details for stripe
-        dataForStripe.amount = parseInt(data.stateParams.amount) * 100; // amount is in cents/pence for stripe so * 100
-            dataForStripe.currency = data.stateParams.currency;
-            dataForStripe.description =  "Payment for Maestro Order #"+ orderId;
-
-       });
-
-      //Stripe card payment_method
-
-         $scope.makeStripePayment =  function (_cardInformation) {
-
-            //////////console.log('clicked');
-           // $scope.loading = true;
-      $pinroUiService.showLoading();
-
-            dataForStripe.card = {
-                  "number": _cardInformation.number,
-                  "exp_month": _cardInformation.exp_month,
-                  "exp_year": _cardInformation.exp_year,
-                  "cvc": _cardInformation.cvc,
-                  "name": _cardInformation.name
-                }
-                //////////console.log(dataForStripe);
-
-            if (!window.stripe) {
-              alert("stripe plugin not installed");
-              return;
-            }
-
-            if (!_cardInformation) {
-              alert("Invalid Card Data");
-              return;
-            }
-
-            // charge card with card and order data
-            stripe.charges.create(dataForStripe,
-              function(response) {
-               // $scope.loading = false;
-               $pinroUiService.hideLoading();
-                //////////console.log(JSON.stringify(response, null, 2));
-                //alert(JSON.stringify(response, null, 2));
-                $state.go('app.payment_step3', {orderId: orderId, transactionId: response.id});
-              },
-              function(response) {
-                //$scope.loading = false;
-                $pinroUiService.hideLoading();
-                alert(JSON.stringify(response))
-              } // error handler
-            );
-          }
-
-      $scope.payCashOnDelivery = function(){
-        $state.go('app.payment_step3', {orderId: orderId, payByCash: true})
-      }
-
-      $scope.scanCard = function(){
-          $cordovaNgCardIO.scanCard()
-              .then(function (response) {
-                      //Success response - it`s an object with card data
-                      //////////console.log(response);
-                      $scope.card.number = response.card_number;
-                      $scope.card.exp_month = response.expiry_month;
-                      $scope.card.exp_year = response.short_expiry_year;
-                      $scope.card.cvc = response.cvv;
-
-
-                    },
-                    function (response) {
-                      //We will go there only when user cancel a scanning.
-                      //response always null
-                      //////////console.log(response);
-                    }
-              );
-      }
-
-})
-
-.controller('OrderConfirmCtrl', function ($scope, $stateParams, $ionicHistory, $state, StorageService, Maestro, CartService, $pinroUiService) {
-
-
-
-    var order = {};
-
-
-    var updateOrder = function(data){
-      $pinroUiService.showLoading();
-      //$scope.loading = true;
-      Maestro.$updateOrder(data).then(function(res){
-        //////////console.log(res)
-       // $scope.loading = false;
-       $pinroUiService.hideLoading();
-      }, function(err){
-        //////////console.log(err);
-        //$scope.loading = false;
-        $pinroUiService.hideLoading();
-      })
-    }
-
-
-
-
-     $scope.$on("$ionicView.enter", function(event, data){
-       // handle event
-       //////////console.log("State Params: ", data.stateParams);
-
-        if(data.stateParams.payByCash){
-            order = {
-                  id: data.stateParams.orderId,
-                  payment_method: 'Cash on delivery',
-                  payment_method_title: 'Cash on delivery',
-                  status: 'processing'
-              }
-          }else{
-            order = {
-                id: data.stateParams.orderId,
-                transaction_id: data.stateParams.transactionId,
-                payment_method: 'Stripe',
-                payment_method_title: 'Card Payment',
-                set_paid: true,
-                status: 'processing'
-            }
-      
-       }
-      
-
-        
-
-       updateOrder(order); // update order
-
-     });
-
-
-    //go to main screen
-     $scope.goToMain = function () {
-        $ionicHistory.nextViewOptions({
-          disableBack: true
-        });
-
-        $state.go('app.editorial');
-      }
-
-})
-
-.controller('WishlistCtrl', function ($scope, $stateParams, $state, $timeout, Maestro, WishlistService) {
-      //CartService.getAll();
-        $scope.WishListItems = [];
-
-
-        $scope.editWishlist = false;
-
-
-      //Get CartItemList function
-      var getWishlistItems = function(){
-          if(WishlistService.getAll().length){
-              $scope.WishListItems = WishlistService.getAll();
-             
-            }
-        }
-
-        $scope.$on('modal.shown', function(event, data) {
-        //////////console.log('Modal is shown!'+ data.id);
-        if(data.id === 'wishlist'){
-
-          getWishlistItems(); //populate WishListItems from WishlistService
-        }
-      });
-
-      $scope.makeListEditable = function(){
-        $scope.editWishlist = true;
-      }
-
-
-      //remove item from wishlist function
-      $scope.removeSelectedItems = function(){
-        angular.forEach($scope.WishListItems, function(item){
-          if(item.selected){
-            WishlistService.remove(item);
-          }
-        });
-        $scope.editWishlist = false;
-        getWishlistItems(); 
-      }
-
-
-      //go to product
-
-          $scope.goToProduct = function (id) { //close all open modal and go to product page
-            //////////console.log('clicked');
-            $scope.wishlistModal.isShown() ? $scope.wishlistModal.hide() : null;
-            $state.go('app.single', {
-              id: id
-            });
-          }
 
 })
 
@@ -1958,7 +1386,6 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                           }
                           
                         });
-                        console.log($scope.detalle_Favorito);
                       }else{
                         //////////console.log("No tiene favs");
                         $scope.Favoritos=false;
@@ -2807,7 +2234,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 })
 
 // Controlador de las Categorias
-.controller('CategoriaCtrl', function ($scope, $stateParams, $dataService, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, CentrosComerciales, Multimarcas,
+.controller('CategoriaCtrl', function ($scope, $stateParams, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, CentrosComerciales, Multimarcas,
   $timeout, Auth, $interval, $ionicScrollDelegate, Supermercados) {
  
   var shoppings              =  this;
@@ -2948,7 +2375,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 })
 // Controlador de los Shoppings
-.controller('ShoppingCtrl', function ($scope, $stateParams, $dataService, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, CentrosComerciales, $timeout, Auth, Favoritos) {
+.controller('ShoppingCtrl', function ($scope, $stateParams, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, CentrosComerciales, $timeout, Auth, Favoritos) {
  
   var shoppings              =  this;
       shoppings.datos        =  $stateParams.slug;
@@ -3316,7 +2743,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 })
 // Controlador de las Multimarcas
-.controller('MultimarcasCtrl', function ($scope, $stateParams, $dataService, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, Multimarcas, $timeout, Auth, Favoritos) {
+.controller('MultimarcasCtrl', function ($scope, $stateParams, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, Multimarcas, $timeout, Auth, Favoritos) {
  
   var shoppings              =  this;
       shoppings.datos           =  $stateParams.slug;
@@ -3704,7 +3131,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
 })
 // Controlador de las Multimarcas
-.controller('SupermercadosCtrl', function ($scope, $stateParams, $dataService, $ionicHistory, StorageService, $state, $ionicModal,
+.controller('SupermercadosCtrl', function ($scope, $stateParams, $ionicHistory, StorageService, $state, $ionicModal,
  $ionicPopup, Supermercados, $timeout, Auth, Favoritos) {
  
   var shoppings              =  this;
@@ -4764,7 +4191,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 })
 
 //Settings controller
-.controller('SettingsCtrl', function ($scope, $stateParams, $ionicHistory, $ionicPopup, $state, StorageService, $dataService, Maestro, CartService) {
+.controller('SettingsCtrl', function ($scope, $stateParams, $ionicHistory, $ionicPopup, $state, StorageService, Maestro) {
 
       $scope.user = $scope.user || {}; // to assign and display user Data
 

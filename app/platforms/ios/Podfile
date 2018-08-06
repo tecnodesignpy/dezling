@@ -2,5 +2,5 @@
 platform :ios, '8.0'
 target 'Dezling' do
 	project 'Dezling.xcodeproj'
-	pod 'OneSignal', '2.6.0'
+	pod 'OneSignal', '2.8.5'
 end

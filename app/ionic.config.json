@@ -1,6 +1,8 @@
 {
   "name": "Dezling",
-  "app_id": "8fb98978",
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic1",
   "watchPatterns": [
     "scss/**/*",
@@ -8,7 +10,6 @@
     "!www/lib/**/*",
     "!www/**/*.map"
   ],
-  "integrations": {
-    "cordova": {}
-  }
+  "pro_id": "8fb98978",
+  "app_id": ""
 }

@@ -1,19 +1,19 @@
 {
-  "_from": "cordova-plugin-spinner",
+  "_from": "cordova-plugin-spinner@^1.1.0",
   "_id": "cordova-plugin-spinner@1.1.0",
   "_inBundle": false,
   "_integrity": "sha1-uy/XiwIO/BgyKlEJsfOMcfKLMlQ=",
   "_location": "/cordova-plugin-spinner",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "cordova-plugin-spinner",
+    "raw": "cordova-plugin-spinner@^1.1.0",
     "name": "cordova-plugin-spinner",
     "escapedName": "cordova-plugin-spinner",
-    "rawSpec": "",
+    "rawSpec": "^1.1.0",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^1.1.0"
   },
   "_requiredBy": [
     "#USER",
@@ -21,8 +21,8 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-spinner/-/cordova-plugin-spinner-1.1.0.tgz",
   "_shasum": "bb2fd78b020efc18322a5109b1f38c71f28b3254",
-  "_spec": "cordova-plugin-spinner",
-  "_where": "/Users/ledezmatto/Desktop/Ionic/dezling/app",
+  "_spec": "cordova-plugin-spinner@^1.1.0",
+  "_where": "/Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app",
   "bugs": {
     "url": "https://github.com/justin-credible/cordova-plugin-spinner/issues"
   },

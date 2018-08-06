@@ -1,0 +1,59 @@
+<ion-modal-view ng-controller="ProfileCtrl" class="settings">
+
+<ion-header-bar class="pinro-header header-shadow">
+    
+      <button class="button button-icon icon ion-ios-arrow-back" ui-sref="app.configuraciones()"></button>
+    <h1 class="title">Editar Perfil</h1>
+  </ion-header-bar>
+
+<!-- <div ng-include="'templates/common/loading.html'" ng-show="loading"></div> -->      
+	<ion-content>
+
+
+<div class="profile-img">
+    <a ng-click="changeProfilePicture()">
+        <img ng-src="{{ foto_perfil }}">
+    </a>
+</div>
+
+
+<ion-list>
+    
+    <ion-item class="item-divider">
+        Info
+    </ion-item>
+    <ion-item class="item-input ">
+        <span class="input-label">Nombres</span>
+        <input type="text" ng-model="ProfileData.perfil.nombre">
+    </ion-item>
+    <ion-item class="item-input ">
+        <span class="input-label">Apellidos</span>
+        <input type="text" ng-model="ProfileData.perfil.apellido">
+    </ion-item>
+    <ion-item class="item-input ">
+        <span class="input-label">Email</span>
+        <input type="email" ng-model="ProfileData.perfil.email">
+    </ion-item>
+    <ion-item class="item-input ">
+        <span class="input-label">Ciudad</span>
+        <input type="text" ng-model="ProfileData.perfil.ciudad">
+    </ion-item>  
+    <ion-item class="item-input ">
+        <span class="input-label">Fecha de Nacimiento</span>
+        <input type="date" ng-model="ProfileData.perfil.nacimiento">
+    </ion-item>  
+    <ion-item class="item-input ">
+        <span class="input-label">Sexo</span>
+        <select ng-model="ProfileData.perfil.sexo" style="border: 0px;    background-color: transparent;width: auto">
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+        </select> 
+    </ion-item>  		
+</ion-list>
+
+<div class="footer-button">
+    <button class="button gradiente-1 button-block button-round" ng-click="UpdatePerfil()">Guardar Cambios</button>
+</div>
+
+</ion-content>
+</ion-modal-view>

@@ -1,40 +1,8 @@
 {
-  "cordova-plugin-device": {
+  "cordova-universal-links-plugin": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-device@~1.1.3"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-whitelist": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-whitelist@~1.3.0"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-splashscreen": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-splashscreen@~4.0.0"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-statusbar": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-statusbar@~2.2.0"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "ionic-plugin-keyboard": {
-    "source": {
-      "type": "registry",
-      "id": "ionic-plugin-keyboard@~2.2.1"
+      "id": "https://github.com/walteram/cordova-universal-links-plugin"
     },
     "is_top_level": true,
     "variables": {}
@@ -46,14 +14,54 @@
     },
     "is_top_level": true,
     "variables": {
-      "CAMERA_USAGE_DESCRIPTION": " ",
-      "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
+      "CAMERA_USAGE_DESCRIPTION": "Personalizá tu perfil agregando una foto - avatar que te identifique.",
+      "PHOTOLIBRARY_USAGE_DESCRIPTION": "Personalizá tu perfil agregando una foto - avatar que te identifique."
     }
   },
-  "cordova-plugin-dialogs": {
+  "cordova-plugin-compat": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-dialogs@~1.3.3"
+      "id": "cordova-plugin-compat@^1.1.0"
+    },
+    "is_top_level": false,
+    "variables": {}
+  },
+  "cordova-plugin-device": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-device@^1.1.7"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-splashscreen": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-splashscreen@^4.1.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-statusbar": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-statusbar@^2.4.2"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-whitelist": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-whitelist@^1.3.3"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "ionic-plugin-keyboard": {
+    "source": {
+      "type": "registry",
+      "id": "ionic-plugin-keyboard@^2.2.1"
     },
     "is_top_level": true,
     "variables": {}
@@ -61,7 +69,7 @@
   "cordova-plugin-network-information": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-network-information@^1.3.3"
+      "id": "cordova-plugin-network-information@^1.3.4"
     },
     "is_top_level": true,
     "variables": {}
@@ -69,7 +77,7 @@
   "cordova-sqlite-storage": {
     "source": {
       "type": "registry",
-      "id": "cordova-sqlite-storage"
+      "id": "cordova-sqlite-storage@^2.3.3"
     },
     "is_top_level": true,
     "variables": {}
@@ -81,45 +89,13 @@
     },
     "is_top_level": true,
     "variables": {
-      "GEOLOCATION_USAGE_DESCRIPTION": " "
+      "GEOLOCATION_USAGE_DESCRIPTION": "Encontrá las mejores promociones de acuerdo a tu ubicación, en tiempo real."
     }
-  },
-  "cordova-android-play-services-gradle-release": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-android-play-services-gradle-release@^1.1.1"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-app-event": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-app-event"
-    },
-    "is_top_level": false,
-    "variables": {}
-  },
-  "cordova-plugin-crosswalk-webview": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-crosswalk-webview@^2.3.0"
-    },
-    "is_top_level": true,
-    "variables": {}
   },
   "cordova-plugin-badge": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-badge@^0.8.4"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-compat": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-compat@^1.2.0"
+      "id": "cordova-plugin-badge@^0.8.7"
     },
     "is_top_level": true,
     "variables": {}
@@ -127,10 +103,12 @@
   "cordova-plugin-google-analytics": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-google-analytics@^1.8.3"
+      "id": "cordova-plugin-google-analytics@^1.8.6"
     },
     "is_top_level": true,
-    "variables": {}
+    "variables": {
+      "GMS_VERSION": "11.0.1"
+    }
   },
   "cordova-plugin-buildinfo": {
     "source": {
@@ -156,10 +134,23 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-universal-links-plugin": {
+  "cordova-plugin-customurlscheme": {
     "source": {
       "type": "registry",
-      "id": "cordova-universal-links-plugin"
+      "id": "cordova-plugin-customurlscheme@^4.3.0"
+    },
+    "is_top_level": true,
+    "variables": {
+      "URL_SCHEME": "com.tecnodesign.dezling",
+      "ANDROID_SCHEME": " ",
+      "ANDROID_HOST": " ",
+      "ANDROID_PATHPREFIX": "/"
+    }
+  },
+  "cordova-plugin-dialogs": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-dialogs@^1.3.4"
     },
     "is_top_level": true,
     "variables": {}
@@ -175,7 +166,7 @@
   "onesignal-cordova-plugin": {
     "source": {
       "type": "registry",
-      "id": "onesignal-cordova-plugin"
+      "id": "onesignal-cordova-plugin@^2.4.1"
     },
     "is_top_level": true,
     "variables": {}
@@ -188,14 +179,26 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-customurlscheme": {
+  "cordova-android-support-gradle-release": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-customurlscheme"
+      "id": "cordova-android-support-gradle-release@^1.4.4"
     },
     "is_top_level": true,
     "variables": {
-      "URL_SCHEME": "com.tecnodesign.dezling"
+      "ANDROID_SUPPORT_VERSION": "26.+"
+    }
+  },
+  "cordova-plugin-facebook4": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-facebook4@^2.2.0"
+    },
+    "is_top_level": true,
+    "variables": {
+      "APP_ID": "1830593113933558",
+      "APP_NAME": "Dezling",
+      "ANDROID_SDK_VERSION": "4.+"
     }
   }
 }

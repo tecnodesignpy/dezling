@@ -1,28 +1,28 @@
 {
-  "_from": "cordova-plugin-badge",
-  "_id": "cordova-plugin-badge@0.8.4",
+  "_from": "cordova-plugin-badge@^0.8.7",
+  "_id": "cordova-plugin-badge@0.8.7",
   "_inBundle": false,
-  "_integrity": "sha512-OPzdcRk+gMrcQikJZXRC0iTYmomM7ubGMczlmsGgscSzsfjtPTG9RxiaHBD+EP6TFhRMFS0tKSxXE0MKr9VJvg==",
+  "_integrity": "sha512-s+s4yusKdeJ4sMPhQs4zR3lR2UuROzSy14GFAp00pTHPiBfCtxeINSUYAZYnpuO3RGx6PPlVCwSJpVG0IdM58g==",
   "_location": "/cordova-plugin-badge",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "cordova-plugin-badge",
+    "raw": "cordova-plugin-badge@^0.8.7",
     "name": "cordova-plugin-badge",
     "escapedName": "cordova-plugin-badge",
-    "rawSpec": "",
+    "rawSpec": "^0.8.7",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^0.8.7"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-badge/-/cordova-plugin-badge-0.8.4.tgz",
-  "_shasum": "80a8582e18b630a9f82cf25d1b61fdb7437b7776",
-  "_spec": "cordova-plugin-badge",
-  "_where": "C:\\Users\\Usuario\\Desktop\\TecnoDesign\\Dezling App\\app\\node_modules",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-badge/-/cordova-plugin-badge-0.8.7.tgz",
+  "_shasum": "fe4942aa24af6822da85c01ccce6a831afff5931",
+  "_spec": "cordova-plugin-badge@^0.8.7",
+  "_where": "/Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app",
   "author": {
     "name": "Sebastián Katzer"
   },
@@ -78,5 +78,5 @@
     "type": "git",
     "url": "git+https://github.com/katzer/cordova-plugin-badge.git"
   },
-  "version": "0.8.4"
+  "version": "0.8.7"
 }
