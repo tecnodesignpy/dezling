@@ -7,8 +7,9 @@
 	
 	<ion-content>
     	<div style="margin-top: 10%" ng-show="!cargado">
-		  	<ion-spinner></ion-spinner>
-		    <h5 class="light-font">Cargando..!</h5>
+      		<img style="margin-top: 5%" width="30%" src="img/consultas.svg"><br>
+		  	<ion-spinner icon="dots"></ion-spinner>
+		    <h5 class="light-font" style="margin:0 25px;">¡Estamos obteniendo las mejores promociones para vos!</h5>
 		</div>
 		<div ng-show="sponsors.length != 0" class="offer-header animated fadeIn" style="height: 60%">
 			<ion-slides options="opciones" slider="sliderDelegate" style="height: 100% !important;">
@@ -25,8 +26,10 @@
 		<p ng-show="destacados.length != 0" class="script"><span>DESTACADOS</span></p>
 
          <div style="margin-top: 10%" ng-show="!cargado_destacados">
+         	<!--
 			<ion-spinner></ion-spinner>
 			<h5 class="light-font">Cargando..!</h5>
+			-->
 		</div>
 		<div ng-click="openSponsor(item.item.titulo,item.item.descripcion);SumarClick('destacado', item.key)" ng-repeat="(key, item) in destacados | orderBy:'-random'" class="offer-header animated fadeIn" style=" margin-top: 0px">
 					<img ng-src="{{ item.item.banner}}" width="100%">

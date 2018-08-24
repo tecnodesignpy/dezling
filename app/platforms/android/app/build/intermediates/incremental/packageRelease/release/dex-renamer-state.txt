@@ -1,4 +1,4 @@
-#Mon Aug 06 16:12:37 PYT 2018
-base.0=/Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/transforms/dex/release/0
+#Wed Aug 22 17:55:28 PYT 2018
+base.0=/Users/ledezmatto/Desktop/TecnoDesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/transforms/dex/release/0
 renamed.0=classes.dex
-file.0=/Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/transforms/dex/release/0/classes.dex
+file.0=/Users/ledezmatto/Desktop/TecnoDesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/transforms/dex/release/0/classes.dex

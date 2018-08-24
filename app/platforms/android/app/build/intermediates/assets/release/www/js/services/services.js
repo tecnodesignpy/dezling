@@ -261,7 +261,7 @@ angular.module('starter.services', [])
       // Get Sponsor
       self.onValueSponsor = function(childRef) {
         var qGet = $q.defer();
-        console.log(childRef);
+        console.log(new Date());
         firebase.database().ref(childRef).on('value', function(snapshot) {
             qGet.resolve(snapshot.val());
         }, function(error){
@@ -1511,6 +1511,7 @@ angular.module('starter.services', [])
         var qCat = $q.defer();
         FireFunc.onValueSponsor('/sponsors/').then(function(result){
           console.log("Sponsor Get");
+          console.log(new Date());
           if(result != null) {
             self.listado = result;
           } else {

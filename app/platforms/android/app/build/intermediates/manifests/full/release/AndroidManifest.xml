@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tecnodesign.dezling"
     android:hardwareAccelerated="true"
-    android:versionCode="10083"
-    android:versionName="1.0.83" >
+    android:versionCode="10087"
+    android:versionName="1.0.87" >
 
     <uses-sdk
         android:minSdkVersion="19"
