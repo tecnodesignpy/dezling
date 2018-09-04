@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-es-rES/values-es-rES.xml",
+            "outputFile": "/Users/ledezmatto/Desktop/TecnoDesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-es-rES/values-es-rES.xml",
             "map": [
                 {
-                    "source": "/Users/ledezmatto/.gradle/caches/transforms-1/files-1.1/facebook-login-4.35.0.aar/f4b49c27e10fe0fa9442a31e3b07b3de/res/values-es-rES/values-es-rES.xml",
+                    "source": "/Users/ledezmatto/.gradle/caches/transforms-1/files-1.1/facebook-login-4.36.0.aar/140f09495f8edf9c7ab8966482f3b1b3/res/values-es-rES/values-es-rES.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

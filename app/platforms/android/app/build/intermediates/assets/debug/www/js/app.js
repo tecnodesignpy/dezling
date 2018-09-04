@@ -21,8 +21,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
      */
 
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      
       navigator.splashscreen.hide();
+
   
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       cordova.plugins.Keyboard.disableScroll(true);

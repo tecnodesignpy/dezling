@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/ledezmatto/Desktop/Tecnodesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hdpi-v4/values-hdpi-v4.xml",
+            "outputFile": "/Users/ledezmatto/Desktop/TecnoDesign/Trabajos/dezling-app/app/platforms/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hdpi-v4/values-hdpi-v4.xml",
             "map": [
                 {
-                    "source": "/Users/ledezmatto/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.0.aar/74d7469bbb51622e2c3a5bf4d99ad21b/res/values-hdpi-v4/values-hdpi-v4.xml",
+                    "source": "/Users/ledezmatto/.gradle/caches/transforms-1/files-1.1/appcompat-v7-26.1.0.aar/faca78d253bd40432193c8f7fdfa58e4/res/values-hdpi-v4/values-hdpi-v4.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

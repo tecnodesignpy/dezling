@@ -23,9 +23,6 @@ angular.module('jett.ionic.filter.bar', ['ionic']);
                     '<div class="col-70">'+
                       '<input type="search" class="filter-bar-search" ng-model="data.filterText" placeholder="{{::config.placeholder}}" />' +
                     '</div>'+
-                    '<div class="col-15">'+
-                      '<button style="float:right;" class="filter-bar-clear button button-icon icon_set_1_icon-77" ng-class="getClearButtonClass()"></button>' +
-                    '</div>'+
                   '</div>'+
                 '</label>' +
               '</div>' +

@@ -5,6 +5,20 @@
   },
   "config_munge": {
     "files": {
+      "./res/values/strings.xml": {
+        "parents": {
+          "/resources": [
+            {
+              "xml": "<string name=\"fb_app_id\">1830593113933558</string>",
+              "count": 4
+            },
+            {
+              "xml": "<string name=\"fb_app_name\">Dezling</string>",
+              "count": 4
+            }
+          ]
+        }
+      },
       "res/xml/config.xml": {
         "parents": {
           "/*": [
@@ -231,20 +245,6 @@
             {
               "xml": "<string name=\"fb_app_name\">Dezling</string>",
               "count": 1
-            }
-          ]
-        }
-      },
-      "./res/values/strings.xml": {
-        "parents": {
-          "/resources": [
-            {
-              "xml": "<string name=\"fb_app_id\">1830593113933558</string>",
-              "count": 10
-            },
-            {
-              "xml": "<string name=\"fb_app_name\">Dezling</string>",
-              "count": 10
             }
           ]
         }

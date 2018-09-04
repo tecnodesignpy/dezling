@@ -1551,7 +1551,9 @@ angular.module('starter.services', [])
 
       self.get = function() {
         var qCat = $q.defer();
-        FireFunc.onValue('/destacados/').then(function(result){
+        FireFunc.onValueSponsor('/destacados/').then(function(result){
+          console.log("Destacados Get");
+          console.log(new Date());
           if(result != null) {
             self.listado = result;
           } else {

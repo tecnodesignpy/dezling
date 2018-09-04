@@ -1393,10 +1393,10 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                       //////////console.log($scope.AuthData.providerData[0].providerId);
                       if($scope.AuthData.providerData[0].providerId == 'facebook.com'){
                         setTimeout(function(){
-                            $scope.foto_perfil =  'https://graph.facebook.com/'+$scope.AuthData.providerData[0].uid+'/picture?width=500';
+                            $scope.foto_perfil =  'https://graph.facebook.com/'+$scope.AuthData.providerData[0].uid+'/picture?width=500' || 'img/avatar-default.jpg' ;
                             $scope.$apply();
                         }, 0);      
-                      }else if($scope.AuthData.providerData[0].providerId == 'password' && $scope.ProfileData.perfil.hasOwnProperty(['foto_perfil'])){
+                      }else if($scope.AuthData.providerData[0].providerId == 'password' && $scope.ProfileData.hasOwnProperty(['perfil.foto_perfil'])){
                         setTimeout(function(){
                             $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'img/avatar-default.jpg' ;
                             $scope.$apply();
