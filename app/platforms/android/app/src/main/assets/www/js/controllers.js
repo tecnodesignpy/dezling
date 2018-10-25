@@ -714,7 +714,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         // Cargamos los banners de sponsor
           CargarBannerSponsors();
         // Cargamos los banner de Destacados
-          CargarBannerDestacados()
+          CargarBannerDestacados();
       });
 
       var showLoading = function(){
@@ -732,12 +732,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
       $scope.sponsors = ['1','2','3','4','5','6']
 
-      $scope.opciones = {
+      $scope.options = {
         autoplay:2000,
         loop: false,
         free:false,
         speed:2000,
-        initialSlide: 5,
+        initialSlide: 2,
         direction: 'horizontal',
         autoplayDisableOnInteraction: false,
         slidesPerView: '1', 
@@ -766,21 +766,10 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           Destacados.get().then(
               function(success){
                   if(Destacados.listado != null) {
-                    var contador = 1
-                    angular.forEach(Destacados.listado, function(item, key){
-                          var dt1   = parseInt(item.fechainicio.substring(0,2));
-                          var mon1  = parseInt(item.fechainicio.substring(3,5));
-                          var yr1   = parseInt(item.fechainicio.substring(6,10));
-                          var date1 = new Date(yr1, mon1-1, dt1);
-                          var dt1   = parseInt(item.fechafin.substring(0,2));
-                          var mon1  = parseInt(item.fechafin.substring(3,5));
-                          var yr1   = parseInt(item.fechafin.substring(6,10));
-                          var date2 = new Date(yr1, mon1-1, dt1); 
-                          if(date1 <= new Date() && date2 >= new Date() && contador <=7){
-                            var randomvalue = 0.5 - Math.random();
-                            $scope.destacados.push({item:item, random:randomvalue, key:key});
-                            contador = contador + 1;
-                          }                    });
+                    setTimeout(function() {
+                      $scope.destacados = success;
+                        $scope.$apply();
+                    });
                     $scope.cargado_destacados = true;
                   }else{
                     $scope.cargado_destacados = false;
@@ -803,20 +792,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               function(success){
                   if(success != null) {
                     setTimeout(function() {
-                        angular.forEach(success, function(item, key){
-                          const [day, month, year] = item.fechainicio.split("/");
-                          const [day1, month1, year1] = item.fechafin.split("/");
-                          var date1 = new Date(year, month - 1, day); 
-                          var date2 = new Date(year1, month1 - 1, day1);
-
-                          if(date1 <= new Date() && date2 >= new Date() && $scope.cantidadSponsor <= 5){
-                            var randomvalue = 0.5 - Math.random();
-                            $scope.sponsors.push({item:item, random:randomvalue, key:key});
-                            $scope.cantidadSponsor ++;
-                          }
-
+                      $scope.sponsors = success;
                         $scope.$apply();
-                        });
                     });
                     $scope.cargado = true;
                   }else{
@@ -1263,186 +1240,188 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       loadProfileData();
     };
   };
-  	function loadProfileData() {
-      //////console.log($scope.AuthData);
-	    if($scope.AuthData.hasOwnProperty('uid')){
-	      Profile.get($scope.AuthData.uid).then(
-	        function(ProfileData) {	          
-	          // bind to scope
-	          if(ProfileData != null) {
-                setTimeout(function(){
-                    $scope.ProfileData = ProfileData;
-                    $scope.$apply();
-                    //////////console.log($scope.ProfileData);
-                    $q.all($scope.ProfileData).then(function(){
-                      if($scope.ProfileData.hasOwnProperty('favoritos')){
-                        //window.plugins.OneSignal.sendTags({Favoritos: ProfileData.favoritos});
-                        $scope.Favoritos = ProfileData.favoritos;
-                        //console.log($scope.Favoritos);
-                        //Obtenemos el detalle de cada favorito de la base de datos Comercios, en base a su categoria
-                        $scope.detalle_Favorito = [];
-                        $scope.quitar_fav = [];
-                        angular.forEach($scope.Favoritos,function (detalles) {
-                          if(detalles.categoria == "centros_comerciales"){
-                            $timeout(function() {
-                              CentrosComerciales.getShopping(detalles.slug).then(
-                                function(success){
-                                  if(success != null){
-                                    if(success.perfil.online == true){
-                                      $scope.detalle_Favorito.push(CentrosComerciales.shopping);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }else{
-                                      //console.log("No esta Online ", success);
-                                    }
-                                  }else{
-                                    //console.log("Es NULL Shopp");
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "centros_comerciales_local"){
-                            $timeout(function() {
-                              CentrosComerciales.getLocal(detalles.slug,detalles.comercio).then(
-                                function(success){
-                                  if(success != null){
-                                    //console.log(success.perfil.nombre, success.perfil.online);
-                                    if(success.perfil.online === true && success.perfil.online != false && success.perfil.online != 'false'){
-                                      $scope.detalle_Favorito.push(CentrosComerciales.local);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }else{
-                                      //console.log("No esta Online ", success);
-                                    }
-                                  }else{
-                                    //console.log("Es NULL ", success);
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "multimarcas"){
-                            $timeout(function() {
-                              Multimarcas.getShopping(detalles.slug).then(
-                                function(success){
-                                  if(success != null){
-                                    if(success.perfil.online == true){
-                                      $scope.detalle_Favorito.push(Multimarcas.shopping);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }
-                                  }else{
-                                    //console.log("Es NULL Multi");
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "multimarcas_local"){
-                            $timeout(function() {
-                              //////////console.log(detalles.slug,detalles.comercio);
-                              Multimarcas.getLocal(detalles.slug,detalles.comercio).then(
-                                function(success){
-                                  if(success != null){
-                                    //console.log(success);
-                                    if(success.perfil.online == true){
-                                      $scope.detalle_Favorito.push(Multimarcas.local);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }
-                                  }else{
-                                    //console.log("Es NULL Multi Local");
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "supermercados"){
-                            $timeout(function() {
-                              Supermercados.getShopping(detalles.slug).then(
-                                function(success){
-                                  if(success != null){
-                                    //////////console.log(Multimarcas.shopping);
-                                    $scope.detalle_Favorito.push(Supermercados.shopping);
+
+  // Cargamos toda la info del perfil
+	function loadProfileData() {
+    //////console.log($scope.AuthData);
+    if($scope.AuthData.hasOwnProperty('uid')){
+      Profile.get($scope.AuthData.uid).then(
+        function(ProfileData) {	          
+          // bind to scope
+          if(ProfileData != null) {
+              setTimeout(function(){
+                  $scope.ProfileData = ProfileData;
+                  $scope.$apply();
+                  //////////console.log($scope.ProfileData);
+                  $q.all($scope.ProfileData).then(function(){
+                    if($scope.ProfileData.hasOwnProperty('favoritos')){
+                      //window.plugins.OneSignal.sendTags({Favoritos: ProfileData.favoritos});
+                      $scope.Favoritos = ProfileData.favoritos;
+                      //console.log($scope.Favoritos);
+                      //Obtenemos el detalle de cada favorito de la base de datos Comercios, en base a su categoria
+                      $scope.detalle_Favorito = [];
+                      $scope.quitar_fav = [];
+                      angular.forEach($scope.Favoritos,function (detalles) {
+                        if(detalles.categoria == "centros_comerciales"){
+                          $timeout(function() {
+                            CentrosComerciales.getShopping(detalles.slug).then(
+                              function(success){
+                                if(success != null){
+                                  if(success.perfil.online == true){
+                                    $scope.detalle_Favorito.push(CentrosComerciales.shopping);
                                     //Guardamos en un Scope el slug para quitar del fav luego
                                     $scope.quitar_fav.push( {slug: detalles.slug});
                                   }else{
-                                    //console.log("Es NULL Super");
+                                    //console.log("No esta Online ", success);
                                   }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "supermercados_local"){
-                            $timeout(function() {
-                              //////////console.log(detalles.slug,detalles.comercio);
-                              Supermercados.getLocal(detalles.slug,detalles.comercio).then(
-                                function(success){
-                                  if(success != null){
-                                    $scope.detalle_Favorito.push(Supermercados.local);
+                                }else{
+                                  //console.log("Es NULL Shopp");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "centros_comerciales_local"){
+                          $timeout(function() {
+                            CentrosComerciales.getLocal(detalles.slug,detalles.comercio).then(
+                              function(success){
+                                if(success != null){
+                                  //console.log(success.perfil.nombre, success.perfil.online);
+                                  if(success.perfil.online === true && success.perfil.online != false && success.perfil.online != 'false'){
+                                    $scope.detalle_Favorito.push(CentrosComerciales.local);
                                     //Guardamos en un Scope el slug para quitar del fav luego
                                     $scope.quitar_fav.push( {slug: detalles.slug});
                                   }else{
-                                    //console.log("Es NULL Super Local");
+                                    //console.log("No esta Online ", success);
                                   }
-                              });
-                            }, 500);
-                          }
-                          
-                        });
-                      }else{
-                        //////////console.log("No tiene favs");
-                        $scope.Favoritos=false;
-                      }
-                      //////////console.log($scope.AuthData.providerData[0].providerId);
-                      if($scope.AuthData.providerData[0].providerId == 'facebook.com'){
-                        setTimeout(function(){
-                            $scope.foto_perfil =  'https://graph.facebook.com/'+$scope.AuthData.providerData[0].uid+'/picture?width=500' || 'img/avatar-default.jpg' ;
-                            $scope.$apply();
-                        }, 0);      
-                      }else if($scope.AuthData.providerData[0].providerId == 'password' && $scope.ProfileData.hasOwnProperty(['perfil.foto_perfil'])){
-                        setTimeout(function(){
-                            $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'img/avatar-default.jpg' ;
-                            $scope.$apply();
-                        }, 0); 
-                      }else{
-                        setTimeout(function(){
-                            $scope.foto_perfil =  'img/avatar-default.jpg';
-                            $scope.$apply();
-                        }, 0);
-                      }
-                      //////////console.log(ProfileData);
-                      if($scope.ProfileData.hasOwnProperty(['perfil.nacimiento'])){
-                        $scope.ProfileData.perfil.nacimiento = new Date($scope.ProfileData.perfil.nacimiento);
-                      }
-                    })
-                }, 0); 
-              
-              var user = firebase.auth().currentUser;
-              if (user != null) {
-                user.providerData.forEach(function (profile) {
-                  if(profile.providerId == "facebook.com"){
+                                }else{
+                                  //console.log("Es NULL ", success);
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "multimarcas"){
+                          $timeout(function() {
+                            Multimarcas.getShopping(detalles.slug).then(
+                              function(success){
+                                if(success != null){
+                                  if(success.perfil.online == true){
+                                    $scope.detalle_Favorito.push(Multimarcas.shopping);
+                                    //Guardamos en un Scope el slug para quitar del fav luego
+                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  }
+                                }else{
+                                  //console.log("Es NULL Multi");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "multimarcas_local"){
+                          $timeout(function() {
+                            //////////console.log(detalles.slug,detalles.comercio);
+                            Multimarcas.getLocal(detalles.slug,detalles.comercio).then(
+                              function(success){
+                                if(success != null){
+                                  //console.log(success);
+                                  if(success.perfil.online == true){
+                                    $scope.detalle_Favorito.push(Multimarcas.local);
+                                    //Guardamos en un Scope el slug para quitar del fav luego
+                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  }
+                                }else{
+                                  //console.log("Es NULL Multi Local");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "supermercados"){
+                          $timeout(function() {
+                            Supermercados.getShopping(detalles.slug).then(
+                              function(success){
+                                if(success != null){
+                                  //////////console.log(Multimarcas.shopping);
+                                  $scope.detalle_Favorito.push(Supermercados.shopping);
+                                  //Guardamos en un Scope el slug para quitar del fav luego
+                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                }else{
+                                  //console.log("Es NULL Super");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "supermercados_local"){
+                          $timeout(function() {
+                            //////////console.log(detalles.slug,detalles.comercio);
+                            Supermercados.getLocal(detalles.slug,detalles.comercio).then(
+                              function(success){
+                                if(success != null){
+                                  $scope.detalle_Favorito.push(Supermercados.local);
+                                  //Guardamos en un Scope el slug para quitar del fav luego
+                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                }else{
+                                  //console.log("Es NULL Super Local");
+                                }
+                            });
+                          }, 500);
+                        }
+                        
+                      });
+                    }else{
+                      //////////console.log("No tiene favs");
+                      $scope.Favoritos=false;
+                    }
+                    //////////console.log($scope.AuthData.providerData[0].providerId);
+                    if($scope.AuthData.providerData[0].providerId == 'facebook.com'){
+                      setTimeout(function(){
+                          $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'https://graph.facebook.com/'+$scope.AuthData.providerData[0].uid+'/picture?width=500' || 'img/avatar-default.jpg' ;
+                          $scope.$apply();
+                      }, 0);      
+                    }else if($scope.AuthData.providerData[0].providerId == 'password' && $scope.ProfileData.hasOwnProperty(['perfil.foto_perfil'])){
+                      setTimeout(function(){
+                          $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'img/avatar-default.jpg' ;
+                          $scope.$apply();
+                      }, 0); 
+                    }else{
+                      setTimeout(function(){
+                          $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'img/avatar-default.jpg' ;
+                          $scope.$apply();
+                      }, 0);
+                    }
+                    //////////console.log(ProfileData);
+                    if($scope.ProfileData.hasOwnProperty(['perfil.nacimiento'])){
+                      $scope.ProfileData.perfil.nacimiento = new Date($scope.ProfileData.perfil.nacimiento);
+                    }
+                  })
+              }, 0); 
+            
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+              user.providerData.forEach(function (profile) {
+                if(profile.providerId == "facebook.com"){
+                    $scope.LogeadoConFacebook = false;
+                    //////////console.log("Logeado con Facebook");
+                }
+                if(profile.providerId == "password"){
+                    $scope.LogeadoConPassword = true;
+                    //////////console.log("Logeado con Email");
+                    if($scope.LogeadoConFacebook){
+                      $scope.LogeadoConFacebook = true;
+                      $scope.LogeadoConPassword = false;
+                      //////////console.log("Logeado con Facebook y Correo");
+                    }else{
                       $scope.LogeadoConFacebook = false;
-                      //////////console.log("Logeado con Facebook");
-                  }
-                  if(profile.providerId == "password"){
-                      $scope.LogeadoConPassword = true;
-                      //////////console.log("Logeado con Email");
-                      if($scope.LogeadoConFacebook){
-                        $scope.LogeadoConFacebook = true;
-                        $scope.LogeadoConPassword = false;
-                        //////////console.log("Logeado con Facebook y Correo");
-                      }else{
-                        $scope.LogeadoConFacebook = false;
-                      }
-                  }
-                });
-              }
-	          };
-	        }
-	      ),
-	      function(error){
-	      }
-	    }else{
-			   $scope.AuthData = "";
-	    }
-  	};
+                    }
+                }
+              });
+            }
+          };
+        }
+      ),
+      function(error){
+      }
+    }else{
+		   $scope.AuthData = "";
+    }
+	};
 
   // Logout
   $scope.logout = function () {
@@ -1465,56 +1444,62 @@ angular.module('starter.controllers', ["angucomplete-alt",])
   };
   	
 
-	  // fn update profile picture
-	  $scope.changeProfilePicture = function() {
-	    // Show the action sheet
-	    $ionicActionSheet.show({
-	        buttons: [
-	            { text: 'Tomar nueva foto' },
-	            { text: 'Elegir de la Galeria' },
-	        ],
-	        titleText: 'Cambiar foto de perfil',
-	        cancelText: 'Cancelar',
-	        cancel: function() {
-	            // add cancel code..
-	        },
-	        buttonClicked: function(sourceTypeIndex) {
-	            proceed(sourceTypeIndex)
-	            return true;
-	        }
-	    });
-	    function proceed(sourceTypeIndex) {
-	      Profile.changeProfilePicture(sourceTypeIndex, $scope.AuthData.uid).then(
-	        function(successCallback){
-              loadProfileData();  
-              $ionicPopup.alert({
-               template: '<div class="content">'
-                            +'<h4 class="normal-font">Perfil</h4>'
-                            +'<h4 class="light-font"><br><br>Actualizado correctamente.<br><br></h4>'
-                            +'</div>',
-               buttons: [{ 
-                text: 'Ok',
-                type: 'button-default boton-cerrar',
-              }]
-             });
-	        }, function(error){
-              loadProfileData(); 
-              $ionicPopup.alert({
-               template: '<div class="content">'
-                            +'<h4 class="normal-font">Perfil</h4>'
-                            +'<h4 class="light-font"><br><br>Ocurrió un error.<br><br></h4>'
-                            +'</div>',
-               buttons: [{ 
-                text: 'Ok',
-                type: 'button-default boton-cerrar',
-              }]
-             });
-          });
-	    };
-	  };
+  // fn update profile picture
+  $scope.changeProfilePicture = function() {
+    // Show the action sheet
+    $ionicActionSheet.show({
+        buttons: [
+            { text: 'Tomar nueva foto' },
+            { text: 'Elegir de la Galeria' },
+        ],
+        titleText: 'Cambiar foto de perfil',
+        cancelText: 'Cancelar',
+        cancel: function() {
+            // add cancel code..
+        },
+        buttonClicked: function(sourceTypeIndex) {
+            proceed(sourceTypeIndex)
+            return true;
+        }
+    });
+    function proceed(sourceTypeIndex) {
+      showLoading();
+      Profile.changeProfilePicture(sourceTypeIndex, $scope.AuthData.uid).then(
+        function(successCallback){
+            hideLoading();
+            loadProfileData().then(
+              function(){
+                  $ionicPopup.alert({
+                    template: '<div class="content">'
+                                +'<h4 class="normal-font">Perfil</h4>'
+                                +'<h4 class="light-font"><br><br>Actualizado correctamente.<br><br></h4>'
+                                +'</div>',
+                    buttons: [{ 
+                      text: 'Ok',
+                      type: 'button-default boton-cerrar',
+                    }]
+                  });
+              });  
+            
+        }, function(error){
+            hideLoading();
+            loadProfileData(); 
+            $ionicPopup.alert({
+             template: '<div class="content">'
+                          +'<h4 class="normal-font">Perfil</h4>'
+                          +'<h4 class="light-font"><br><br>Ocurrió un error.<br><br></h4>'
+                          +'</div>',
+             buttons: [{ 
+              text: 'Ok',
+              type: 'button-default boton-cerrar',
+            }]
+           });
+        });
+    };
+  };
 
-	  // fn change username
-	  $scope.UpdatePerfil = function() {
+	// fn change username
+	$scope.UpdatePerfil = function() {
       //////////console.log($scope.ProfileData.hasOwnProperty(['perfil.nombre']));
         if($scope.ProfileData.hasOwnProperty(['perfil.nombre']) || ($scope.ProfileData.perfil.nombre != undefined && $scope.ProfileData.perfil.nombre != null)) {
           Profile.UpdatePerfil($scope.AuthData.uid,$scope.ProfileData.perfil).then(
@@ -1546,45 +1531,43 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 	}
 
 
-
-  
-    $scope.notificaciones = {};  
-    $scope.notificaciones = function(){
-          Profile.notificaciones($scope.AuthData.uid).then(
-              function(success){
-                  if(Profile.notificacion != null) {
-                    $scope.notificaciones.promociones = Profile.notificacion;
-          
-                    //////////console.log($scope.notificaciones.promociones);
-                    if($scope.notificaciones.promociones.activada == true){
-                      $scope.notificaciones.mensaje = "Activada";
-                      $scope.notificaciones.promociones = true;
-                    }else{
-                      $scope.notificaciones.mensaje = "Desactivada";
-                      $scope.notificaciones.promociones = false;
-                    }
-                  }else if(Profile.notificacion == null){
-                    //////////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
-                    Profile.UpdateNotificaciones($scope.AuthData.uid,true);
+  $scope.notificaciones = {};  
+  $scope.notificaciones = function(){
+        Profile.notificaciones($scope.AuthData.uid).then(
+            function(success){
+                if(Profile.notificacion != null) {
+                  $scope.notificaciones.promociones = Profile.notificacion;
+        
+                  //////////console.log($scope.notificaciones.promociones);
+                  if($scope.notificaciones.promociones.activada == true){
+                    $scope.notificaciones.mensaje = "Activada";
+                    $scope.notificaciones.promociones = true;
+                  }else{
+                    $scope.notificaciones.mensaje = "Desactivada";
+                    $scope.notificaciones.promociones = false;
                   }
-              },
-              function(error){
-                  //////////console.log(error);
-                  $scope.notificaciones.mensaje = "Activada";
-              }
-          );
-          
-    }
+                }else if(Profile.notificacion == null){
+                  //////////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
+                  Profile.UpdateNotificaciones($scope.AuthData.uid,true);
+                }
+            },
+            function(error){
+                //////////console.log(error);
+                $scope.notificaciones.mensaje = "Activada";
+            }
+        );
+        
+  }
 
-    $scope.CambiarNotificaciones = function(){
-          //////////console.log("Cambiamos Noti",$scope.notificaciones.promociones);
-          Profile.UpdateNotificaciones($scope.AuthData.uid,$scope.notificaciones.promociones);
-          if($scope.notificaciones.promociones == true){
-            $scope.notificaciones.mensaje = "Activada";
-          }else{
-            $scope.notificaciones.mensaje = "Desactivada";
-          }
-    }
+  $scope.CambiarNotificaciones = function(){
+        //////////console.log("Cambiamos Noti",$scope.notificaciones.promociones);
+        Profile.UpdateNotificaciones($scope.AuthData.uid,$scope.notificaciones.promociones);
+        if($scope.notificaciones.promociones == true){
+          $scope.notificaciones.mensaje = "Activada";
+        }else{
+          $scope.notificaciones.mensaje = "Desactivada";
+        }
+  }
 
   
   var showLoading = function(){
@@ -1878,8 +1861,9 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             }
         );
     };
+
     // A confirm dialog
-   $scope.showConfirm = function(puntos,item) {
+    $scope.showConfirm = function(puntos,item) {
         var ultimo_check = localStorage.getItem(item.slug);
         ////////console.log(ultimo_check);
         var timeNow = new Date().getTime();
@@ -2056,7 +2040,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
             });
           }
         }
-   };
+    };
 
     /*
       FUNCION PARA ELIMINAR FAVORITOS
@@ -2080,16 +2064,36 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       }
       //////////console.log($scope.showDelete);
     }
+
     $scope.AuthData = Auth.AuthData;
     $scope.eliminar = function(item){
+      showLoading();
       ////////console.log($scope.quitar_fav[item]);
       $scope.detalle_Favorito.splice(item, 1);
+      console.log("Slug: ",$scope.quitar_fav[item].slug);
       Favoritos.buttonPressed($scope.AuthData, $scope.quitar_fav[item].slug).then(
       function(success){
         ////////console.log("No Fav"+Favoritos.CachedList);
+        hideLoading();
       }, function(error){
         ////////console.log(error);
-        //hideLoading();
+        hideLoading();
+        $ionicPopup.alert({
+          template: '<div class="content">'
+                        +'<h4 class="normal-font">Favoritos</h4>'
+                        +'<h4 class="light-font"><br><br>No pudimos eliminar este comercio.<br></h4>'
+                        +'</div>',
+           buttons: [{ 
+            text: 'Ok',
+            type: 'button-default boton-cerrar',
+            onTap: function(e) {
+              $timeout(function() {
+                puntos();
+              }, 1000);
+              //e.preventDefault();
+            }
+          }]
+        });
       })
     }
 
@@ -2372,8 +2376,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                  if(direction == 'right') 
                    $ionicHistory.goBack()
                }
-
 })
+
 // Controlador de los Shoppings
 .controller('ShoppingCtrl', function ($scope, $stateParams, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, CentrosComerciales, $timeout, Auth, Favoritos) {
  

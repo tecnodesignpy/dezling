@@ -702,8 +702,40 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         });
       };
  })
-.controller('MainCtrl', function ($scope, $state, $ionicHistory, $ionicScrollDelegate, Maestro,
- $pinroUiService, $ionicLoading, $ionicPopup, Sponsor, Visitas, Destacados, $window) {
+.controller('MainCtrl', function ($scope, $state, $ionicHistory, $ionicScrollDelegate, $ionicLoading, $ionicPopup, Sponsor, Visitas, Destacados, $window) {
+
+      $scope.sponsors = ['1','2']
+
+
+      $scope.options = {
+        autoplay:2000,
+        loop: false,
+        free:false,
+        speed:2000,
+        initialSlide: 2,
+        direction: 'horizontal',
+        autoplayDisableOnInteraction: false,
+        slidesPerView: '1', 
+        showNavButtons: false, 
+      };
+      $scope.sliderDelegate;
+
+
+      //detect when sliderDelegate has been defined, and attatch some event listeners
+      $scope.$watch('sliderDelegate', function(newVal, oldVal){
+        if(newVal != null){ 
+          $scope.sliderDelegate.on('slideChangeEnd', function(){
+            console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
+            $scope.$apply();
+          });
+          $scope.sliderDelegate.on('AutoplayStart', function(){
+            console.log('Autoplay');
+            $scope.$apply();
+          });
+
+        }
+      });
+
 
       $scope.$on("$ionicView.enter", function (event, data) {
         
@@ -714,7 +746,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         // Cargamos los banners de sponsor
           CargarBannerSponsors();
         // Cargamos los banner de Destacados
-          CargarBannerDestacados()
+          CargarBannerDestacados();
       });
 
       var showLoading = function(){
@@ -728,34 +760,6 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         $scope.popup.close();
       }
 
-
-
-      $scope.sponsors = ['1','2','3','4','5','6']
-
-      $scope.opciones = {
-        autoplay:2000,
-        loop: false,
-        free:false,
-        speed:2000,
-        initialSlide: 5,
-        direction: 'horizontal',
-        autoplayDisableOnInteraction: false,
-        slidesPerView: '1', 
-        showNavButtons: false, 
-      };
-
-      $scope.sliderDelegate;
-
-      //detect when sliderDelegate has been defined, and attatch some event listeners
-      $scope.$watch('sliderDelegate', function(newVal, oldVal){
-        if(newVal != null){ 
-          $scope.sliderDelegate.on('slideChangeEnd', function(){
-            ////////console.log('updated slide to ' + $scope.sliderDelegate.activeIndex);
-            $scope.$apply();
-          });
-        }
-      });
-
     
       /*
           Funcion para cargar Banner Destacados
@@ -766,21 +770,10 @@ angular.module('starter.controllers', ["angucomplete-alt",])
           Destacados.get().then(
               function(success){
                   if(Destacados.listado != null) {
-                    var contador = 1
-                    angular.forEach(Destacados.listado, function(item, key){
-                          var dt1   = parseInt(item.fechainicio.substring(0,2));
-                          var mon1  = parseInt(item.fechainicio.substring(3,5));
-                          var yr1   = parseInt(item.fechainicio.substring(6,10));
-                          var date1 = new Date(yr1, mon1-1, dt1);
-                          var dt1   = parseInt(item.fechafin.substring(0,2));
-                          var mon1  = parseInt(item.fechafin.substring(3,5));
-                          var yr1   = parseInt(item.fechafin.substring(6,10));
-                          var date2 = new Date(yr1, mon1-1, dt1); 
-                          if(date1 <= new Date() && date2 >= new Date() && contador <=7){
-                            var randomvalue = 0.5 - Math.random();
-                            $scope.destacados.push({item:item, random:randomvalue, key:key});
-                            contador = contador + 1;
-                          }                    });
+                    setTimeout(function() {
+                      $scope.destacados = success;
+                        $scope.$apply();
+                    });
                     $scope.cargado_destacados = true;
                   }else{
                     $scope.cargado_destacados = false;
@@ -803,20 +796,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               function(success){
                   if(success != null) {
                     setTimeout(function() {
-                        angular.forEach(success, function(item, key){
-                          const [day, month, year] = item.fechainicio.split("/");
-                          const [day1, month1, year1] = item.fechafin.split("/");
-                          var date1 = new Date(year, month - 1, day); 
-                          var date2 = new Date(year1, month1 - 1, day1);
-
-                          if(date1 <= new Date() && date2 >= new Date() && $scope.cantidadSponsor <= 5){
-                            var randomvalue = 0.5 - Math.random();
-                            $scope.sponsors.push({item:item, random:randomvalue, key:key});
-                            $scope.cantidadSponsor ++;
-                          }
-
+                      $scope.sponsors = success;
                         $scope.$apply();
-                        });
                     });
                     $scope.cargado = true;
                   }else{
@@ -1219,7 +1200,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     }
 })
 
-//profile controller
+// Controlador para el perfil, favoritos, puntos y cupon
 .controller('ProfileCtrl', function ($rootScope, $scope, $stateParams, $ionicHistory, $state, Auth, Profile, $ionicActionSheet, $ionicPopup, $timeout, CentrosComerciales, Favoritos,
   Multimarcas, LocalesAdheridos, $localStorage,$interval, Supermercados, $q, $ionicModal) {
 
@@ -1263,186 +1244,188 @@ angular.module('starter.controllers', ["angucomplete-alt",])
       loadProfileData();
     };
   };
-  	function loadProfileData() {
-      //////console.log($scope.AuthData);
-	    if($scope.AuthData.hasOwnProperty('uid')){
-	      Profile.get($scope.AuthData.uid).then(
-	        function(ProfileData) {	          
-	          // bind to scope
-	          if(ProfileData != null) {
-                setTimeout(function(){
-                    $scope.ProfileData = ProfileData;
-                    $scope.$apply();
-                    //////////console.log($scope.ProfileData);
-                    $q.all($scope.ProfileData).then(function(){
-                      if($scope.ProfileData.hasOwnProperty('favoritos')){
-                        //window.plugins.OneSignal.sendTags({Favoritos: ProfileData.favoritos});
-                        $scope.Favoritos = ProfileData.favoritos;
-                        //console.log($scope.Favoritos);
-                        //Obtenemos el detalle de cada favorito de la base de datos Comercios, en base a su categoria
-                        $scope.detalle_Favorito = [];
-                        $scope.quitar_fav = [];
-                        angular.forEach($scope.Favoritos,function (detalles) {
-                          if(detalles.categoria == "centros_comerciales"){
-                            $timeout(function() {
-                              CentrosComerciales.getShopping(detalles.slug).then(
-                                function(success){
-                                  if(success != null){
-                                    if(success.perfil.online == true){
-                                      $scope.detalle_Favorito.push(CentrosComerciales.shopping);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }else{
-                                      //console.log("No esta Online ", success);
-                                    }
-                                  }else{
-                                    //console.log("Es NULL Shopp");
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "centros_comerciales_local"){
-                            $timeout(function() {
-                              CentrosComerciales.getLocal(detalles.slug,detalles.comercio).then(
-                                function(success){
-                                  if(success != null){
-                                    //console.log(success.perfil.nombre, success.perfil.online);
-                                    if(success.perfil.online === true && success.perfil.online != false && success.perfil.online != 'false'){
-                                      $scope.detalle_Favorito.push(CentrosComerciales.local);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }else{
-                                      //console.log("No esta Online ", success);
-                                    }
-                                  }else{
-                                    //console.log("Es NULL ", success);
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "multimarcas"){
-                            $timeout(function() {
-                              Multimarcas.getShopping(detalles.slug).then(
-                                function(success){
-                                  if(success != null){
-                                    if(success.perfil.online == true){
-                                      $scope.detalle_Favorito.push(Multimarcas.shopping);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }
-                                  }else{
-                                    //console.log("Es NULL Multi");
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "multimarcas_local"){
-                            $timeout(function() {
-                              //////////console.log(detalles.slug,detalles.comercio);
-                              Multimarcas.getLocal(detalles.slug,detalles.comercio).then(
-                                function(success){
-                                  if(success != null){
-                                    //console.log(success);
-                                    if(success.perfil.online == true){
-                                      $scope.detalle_Favorito.push(Multimarcas.local);
-                                      //Guardamos en un Scope el slug para quitar del fav luego
-                                      $scope.quitar_fav.push( {slug: detalles.slug});
-                                    }
-                                  }else{
-                                    //console.log("Es NULL Multi Local");
-                                  }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "supermercados"){
-                            $timeout(function() {
-                              Supermercados.getShopping(detalles.slug).then(
-                                function(success){
-                                  if(success != null){
-                                    //////////console.log(Multimarcas.shopping);
-                                    $scope.detalle_Favorito.push(Supermercados.shopping);
+
+  // Cargamos toda la info del perfil
+	function loadProfileData() {
+    //////console.log($scope.AuthData);
+    if($scope.AuthData.hasOwnProperty('uid')){
+      Profile.get($scope.AuthData.uid).then(
+        function(ProfileData) {	          
+          // bind to scope
+          if(ProfileData != null) {
+              setTimeout(function(){
+                  $scope.ProfileData = ProfileData;
+                  $scope.$apply();
+                  //////////console.log($scope.ProfileData);
+                  $q.all($scope.ProfileData).then(function(){
+                    if($scope.ProfileData.hasOwnProperty('favoritos')){
+                      //window.plugins.OneSignal.sendTags({Favoritos: ProfileData.favoritos});
+                      $scope.Favoritos = ProfileData.favoritos;
+                      //console.log($scope.Favoritos);
+                      //Obtenemos el detalle de cada favorito de la base de datos Comercios, en base a su categoria
+                      $scope.detalle_Favorito = [];
+                      $scope.quitar_fav = [];
+                      angular.forEach($scope.Favoritos,function (detalles) {
+                        if(detalles.categoria == "centros_comerciales"){
+                          $timeout(function() {
+                            CentrosComerciales.getShopping(detalles.slug).then(
+                              function(success){
+                                if(success != null){
+                                  if(success.perfil.online == true){
+                                    $scope.detalle_Favorito.push(CentrosComerciales.shopping);
                                     //Guardamos en un Scope el slug para quitar del fav luego
                                     $scope.quitar_fav.push( {slug: detalles.slug});
                                   }else{
-                                    //console.log("Es NULL Super");
+                                    //console.log("No esta Online ", success);
                                   }
-                              });
-                            }, 500);
-                          }
-                          if(detalles.categoria == "supermercados_local"){
-                            $timeout(function() {
-                              //////////console.log(detalles.slug,detalles.comercio);
-                              Supermercados.getLocal(detalles.slug,detalles.comercio).then(
-                                function(success){
-                                  if(success != null){
-                                    $scope.detalle_Favorito.push(Supermercados.local);
+                                }else{
+                                  //console.log("Es NULL Shopp");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "centros_comerciales_local"){
+                          $timeout(function() {
+                            CentrosComerciales.getLocal(detalles.slug,detalles.comercio).then(
+                              function(success){
+                                if(success != null){
+                                  //console.log(success.perfil.nombre, success.perfil.online);
+                                  if(success.perfil.online === true && success.perfil.online != false && success.perfil.online != 'false'){
+                                    $scope.detalle_Favorito.push(CentrosComerciales.local);
                                     //Guardamos en un Scope el slug para quitar del fav luego
                                     $scope.quitar_fav.push( {slug: detalles.slug});
                                   }else{
-                                    //console.log("Es NULL Super Local");
+                                    //console.log("No esta Online ", success);
                                   }
-                              });
-                            }, 500);
-                          }
-                          
-                        });
-                      }else{
-                        //////////console.log("No tiene favs");
-                        $scope.Favoritos=false;
-                      }
-                      //////////console.log($scope.AuthData.providerData[0].providerId);
-                      if($scope.AuthData.providerData[0].providerId == 'facebook.com'){
-                        setTimeout(function(){
-                            $scope.foto_perfil =  'https://graph.facebook.com/'+$scope.AuthData.providerData[0].uid+'/picture?width=500' || 'img/avatar-default.jpg' ;
-                            $scope.$apply();
-                        }, 0);      
-                      }else if($scope.AuthData.providerData[0].providerId == 'password' && $scope.ProfileData.hasOwnProperty(['perfil.foto_perfil'])){
-                        setTimeout(function(){
-                            $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'img/avatar-default.jpg' ;
-                            $scope.$apply();
-                        }, 0); 
-                      }else{
-                        setTimeout(function(){
-                            $scope.foto_perfil =  'img/avatar-default.jpg';
-                            $scope.$apply();
-                        }, 0);
-                      }
-                      //////////console.log(ProfileData);
-                      if($scope.ProfileData.hasOwnProperty(['perfil.nacimiento'])){
-                        $scope.ProfileData.perfil.nacimiento = new Date($scope.ProfileData.perfil.nacimiento);
-                      }
-                    })
-                }, 0); 
-              
-              var user = firebase.auth().currentUser;
-              if (user != null) {
-                user.providerData.forEach(function (profile) {
-                  if(profile.providerId == "facebook.com"){
+                                }else{
+                                  //console.log("Es NULL ", success);
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "multimarcas"){
+                          $timeout(function() {
+                            Multimarcas.getShopping(detalles.slug).then(
+                              function(success){
+                                if(success != null){
+                                  if(success.perfil.online == true){
+                                    $scope.detalle_Favorito.push(Multimarcas.shopping);
+                                    //Guardamos en un Scope el slug para quitar del fav luego
+                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  }
+                                }else{
+                                  //console.log("Es NULL Multi");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "multimarcas_local"){
+                          $timeout(function() {
+                            //////////console.log(detalles.slug,detalles.comercio);
+                            Multimarcas.getLocal(detalles.slug,detalles.comercio).then(
+                              function(success){
+                                if(success != null){
+                                  //console.log(success);
+                                  if(success.perfil.online == true){
+                                    $scope.detalle_Favorito.push(Multimarcas.local);
+                                    //Guardamos en un Scope el slug para quitar del fav luego
+                                    $scope.quitar_fav.push( {slug: detalles.slug});
+                                  }
+                                }else{
+                                  //console.log("Es NULL Multi Local");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "supermercados"){
+                          $timeout(function() {
+                            Supermercados.getShopping(detalles.slug).then(
+                              function(success){
+                                if(success != null){
+                                  //////////console.log(Multimarcas.shopping);
+                                  $scope.detalle_Favorito.push(Supermercados.shopping);
+                                  //Guardamos en un Scope el slug para quitar del fav luego
+                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                }else{
+                                  //console.log("Es NULL Super");
+                                }
+                            });
+                          }, 500);
+                        }
+                        if(detalles.categoria == "supermercados_local"){
+                          $timeout(function() {
+                            //////////console.log(detalles.slug,detalles.comercio);
+                            Supermercados.getLocal(detalles.slug,detalles.comercio).then(
+                              function(success){
+                                if(success != null){
+                                  $scope.detalle_Favorito.push(Supermercados.local);
+                                  //Guardamos en un Scope el slug para quitar del fav luego
+                                  $scope.quitar_fav.push( {slug: detalles.slug});
+                                }else{
+                                  //console.log("Es NULL Super Local");
+                                }
+                            });
+                          }, 500);
+                        }
+                        
+                      });
+                    }else{
+                      //////////console.log("No tiene favs");
+                      $scope.Favoritos=false;
+                    }
+                    //////////console.log($scope.AuthData.providerData[0].providerId);
+                    if($scope.AuthData.providerData[0].providerId == 'facebook.com'){
+                      setTimeout(function(){
+                          $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'https://graph.facebook.com/'+$scope.AuthData.providerData[0].uid+'/picture?width=500' || 'img/avatar-default.jpg' ;
+                          $scope.$apply();
+                      }, 0);      
+                    }else if($scope.AuthData.providerData[0].providerId == 'password' && $scope.ProfileData.hasOwnProperty(['perfil.foto_perfil'])){
+                      setTimeout(function(){
+                          $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'img/avatar-default.jpg' ;
+                          $scope.$apply();
+                      }, 0); 
+                    }else{
+                      setTimeout(function(){
+                          $scope.foto_perfil =  $scope.ProfileData.perfil.foto_perfil || 'img/avatar-default.jpg' ;
+                          $scope.$apply();
+                      }, 0);
+                    }
+                    //////////console.log(ProfileData);
+                    if($scope.ProfileData.hasOwnProperty(['perfil.nacimiento'])){
+                      $scope.ProfileData.perfil.nacimiento = new Date($scope.ProfileData.perfil.nacimiento);
+                    }
+                  })
+              }, 0); 
+            
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+              user.providerData.forEach(function (profile) {
+                if(profile.providerId == "facebook.com"){
+                    $scope.LogeadoConFacebook = false;
+                    //////////console.log("Logeado con Facebook");
+                }
+                if(profile.providerId == "password"){
+                    $scope.LogeadoConPassword = true;
+                    //////////console.log("Logeado con Email");
+                    if($scope.LogeadoConFacebook){
+                      $scope.LogeadoConFacebook = true;
+                      $scope.LogeadoConPassword = false;
+                      //////////console.log("Logeado con Facebook y Correo");
+                    }else{
                       $scope.LogeadoConFacebook = false;
-                      //////////console.log("Logeado con Facebook");
-                  }
-                  if(profile.providerId == "password"){
-                      $scope.LogeadoConPassword = true;
-                      //////////console.log("Logeado con Email");
-                      if($scope.LogeadoConFacebook){
-                        $scope.LogeadoConFacebook = true;
-                        $scope.LogeadoConPassword = false;
-                        //////////console.log("Logeado con Facebook y Correo");
-                      }else{
-                        $scope.LogeadoConFacebook = false;
-                      }
-                  }
-                });
-              }
-	          };
-	        }
-	      ),
-	      function(error){
-	      }
-	    }else{
-			   $scope.AuthData = "";
-	    }
-  	};
+                    }
+                }
+              });
+            }
+          };
+        }
+      ),
+      function(error){
+      }
+    }else{
+		   $scope.AuthData = "";
+    }
+	};
 
   // Logout
   $scope.logout = function () {
@@ -1458,63 +1441,67 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $state.go('sesion_cerrada');
   }
 
-
   // update auth status in other controllers
   function broadcastAuthChange() {
     $rootScope.$broadcast('rootScope:authChange', {});
   };
   	
+  // Change profile picture
+  $scope.changeProfilePicture = function() {
+    // Show the action sheet
+    $ionicActionSheet.show({
+        buttons: [
+            { text: 'Tomar nueva foto' },
+            { text: 'Elegir de la Galeria' },
+        ],
+        titleText: 'Cambiar foto de perfil',
+        cancelText: 'Cancelar',
+        cancel: function() {
+            // add cancel code..
+        },
+        buttonClicked: function(sourceTypeIndex) {
+            proceed(sourceTypeIndex)
+            return true;
+        }
+    });
+    function proceed(sourceTypeIndex) {
+      showLoading();
+      Profile.changeProfilePicture(sourceTypeIndex, $scope.AuthData.uid).then(
+        function(successCallback){
+            hideLoading();
+            loadProfileData().then(
+              function(){
+                  $ionicPopup.alert({
+                    template: '<div class="content">'
+                                +'<h4 class="normal-font">Perfil</h4>'
+                                +'<h4 class="light-font"><br><br>Actualizado correctamente.<br><br></h4>'
+                                +'</div>',
+                    buttons: [{ 
+                      text: 'Ok',
+                      type: 'button-default boton-cerrar',
+                    }]
+                  });
+              });  
+            
+        }, function(error){
+            hideLoading();
+            loadProfileData(); 
+            $ionicPopup.alert({
+             template: '<div class="content">'
+                          +'<h4 class="normal-font">Perfil</h4>'
+                          +'<h4 class="light-font"><br><br>Ocurrió un error.<br><br></h4>'
+                          +'</div>',
+             buttons: [{ 
+              text: 'Ok',
+              type: 'button-default boton-cerrar',
+            }]
+           });
+        });
+    };
+  };
 
-	  // fn update profile picture
-	  $scope.changeProfilePicture = function() {
-	    // Show the action sheet
-	    $ionicActionSheet.show({
-	        buttons: [
-	            { text: 'Tomar nueva foto' },
-	            { text: 'Elegir de la Galeria' },
-	        ],
-	        titleText: 'Cambiar foto de perfil',
-	        cancelText: 'Cancelar',
-	        cancel: function() {
-	            // add cancel code..
-	        },
-	        buttonClicked: function(sourceTypeIndex) {
-	            proceed(sourceTypeIndex)
-	            return true;
-	        }
-	    });
-	    function proceed(sourceTypeIndex) {
-	      Profile.changeProfilePicture(sourceTypeIndex, $scope.AuthData.uid).then(
-	        function(successCallback){
-              loadProfileData();  
-              $ionicPopup.alert({
-               template: '<div class="content">'
-                            +'<h4 class="normal-font">Perfil</h4>'
-                            +'<h4 class="light-font"><br><br>Actualizado correctamente.<br><br></h4>'
-                            +'</div>',
-               buttons: [{ 
-                text: 'Ok',
-                type: 'button-default boton-cerrar',
-              }]
-             });
-	        }, function(error){
-              loadProfileData(); 
-              $ionicPopup.alert({
-               template: '<div class="content">'
-                            +'<h4 class="normal-font">Perfil</h4>'
-                            +'<h4 class="light-font"><br><br>Ocurrió un error.<br><br></h4>'
-                            +'</div>',
-               buttons: [{ 
-                text: 'Ok',
-                type: 'button-default boton-cerrar',
-              }]
-             });
-          });
-	    };
-	  };
-
-	  // fn change username
-	  $scope.UpdatePerfil = function() {
+	// Update Profile,
+	$scope.UpdatePerfil = function() {
       //////////console.log($scope.ProfileData.hasOwnProperty(['perfil.nombre']));
         if($scope.ProfileData.hasOwnProperty(['perfil.nombre']) || ($scope.ProfileData.perfil.nombre != undefined && $scope.ProfileData.perfil.nombre != null)) {
           Profile.UpdatePerfil($scope.AuthData.uid,$scope.ProfileData.perfil).then(
@@ -1545,48 +1532,45 @@ angular.module('starter.controllers', ["angucomplete-alt",])
         }
 	}
 
-
-
+  // Funcion para buscar el estado de recibir notificaciones
+  $scope.notificaciones = {};  
+  $scope.notificaciones = function(){
+    Profile.notificaciones($scope.AuthData.uid).then(
+        function(success){
+          if(Profile.notificacion != null) {
+            $scope.notificaciones.promociones = Profile.notificacion;
   
-    $scope.notificaciones = {};  
-    $scope.notificaciones = function(){
-          Profile.notificaciones($scope.AuthData.uid).then(
-              function(success){
-                  if(Profile.notificacion != null) {
-                    $scope.notificaciones.promociones = Profile.notificacion;
-          
-                    //////////console.log($scope.notificaciones.promociones);
-                    if($scope.notificaciones.promociones.activada == true){
-                      $scope.notificaciones.mensaje = "Activada";
-                      $scope.notificaciones.promociones = true;
-                    }else{
-                      $scope.notificaciones.mensaje = "Desactivada";
-                      $scope.notificaciones.promociones = false;
-                    }
-                  }else if(Profile.notificacion == null){
-                    //////////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
-                    Profile.UpdateNotificaciones($scope.AuthData.uid,true);
-                  }
-              },
-              function(error){
-                  //////////console.log(error);
-                  $scope.notificaciones.mensaje = "Activada";
-              }
-          );
-          
-    }
-
-    $scope.CambiarNotificaciones = function(){
-          //////////console.log("Cambiamos Noti",$scope.notificaciones.promociones);
-          Profile.UpdateNotificaciones($scope.AuthData.uid,$scope.notificaciones.promociones);
-          if($scope.notificaciones.promociones == true){
-            $scope.notificaciones.mensaje = "Activada";
-          }else{
-            $scope.notificaciones.mensaje = "Desactivada";
+            //////////console.log($scope.notificaciones.promociones);
+            if($scope.notificaciones.promociones.activada == true){
+              $scope.notificaciones.mensaje = "Activada";
+              $scope.notificaciones.promociones = true;
+            }else{
+              $scope.notificaciones.mensaje = "Desactivada";
+              $scope.notificaciones.promociones = false;
+            }
+          }else if(Profile.notificacion == null){
+            //////////console.log("No tiene configurado las notificaciones, vamos a poner Activada");
+            Profile.UpdateNotificaciones($scope.AuthData.uid,true);
           }
-    }
+        },
+        function(error){
+          //////////console.log(error);
+          $scope.notificaciones.mensaje = "Activada";
+        }
+    );
+  }
 
-  
+  // Funcion para recibir o no recibir notificaciones, configurable por el usuario
+  $scope.CambiarNotificaciones = function(){
+    Profile.UpdateNotificaciones($scope.AuthData.uid,$scope.notificaciones.promociones);
+    if($scope.notificaciones.promociones == true){
+      $scope.notificaciones.mensaje = "Activada";
+    }else{
+      $scope.notificaciones.mensaje = "Desactivada";
+    }
+  }
+
+  // Animacion Cargando, Show=Muestra, Hide=Esconde
   var showLoading = function(){
     $scope.popup = $ionicPopup.show({
       templateUrl: "templates/common/loading.html"
@@ -1597,6 +1581,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     $scope.popup.close();
   }
 
+  // Funcion para Unlinkear con Facebook, NO ESTA HABILITADO
   $scope.UnLinkearConFacebook = function () {
     showLoading();
     var user = firebase.auth().currentUser;
@@ -1621,6 +1606,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
     });
   }
 
+  // Funcion para Linkear con Facebook, NO ESTA HABILITADO
   $scope.LinkearConFacebook = function () {
     showLoading();
     var provider = new firebase.auth.FacebookAuthProvider();
@@ -1655,582 +1641,577 @@ angular.module('starter.controllers', ["angucomplete-alt",])
               });
   };
 
-    /*
-      FUNCIONES PARA HACER CHECK-IN
-    */
+  /*
+    FUNCIONES PARA HACER CHECK-IN
+  */
 
-    $scope.check = function(){
-      // Chequeamos cuando fue la ultima vez que hice check
-      $scope.last_check = localStorage.getItem('last_check');
-      $scope.CheckOk = true;
-      ////////console.log($scope.last_check);
-      $scope.hora = new Date().getTime();
-      ////////console.log($scope.hora);
-      
-      if($scope.last_check == null){
-          $scope.CheckOk = true;
-          CargarCentros();
-      }else{
-        //localStorage.setItem('completar_perfil',true); ||
-        var horaInicial = $scope.last_check;
-        var horaFinal = $scope.hora;
-        ////////console.log((horaFinal-horaInicial)/1000/60);
-        if(((horaFinal-horaInicial)/1000/60) >= 15){
-          ////////console.log(horaFinal-horaInicial);
-          $scope.CheckOk = true;
-          CargarCentros();
-        }else{
-          $scope.espera = parseInt(15-((horaFinal-horaInicial)/1000/60));
-          $scope.CheckOk = false;
-        }
-      }
-
-    }
-
-    function devolverMinutos(horaMinutos)
-    {
-      return (parseInt(horaMinutos.split(":")[0])*60)+parseInt(horaMinutos.split(":")[1]);
-    }
+  $scope.check = function(){
+    // Chequeamos cuando fue la ultima vez que hice check
+    $scope.last_check = localStorage.getItem('last_check');
+    $scope.CheckOk = true;
+    ////////console.log($scope.last_check);
+    $scope.hora = new Date().getTime();
+    ////////console.log($scope.hora);
     
-    /*
-        Funcion para cargar Centro Comercial
-    */
-    function CargarCentros() {
-        $scope.items = [];
-        $scope.hay_lugares= false;
-        showLoading();
-        CentrosComerciales.get().then(
-            function(success){
-                if(CentrosComerciales.all != null) {
-                  $scope.comercios = CentrosComerciales.all;
-                  ////////console.log($scope.comercios);
-                  // Obtenemos la distacia
-                    //Obtenemos la ubicacion actual
-                    navigator.geolocation.getCurrentPosition(function(pos) {
-                        $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
-                        angular.forEach($scope.comercios,function (detalles,key) {
+    if($scope.last_check == null){
+        $scope.CheckOk = true;
+        CargarCentros();
+    }else{
+      //localStorage.setItem('completar_perfil',true); ||
+      var horaInicial = $scope.last_check;
+      var horaFinal = $scope.hora;
+      ////////console.log((horaFinal-horaInicial)/1000/60);
+      if(((horaFinal-horaInicial)/1000/60) >= 15){
+        ////////console.log(horaFinal-horaInicial);
+        $scope.CheckOk = true;
+        CargarCentros();
+      }else{
+        $scope.espera = parseInt(15-((horaFinal-horaInicial)/1000/60));
+        $scope.CheckOk = false;
+      }
+    }
+  }
 
-                          angular.forEach(detalles.locales,function (locales,key) {
-                            var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+locales.perfil.mapa.latitud || 0+','+locales.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
-                            //////////console.log(dist);
-                            var service = new google.maps.DistanceMatrixService;
-                            service.getDistanceMatrix({
-                              origins: [pos.coords.latitude+","+ pos.coords.longitude],
-                              destinations: [locales.perfil.mapa.latitud+','+locales.perfil.mapa.longitud],
-                              travelMode: google.maps.TravelMode.DRIVING,
-                              unitSystem: google.maps.UnitSystem.METRIC,
-                              avoidHighways: false,
-                              avoidTolls: false
-                            }, function(response, status) {
-                              if (status !== google.maps.DistanceMatrixStatus.OK) {
-                                //alert('Error was: ' + status);
-                              } else {
-                                //////console.log(response);
-                                if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
-                                  if(response.rows[0].elements[0].distance.value <= 250){
-                                    setTimeout(function(){
-                                        $scope.items.push({comercios:locales,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'centros_comerciales',
-                                                          slug: key});
-                                        $scope.$apply();
-                                    }, 0);
-                                    $scope.hay_lugares = true;
-                                  }
-                                }
-                              }
-                            });
-                          });
-                          var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
-                          //////////console.log(dist);
-                          var service = new google.maps.DistanceMatrixService;
-                          service.getDistanceMatrix({
-                            origins: [pos.coords.latitude+","+ pos.coords.longitude],
-                            destinations: [detalles.perfil.mapa.latitud+','+detalles.perfil.mapa.longitud],
-                            travelMode: google.maps.TravelMode.DRIVING,
-                            unitSystem: google.maps.UnitSystem.METRIC,
-                            avoidHighways: false,
-                            avoidTolls: false
-                          }, function(response, status) {
-                            if (status !== google.maps.DistanceMatrixStatus.OK) {
-                              //alert('Error was: ' + status);
-                            } else {
-                              if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
-                                if(response.rows[0].elements[0].distance.value <= 250){
-                                  setTimeout(function(){
-                                      $scope.items.push({comercios:detalles,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'centros_comerciales',
-                                                        slug: key});
-                                      $scope.$apply();
-                                  }, 0);
-                                  $scope.hay_lugares = true;
-                                }
+  function devolverMinutos(horaMinutos)
+  {
+    return (parseInt(horaMinutos.split(":")[0])*60)+parseInt(horaMinutos.split(":")[1]);
+  }
+    
+  // Funcion para cargar Comercios cercanos a 250 metros de la ubicación del usuario
+  function CargarCentros() {
+    $scope.items = [];
+    $scope.hay_lugares= false;
+    showLoading();
+    CentrosComerciales.get().then(
+        function(success){
+            if(CentrosComerciales.all != null) {
+              $scope.comercios = CentrosComerciales.all;
+              ////////console.log($scope.comercios);
+              // Obtenemos la distacia
+                //Obtenemos la ubicacion actual
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
+                    angular.forEach($scope.comercios,function (detalles,key) {
+
+                      angular.forEach(detalles.locales,function (locales,key) {
+                        var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+locales.perfil.mapa.latitud || 0+','+locales.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
+                        //////////console.log(dist);
+                        var service = new google.maps.DistanceMatrixService;
+                        service.getDistanceMatrix({
+                          origins: [pos.coords.latitude+","+ pos.coords.longitude],
+                          destinations: [locales.perfil.mapa.latitud+','+locales.perfil.mapa.longitud],
+                          travelMode: google.maps.TravelMode.DRIVING,
+                          unitSystem: google.maps.UnitSystem.METRIC,
+                          avoidHighways: false,
+                          avoidTolls: false
+                        }, function(response, status) {
+                          if (status !== google.maps.DistanceMatrixStatus.OK) {
+                            //alert('Error was: ' + status);
+                          } else {
+                            //////console.log(response);
+                            if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
+                              if(response.rows[0].elements[0].distance.value <= 250){
+                                setTimeout(function(){
+                                    $scope.items.push({comercios:locales,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'centros_comerciales',
+                                                      slug: key});
+                                    $scope.$apply();
+                                }, 0);
+                                $scope.hay_lugares = true;
                               }
                             }
-                          });
+                          }
                         });
-                    });
-                  //////////console.log($scope.items);
-                  //comercios.CategoriesForm = CentrosComerciales.all;
-                }
-            },
-            function(error){
-                //////////console.log(error);
-            }
-        );
-        Multimarcas.get().then(
-            function(success){
-                if(Multimarcas.all != null) {
-                  $scope.multimarcas = Multimarcas.all;
-                  // Obtenemos la distacia
-                    //Obtenemos la ubicacion actual
-                    navigator.geolocation.getCurrentPosition(function(pos) {
-                        $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
-                          //////////console.log($scope.multimarcas);
-                        angular.forEach($scope.multimarcas,function (detalles1,multimarca) {
-                          //////////console.log(detalles1);
-                          angular.forEach(detalles1.locales,function (detalles,key) {
-                            ////////////console.log(detalles);
-                            detalles.perfil.icono = detalles1.perfil.icono;
-                            var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
-                            var service = new google.maps.DistanceMatrixService;
-                            service.getDistanceMatrix({
-                              origins: [pos.coords.latitude+","+ pos.coords.longitude],
-                              destinations: [detalles.perfil.mapa.latitud+','+detalles.perfil.mapa.longitud],
-                              travelMode: google.maps.TravelMode.DRIVING,
-                              unitSystem: google.maps.UnitSystem.METRIC,
-                              avoidHighways: false,
-                              avoidTolls: false
-                            }, function(response, status) {
-                              if (status !== google.maps.DistanceMatrixStatus.OK) {
-                                //alert('Error was: ' + status);
-                              } else {
-                                if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
-                                  if(response.rows[0].elements[0].distance.value <= 250){
-                                    setTimeout(function(){
-                                        $scope.items.push({comercios:detalles,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'multimarcas',
-                                                          slug: key, multimarca:multimarca});
-                                        $scope.$apply();
-                                    }, 0);
-                                      $scope.hay_lugares = true;
-                                  }
-                                }
-                              }
-                            });
-                          });
-                          //hideLoading();  
-                        });
-                    });
-                  ////////console.log($scope.items);
-                  //comercios.CategoriesForm = CentrosComerciales.all;
-                }
-            },
-            function(error){
-                //////////console.log(error);
-            }
-        );
-        Supermercados.get().then(
-            function(success){
-                if(Supermercados.all != null) {
-                  $scope.supermercados = Supermercados.all;
-                  // Obtenemos la distacia
-                    //Obtenemos la ubicacion actual
-                    navigator.geolocation.getCurrentPosition(function(pos) {
-                        $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
-                          //////////console.log($scope.supermercados);
-                        angular.forEach($scope.supermercados,function (detalles1,multimarca) {
-                          //////////console.log(detalles1);
-                          angular.forEach(detalles1.locales,function (detalles,key) {
-                            ////////////console.log(detalles);
-                            detalles.perfil.icono = detalles1.perfil.icono;
-                            var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
-                            var service = new google.maps.DistanceMatrixService;
-                            service.getDistanceMatrix({
-                              origins: [pos.coords.latitude+","+ pos.coords.longitude],
-                              destinations: [detalles.perfil.mapa.latitud+','+detalles.perfil.mapa.longitud],
-                              travelMode: google.maps.TravelMode.DRIVING,
-                              unitSystem: google.maps.UnitSystem.METRIC,
-                              avoidHighways: false,
-                              avoidTolls: false
-                            }, function(response, status) {
-                              if (status !== google.maps.DistanceMatrixStatus.OK) {
-                                //alert('Error was: ' + status);
-                              } else {
-                                if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
-                                  if(response.rows[0].elements[0].distance.value <= 250){
-                                    setTimeout(function(){
-                                        $scope.items.push({comercios:detalles,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'supermercados',
-                                                          slug: key, supermercado:multimarca});
-                                        $scope.$apply();
-                                    }, 0);
-                                      $scope.hay_lugares = true;
-                                  }
-                                }
-                              }
-                            });
-                          });
-                          hideLoading();  
-                        });
-                    });
-                  ////////console.log($scope.items);
-                  //comercios.CategoriesForm = CentrosComerciales.all;
-                }
-            },
-            function(error){
-                //////////console.log(error);
-            }
-        );
-    };
-    // A confirm dialog
-   $scope.showConfirm = function(puntos,item) {
-        var ultimo_check = localStorage.getItem(item.slug);
-        ////////console.log(ultimo_check);
-        var timeNow = new Date().getTime();
-        ////////console.log(timeNow);
-
-
-        if(ultimo_check == null){
-          if(puntos == true || puntos == 'true'){
-             var confirmPopup = $ionicPopup.confirm({
-               title: 'Realizar Check-In',
-               buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-                text: '<i style="font-size: 20px !important;" class="icon-cancel"></i>',
-                type: 'button-default boton-cerrar-2',
-                onTap: function(e) {
-                  // e.preventDefault() will stop the popup from closing when tapped.
-                  //////////console.log('You are not sure');
-                  //e.preventDefault();
-                }
-              },{
-                text: '<i style="font-size: 20px !important;" class="icon-ok"></i>',
-                type: 'button-positive button-celeste',
-                onTap: function(e) {
-                  //Sumamos el punto en el perfil del usuario, seccion CHECKS, asi como dentro del perfil del local, en la parte de Checks
-                  //////////console.log('You are  sure');
-                  LocalesAdheridos.checkin(item);
-
-                          $ionicPopup.confirm({
-                            template: '<div class="content">'
-                                          +'<h4 class="normal-font">Check-In</h4>'
-                                          +'<h4 class="light-font"><br><br>Realizado con exito. <br> Se sumo un punto a tu historial.<br></h4>'
-                                          +'</div>',
-                             buttons: [{ 
-                              text: 'Ok',
-                              type: 'button-default boton-cerrar',
-                            }]
-                          });
-
-                            // Guardamos la hora del ultimo Check
-                            $scope.hora = new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
-                            var timeNow = new Date().getTime();
-                            localStorage.setItem('last_check',timeNow);
-                            localStorage.setItem(item.slug,timeNow);
-                            $scope.check();
-                            setTimeout(function(){
-                                $scope.CheckOk = false;
-                                $scope.$apply();
-                            }, 0);
-                  
-                  //e.preventDefault();
-                }
-              }]
-             });
-          }else{
-             var confirmPopup = $ionicPopup.confirm({
-               templateUrl: "templates/common/no_check.html",
-               buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-                text: 'Cancelar',
-                type: 'button-default boton-cerrar-2',
-                onTap: function(e) {
-                  // e.preventDefault() will stop the popup from closing when tapped.
-                  //////////console.log('You are not sure');
-                  //e.preventDefault();
-                }
-              },{
-                text: 'Sugerir',
-                type: 'button-positive button-celeste',
-                onTap: function(e) {
-                  LocalesAdheridos.Sugerir(item).then(function(success){
-                    $ionicPopup.alert({
-                      template: '<div class="content">'
-                                    +'<h4 class="normal-font">Sugerir</h4>'
-                                    +'<h4 class="light-font"><br><br>Sugerencia exitosa.<br>Gracias por colaborar.<br></h4>'
-                                    +'</div>',
-                       buttons: [{ 
-                        text: 'Ok',
-                        type: 'button-default boton-cerrar',
-                      }]
-                    });
-                  });
-                }
-              }]
-             });
-          }
-        }else{
-          var diferencia = ((timeNow - ultimo_check)/1000/60/60);
-          ////////console.log(diferencia);
-          if(diferencia >= 12){
-            if(puntos == true || puntos == 'true'){
-               var confirmPopup = $ionicPopup.confirm({
-                 title: 'Realizar Check-In',
-                 buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-                  text: '<i style="font-size: 20px !important;" class="icon-cancel"></i>',
-                  type: 'button-default boton-cerrar-2',
-                  onTap: function(e) {
-                    // e.preventDefault() will stop the popup from closing when tapped.
-                    //////////console.log('You are not sure');
-                    //e.preventDefault();
-                  }
-                },{
-                  text: '<i style="font-size: 20px !important;" class="icon-ok"></i>',
-                  type: 'button-positive button-celeste',
-                  onTap: function(e) {
-                    //Sumamos el punto en el perfil del usuario, seccion CHECKS, asi como dentro del perfil del local, en la parte de Checks
-                    //////////console.log('You are  sure');
-                    LocalesAdheridos.checkin(item);
-
-                      $ionicPopup.confirm({
-                              template: '<div class="content">'
-                                            +'<h4 class="normal-font">Check-In</h4>'
-                                            +'<h4 class="light-font"><br><br>Realizado con exito. <br> Se sumo un punto a tu historial.<br></h4>'
-                                            +'</div>',
-                               buttons: [{ 
-                                text: 'Ok',
-                                type: 'button-default boton-cerrar',
-                              }]
-                            });
-
-                              // Guardamos la hora del ultimo Check
-                              $scope.hora = new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
-                              var timeNow = new Date().getTime();
-                              localStorage.setItem('last_check',timeNow);
-                              localStorage.setItem(item.slug,timeNow);
-                              $scope.check();
+                      });
+                      var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
+                      //////////console.log(dist);
+                      var service = new google.maps.DistanceMatrixService;
+                      service.getDistanceMatrix({
+                        origins: [pos.coords.latitude+","+ pos.coords.longitude],
+                        destinations: [detalles.perfil.mapa.latitud+','+detalles.perfil.mapa.longitud],
+                        travelMode: google.maps.TravelMode.DRIVING,
+                        unitSystem: google.maps.UnitSystem.METRIC,
+                        avoidHighways: false,
+                        avoidTolls: false
+                      }, function(response, status) {
+                        if (status !== google.maps.DistanceMatrixStatus.OK) {
+                          //alert('Error was: ' + status);
+                        } else {
+                          if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
+                            if(response.rows[0].elements[0].distance.value <= 250){
                               setTimeout(function(){
-                                  $scope.CheckOk = false;
+                                  $scope.items.push({comercios:detalles,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'centros_comerciales',
+                                                    slug: key});
                                   $scope.$apply();
                               }, 0);
-                    
-                    //e.preventDefault();
-                  }
-                }]
-               });
-            }else{
-               var confirmPopup = $ionicPopup.confirm({
-                 templateUrl: "templates/common/no_check.html",
-                 buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-                  text: 'Cancelar',
-                  type: 'button-default boton-cerrar-2',
-                  onTap: function(e) {
-                    // e.preventDefault() will stop the popup from closing when tapped.
-                    //////////console.log('You are not sure');
-                    //e.preventDefault();
-                  }
-                },{
-                  text: 'Sugerir',
-                  type: 'button-positive button-celeste',
-                  onTap: function(e) {
-                    LocalesAdheridos.Sugerir(item).then(function(success){
-                      $ionicPopup.alert({
-                        template: '<div class="content">'
-                                      +'<h4 class="normal-font">Sugerir</h4>'
-                                      +'<h4 class="light-font"><br><br>Sugerencia exitosa.<br>Gracias por colaborar.<br></h4>'
-                                      +'</div>',
-                         buttons: [{ 
-                          text: 'Ok',
-                          type: 'button-default boton-cerrar',
-                        }]
+                              $scope.hay_lugares = true;
+                            }
+                          }
+                        }
                       });
                     });
-                  }
-                }]
-               });
-            }
-          }else{
-            $ionicPopup.alert({
-              template: '<div class="content" style="line-height: 1.5;">'
-                            +'<img src="img/sad-face.svg" width="25%" style="margin-bottom: 12px;">'
-                            +'<br>Debes esperar '+parseInt((15-diferencia)) +' horas para volver a hacer check-in en este comercio.'
-                            +'</div>',
-               buttons: [{ 
-                text: 'Ok',
-                type: 'button-default boton-cerrar',
-              }]
-            });
-          }
-        }
-   };
-
-    /*
-      FUNCION PARA ELIMINAR FAVORITOS
-    */
-    $scope.showDelete = false;
-    $scope.listCanSwipe = true;
-    $scope.show_eliminar =function(){
-      ////////console.log($scope.showDelete);
-      if($scope.showDelete){
-        setTimeout(function(){
-            $scope.showDelete = false;
-            $scope.$apply();
-            ////////console.log($scope.showDelete);
-        }, 0);
-      }else{
-        setTimeout(function(){
-            $scope.showDelete = true;
-            $scope.$apply();
-            ////////console.log($scope.showDelete);
-        }, 0);
-      }
-      //////////console.log($scope.showDelete);
-    }
-    $scope.AuthData = Auth.AuthData;
-    $scope.eliminar = function(item){
-      ////////console.log($scope.quitar_fav[item]);
-      $scope.detalle_Favorito.splice(item, 1);
-      Favoritos.buttonPressed($scope.AuthData, $scope.quitar_fav[item].slug).then(
-      function(success){
-        ////////console.log("No Fav"+Favoritos.CachedList);
-      }, function(error){
-        ////////console.log(error);
-        //hideLoading();
-      })
-    }
-
-    /*
-      FUNCIONES PARA PUNTOS
-    */
-
-    function puntos() {
-      showLoading();
-      $scope.puntos = [];
-      // Obtenemos los CHECKS del perfil del usuario, listamos en ion-item, ordenamos por cantidad de puntos
-      LocalesAdheridos.Checks().then(function(success){
-        $scope.checks = LocalesAdheridos.puntos;
-        angular.forEach($scope.checks,function (detalles,key) {
-          // Le agregamos el Key para buscar dentro de Checks del perfil del usuario
-          detalles.key = key ;
-          ////////console.log(detalles);
-          setTimeout(function(){
-              $scope.puntos.push(detalles);
-              $scope.$apply();
-          }, 0);
-        });
-        //////////console.log($scope.puntos);
-        //hideLoading();
-      }, function(err){
-        ////////console.log(err);
-        //hideLoading();
-      })
-
-      $scope.cupones = [];
-      // Obtenemos los Cupones del perfil del usuario, listamos en ion-item
-      LocalesAdheridos.Cupones().then(function(success){
-        $scope.coupons = LocalesAdheridos.cupones;
-        angular.forEach($scope.coupons,function (detalles, key) {
-          detalles.slug = key;
-          var timeNow = new Date();
-          ////////console.log(detalles);
-          var diferencia = (timeNow.getTime() - detalles.time_generado)/1000/60/60
-          ////////console.log(diferencia);
-          // Filtramos por diferencia de 4 horas, si ya paso el tiempo procedemos a eliminar del perfil
-          if(diferencia <= 4){
-            ////////console.log("Tiene cupon");
-            setTimeout(function(){
-                $scope.cupones.push(detalles);
-                $scope.$apply();
-            }, 0);
-            ////////console.log($scope.cupones);
-          }else{
-            LocalesAdheridos.eliminarCupon(key);
-          }
-        });
-        //////////console.log($scope.puntos);
-        hideLoading();
-      }, function(err){
-        ////////console.log(err);
-        hideLoading();
-      })
-      $q.all($scope.puntos).then(function(){
-        ////////console.log($scope.puntos);
-        hideLoading();
-      })
-
-    }
-
-    $scope.nocupon = function(){
-      $ionicPopup.alert({
-                  template: '<div class="content" style="line-height: 1.5;">'
-                                +'<img src="img/sad-face.svg" width="25%" style="margin-bottom: 12px;"> <br><strong>Todavía no alcanzaste los puntos suficientes.</strong>'
-                                +'<br>¡Seguí sumando puntos haciendo check-in!'
-                                +'</div>',
-                   buttons: [{ 
-                    text: 'Ok',
-                    type: 'button-default boton-cerrar',
-                  }]
                 });
-      
-      
-    }
+              //////////console.log($scope.items);
+              //comercios.CategoriesForm = CentrosComerciales.all;
+            }
+        },
+        function(error){
+            //////////console.log(error);
+        }
+    );
+    Multimarcas.get().then(
+        function(success){
+            if(Multimarcas.all != null) {
+              $scope.multimarcas = Multimarcas.all;
+              // Obtenemos la distacia
+                //Obtenemos la ubicacion actual
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
+                      //////////console.log($scope.multimarcas);
+                    angular.forEach($scope.multimarcas,function (detalles1,multimarca) {
+                      //////////console.log(detalles1);
+                      angular.forEach(detalles1.locales,function (detalles,key) {
+                        ////////////console.log(detalles);
+                        detalles.perfil.icono = detalles1.perfil.icono;
+                        var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
+                        var service = new google.maps.DistanceMatrixService;
+                        service.getDistanceMatrix({
+                          origins: [pos.coords.latitude+","+ pos.coords.longitude],
+                          destinations: [detalles.perfil.mapa.latitud+','+detalles.perfil.mapa.longitud],
+                          travelMode: google.maps.TravelMode.DRIVING,
+                          unitSystem: google.maps.UnitSystem.METRIC,
+                          avoidHighways: false,
+                          avoidTolls: false
+                        }, function(response, status) {
+                          if (status !== google.maps.DistanceMatrixStatus.OK) {
+                            //alert('Error was: ' + status);
+                          } else {
+                            if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
+                              if(response.rows[0].elements[0].distance.value <= 250){
+                                setTimeout(function(){
+                                    $scope.items.push({comercios:detalles,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'multimarcas',
+                                                      slug: key, multimarca:multimarca});
+                                    $scope.$apply();
+                                }, 0);
+                                  $scope.hay_lugares = true;
+                              }
+                            }
+                          }
+                        });
+                      });
+                      //hideLoading();  
+                    });
+                });
+              ////////console.log($scope.items);
+              //comercios.CategoriesForm = CentrosComerciales.all;
+            }
+        },
+        function(error){
+            //////////console.log(error);
+        }
+    );
+    Supermercados.get().then(
+        function(success){
+            if(Supermercados.all != null) {
+              $scope.supermercados = Supermercados.all;
+              // Obtenemos la distacia
+                //Obtenemos la ubicacion actual
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    $scope.posicion = pos.coords.latitude+","+ pos.coords.longitude;
+                      //////////console.log($scope.supermercados);
+                    angular.forEach($scope.supermercados,function (detalles1,multimarca) {
+                      //////////console.log(detalles1);
+                      angular.forEach(detalles1.locales,function (detalles,key) {
+                        ////////////console.log(detalles);
+                        detalles.perfil.icono = detalles1.perfil.icono;
+                        var dist = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metrics&origins='+$scope.posicion+'&destinations='+detalles.perfil.mapa.latitud || 0+','+detalles.perfil.mapa.longitud || 0+'&key=AIzaSyCUn0MtaWaYfO2eW7wlIW4Ugy-7vZXmZKM'
+                        var service = new google.maps.DistanceMatrixService;
+                        service.getDistanceMatrix({
+                          origins: [pos.coords.latitude+","+ pos.coords.longitude],
+                          destinations: [detalles.perfil.mapa.latitud+','+detalles.perfil.mapa.longitud],
+                          travelMode: google.maps.TravelMode.DRIVING,
+                          unitSystem: google.maps.UnitSystem.METRIC,
+                          avoidHighways: false,
+                          avoidTolls: false
+                        }, function(response, status) {
+                          if (status !== google.maps.DistanceMatrixStatus.OK) {
+                            //alert('Error was: ' + status);
+                          } else {
+                            if((response.rows[0].elements[0].status !=='ZERO_RESULTS' && response.rows[0].elements[0].status !=='NOT_FOUND' )){
+                              if(response.rows[0].elements[0].distance.value <= 250){
+                                setTimeout(function(){
+                                    $scope.items.push({comercios:detalles,distancia:response.rows[0].elements[0].distance.text,valor:response.rows[0].elements[0].distance.value, categoria:'supermercados',
+                                                      slug: key, supermercado:multimarca});
+                                    $scope.$apply();
+                                }, 0);
+                                  $scope.hay_lugares = true;
+                              }
+                            }
+                          }
+                        });
+                      });
+                      hideLoading();  
+                    });
+                });
+              ////////console.log($scope.items);
+              //comercios.CategoriesForm = CentrosComerciales.all;
+            }
+        },
+        function(error){
+            //////////console.log(error);
+        }
+    );
+  };
 
-    // MODAL PARA MOSTRAR LOS BENEFICIOS
-    
-    $ionicModal.fromTemplateUrl('templates/modal/beneficios.html', {
-      scope: $scope
-    }).then(function (modal) {
-      $scope.BeneficiosModal = modal;
-    });
-    $scope.closeBeneficiosModal = function () {
-      $scope.BeneficiosModal.hide();
-    };
-
-    $scope.beneficio_elegido = function(item, key){
-      $ionicPopup.confirm({
-           title: '¿Estás seguro de realizar el canje?',
-           template: 'Te recordamos que el cupón generado podrá ser utilizado únicamente dentro de las 4 horas posteriores al canje, luego el mismo será eliminado y no tendrá validez.',
+  // A confirm dialog
+  $scope.showConfirm = function(puntos,item) {
+    var ultimo_check = localStorage.getItem(item.slug);
+    var timeNow = new Date().getTime();
+    if(ultimo_check == null){
+      if(puntos == true || puntos == 'true'){
+         var confirmPopup = $ionicPopup.confirm({
+           title: 'Realizar Check-In',
            buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-            text: 'No',
-            type: 'button-default boton-popup',
+            text: '<i style="font-size: 20px !important;" class="icon-cancel"></i>',
+            type: 'button-default boton-cerrar-2',
             onTap: function(e) {
               // e.preventDefault() will stop the popup from closing when tapped.
               //////////console.log('You are not sure');
               //e.preventDefault();
             }
           },{
-            text: 'Si',
+            text: '<i style="font-size: 20px !important;" class="icon-ok"></i>',
             type: 'button-positive button-celeste',
             onTap: function(e) {
-              // Canjear puntos por cupones
-              $scope.BeneficiosModal.hide();
-              ////////console.log(item, key);
-              LocalesAdheridos.canjear(item, key).then(function(success){
-                //Regcargamos la pagina llamando a la funcion puntos
+              // Sumamos el punto en el perfil del usuario, seccion CHECKS, asi como dentro del perfil del local, en la parte de Checks
+              LocalesAdheridos.checkin(item);
+              $ionicPopup.confirm({
+                template: '<div class="content">'
+                              +'<h4 class="normal-font">Check-In</h4>'
+                              +'<h4 class="light-font"><br><br>Realizado con exito. <br> Se sumo un punto a tu historial.<br></h4>'
+                              +'</div>',
+                 buttons: [{ 
+                  text: 'Ok',
+                  type: 'button-default boton-cerrar',
+                }]
+              });
+              // Guardamos la hora del ultimo Check
+              $scope.hora = new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
+              var timeNow = new Date().getTime();
+              localStorage.setItem('last_check',timeNow);
+              localStorage.setItem(item.slug,timeNow);
+              $scope.check();
+              setTimeout(function(){
+                  $scope.CheckOk = false;
+                  $scope.$apply();
+              }, 0);
+              //e.preventDefault();
+            }
+          }]
+         });
+      }else{
+         var confirmPopup = $ionicPopup.confirm({
+           templateUrl: "templates/common/no_check.html",
+           buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
+            text: 'Cancelar',
+            type: 'button-default boton-cerrar-2',
+            onTap: function(e) {
+              // e.preventDefault() will stop the popup from closing when tapped.
+              //////////console.log('You are not sure');
+              //e.preventDefault();
+            }
+          },{
+            text: 'Sugerir',
+            type: 'button-positive button-celeste',
+            onTap: function(e) {
+              LocalesAdheridos.Sugerir(item).then(function(success){
                 $ionicPopup.alert({
+                  template: '<div class="content">'
+                                +'<h4 class="normal-font">Sugerir</h4>'
+                                +'<h4 class="light-font"><br><br>Sugerencia exitosa.<br>Gracias por colaborar.<br></h4>'
+                                +'</div>',
+                   buttons: [{ 
+                    text: 'Ok',
+                    type: 'button-default boton-cerrar',
+                  }]
+                });
+              });
+            }
+          }]
+         });
+      }
+    }else{
+      var diferencia = ((timeNow - ultimo_check)/1000/60/60);
+      ////////console.log(diferencia);
+      if(diferencia >= 12){
+        if(puntos == true || puntos == 'true'){
+           var confirmPopup = $ionicPopup.confirm({
+             title: 'Realizar Check-In',
+             buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
+              text: '<i style="font-size: 20px !important;" class="icon-cancel"></i>',
+              type: 'button-default boton-cerrar-2',
+              onTap: function(e) {
+                // e.preventDefault() will stop the popup from closing when tapped.
+                //////////console.log('You are not sure');
+                //e.preventDefault();
+              }
+            },{
+              text: '<i style="font-size: 20px !important;" class="icon-ok"></i>',
+              type: 'button-positive button-celeste',
+              onTap: function(e) {
+                // Sumamos el punto en el perfil del usuario, seccion CHECKS, asi como dentro del perfil del local, en la parte de Checks
+                LocalesAdheridos.checkin(item);
+                $ionicPopup.confirm({
+                  template: '<div class="content">'
+                                +'<h4 class="normal-font">Check-In</h4>'
+                                +'<h4 class="light-font"><br><br>Realizado con exito. <br> Se sumo un punto a tu historial.<br></h4>'
+                                +'</div>',
+                   buttons: [{ 
+                    text: 'Ok',
+                    type: 'button-default boton-cerrar',
+                  }]
+                });
+                // Guardamos la hora del ultimo Check
+                $scope.hora = new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
+                var timeNow = new Date().getTime();
+                localStorage.setItem('last_check',timeNow);
+                localStorage.setItem(item.slug,timeNow);
+                $scope.check();
+                setTimeout(function(){
+                    $scope.CheckOk = false;
+                    $scope.$apply();
+                }, 0);
+                //e.preventDefault();
+              }
+            }]
+           });
+        }else{
+           var confirmPopup = $ionicPopup.confirm({
+             templateUrl: "templates/common/no_check.html",
+             buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
+              text: 'Cancelar',
+              type: 'button-default boton-cerrar-2',
+              onTap: function(e) {
+                // e.preventDefault() will stop the popup from closing when tapped.
+                //////////console.log('You are not sure');
+                //e.preventDefault();
+              }
+            },{
+              text: 'Sugerir',
+              type: 'button-positive button-celeste',
+              onTap: function(e) {
+                LocalesAdheridos.Sugerir(item).then(function(success){
+                  $ionicPopup.alert({
                     template: '<div class="content">'
-                                  +'<h4 class="normal-font">Canje</h4>'
-                                  +'<h4 class="light-font"><br><br>Cupón canjeado con éxito.<br></h4>'
+                                  +'<h4 class="normal-font">Sugerir</h4>'
+                                  +'<h4 class="light-font"><br><br>Sugerencia exitosa.<br>Gracias por colaborar.<br></h4>'
                                   +'</div>',
                      buttons: [{ 
                       text: 'Ok',
                       type: 'button-default boton-cerrar',
-                      onTap: function(e) {
-                        $timeout(function() {
-                          puntos();
-                        }, 1000);
-                        //e.preventDefault();
-                      }
                     }]
                   });
-              })
+                });
+              }
+            }]
+           });
+        }
+      }else{
+        $ionicPopup.alert({
+          template: '<div class="content" style="line-height: 1.5;">'
+                        +'<img src="img/sad-face.svg" width="25%" style="margin-bottom: 12px;">'
+                        +'<br>Debes esperar '+parseInt((15-diferencia)) +' horas para volver a hacer check-in en este comercio.'
+                        +'</div>',
+           buttons: [{ 
+            text: 'Ok',
+            type: 'button-default boton-cerrar',
+          }]
+        });
+      }
+    }
+  };
+
+  // FUNCION PARA ELIMINAR FAVORITOS 
+  $scope.showDelete = false;
+  $scope.listCanSwipe = true;
+  $scope.show_eliminar =function(){
+    if($scope.showDelete){
+      setTimeout(function(){
+          $scope.showDelete = false;
+          $scope.$apply();
+      }, 0);
+    }else{
+      setTimeout(function(){
+          $scope.showDelete = true;
+          $scope.$apply();
+      }, 0);
+    }
+  }
+
+  $scope.AuthData = Auth.AuthData;
+  $scope.eliminar = function(item){
+    showLoading();
+    $scope.detalle_Favorito.splice(item, 1);
+    console.log(Favoritos.CachedList);
+    console.log("Item: ",item);
+    console.log("Slug: ",$scope.quitar_fav[item].slug);
+    console.log(Favoritos.CachedList);
+    
+    Favoritos.remove($scope.AuthData.uid, $scope.quitar_fav[item].slug).then(
+      function(success){
+        hideLoading();
+      },function(error){
+        hideLoading();
+        $ionicPopup.alert({
+          template: '<div class="content">'
+                      +'<h4 class="normal-font">Favoritos</h4>'
+                      +'<h4 class="light-font"><br><br>No pudimos eliminar este comercio.<br></h4>'
+                      +'</div>',
+          buttons: [{ 
+            text: 'Ok',
+            type: 'button-default boton-cerrar',
+            onTap: function(e) {
+              $timeout(function() {
+                puntos();
+              }, 1000);
+              //e.preventDefault();
             }
           }]
-         });
-    };
+        });
+    });
+    
+  }
 
-    $scope.cupon = function(item){
+  /*
+    FUNCIONES PARA PUNTOS
+  */
 
-            $scope.item = item;
-            ////////console.log($scope.item.detalle_beneficio);
+  function puntos() {
+    showLoading();
+    $scope.puntos = [];
+    // Obtenemos los CHECKS del perfil del usuario, listamos en ion-item, ordenamos por cantidad de puntos
+    LocalesAdheridos.Checks().then(function(success){
+      $scope.checks = LocalesAdheridos.puntos;
+      angular.forEach($scope.checks,function (detalles,key) {
+        // Le agregamos el Key para buscar dentro de Checks del perfil del usuario
+        detalles.key = key ;
+        ////////console.log(detalles);
+        setTimeout(function(){
+            $scope.puntos.push(detalles);
+            $scope.$apply();
+        }, 0);
+      });
+      //////////console.log($scope.puntos);
+      //hideLoading();
+    }, function(err){
+      ////////console.log(err);
+      //hideLoading();
+    })
 
-            $scope.BeneficiosModal.show();
-    }
+    $scope.cupones = [];
+    // Obtenemos los Cupones del perfil del usuario, listamos en ion-item
+    LocalesAdheridos.Cupones().then(function(success){
+      $scope.coupons = LocalesAdheridos.cupones;
+      angular.forEach($scope.coupons,function (detalles, key) {
+        detalles.slug = key;
+        var timeNow = new Date();
+        ////////console.log(detalles);
+        var diferencia = (timeNow.getTime() - detalles.time_generado)/1000/60/60
+        ////////console.log(diferencia);
+        // Filtramos por diferencia de 4 horas, si ya paso el tiempo procedemos a eliminar del perfil
+        if(diferencia <= 4){
+          ////////console.log("Tiene cupon");
+          setTimeout(function(){
+              $scope.cupones.push(detalles);
+              $scope.$apply();
+          }, 0);
+          ////////console.log($scope.cupones);
+        }else{
+          LocalesAdheridos.eliminarCupon(key);
+        }
+      });
+      //////////console.log($scope.puntos);
+      hideLoading();
+    }, function(err){
+      ////////console.log(err);
+      hideLoading();
+    })
+    $q.all($scope.puntos).then(function(){
+      ////////console.log($scope.puntos);
+      hideLoading();
+    })
+  }
 
+  $scope.nocupon = function(){
+    $ionicPopup.alert({
+      template: '<div class="content" style="line-height: 1.5;">'
+                    +'<img src="img/sad-face.svg" width="25%" style="margin-bottom: 12px;"> <br><strong>Todavía no alcanzaste los puntos suficientes.</strong>'
+                    +'<br>¡Seguí sumando puntos haciendo check-in!'
+                    +'</div>',
+       buttons: [{ 
+        text: 'Ok',
+        type: 'button-default boton-cerrar',
+      }]
+    });  
+  }
+
+  // MODAL PARA MOSTRAR LOS BENEFICIOS
+  
+  $ionicModal.fromTemplateUrl('templates/modal/beneficios.html', {
+    scope: $scope
+  }).then(function (modal) {
+    $scope.BeneficiosModal = modal;
+  });
+  $scope.closeBeneficiosModal = function () {
+    $scope.BeneficiosModal.hide();
+  };
+
+  $scope.beneficio_elegido = function(item, key){
+    $ionicPopup.confirm({
+         title: '¿Estás seguro de realizar el canje?',
+         template: 'Te recordamos que el cupón generado podrá ser utilizado únicamente dentro de las 4 horas posteriores al canje, luego el mismo será eliminado y no tendrá validez.',
+         buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
+          text: 'No',
+          type: 'button-default boton-popup',
+          onTap: function(e) {
+            // e.preventDefault() will stop the popup from closing when tapped.
+            //////////console.log('You are not sure');
+            //e.preventDefault();
+          }
+        },{
+          text: 'Si',
+          type: 'button-positive button-celeste',
+          onTap: function(e) {
+            // Canjear puntos por cupones
+            $scope.BeneficiosModal.hide();
+            ////////console.log(item, key);
+            LocalesAdheridos.canjear(item, key).then(function(success){
+              //Regcargamos la pagina llamando a la funcion puntos
+              $ionicPopup.alert({
+                  template: '<div class="content">'
+                                +'<h4 class="normal-font">Canje</h4>'
+                                +'<h4 class="light-font"><br><br>Cupón canjeado con éxito.<br></h4>'
+                                +'</div>',
+                   buttons: [{ 
+                    text: 'Ok',
+                    type: 'button-default boton-cerrar',
+                    onTap: function(e) {
+                      $timeout(function() {
+                        puntos();
+                      }, 1000);
+                      //e.preventDefault();
+                    }
+                  }]
+                });
+            })
+          }
+        }]
+       });
+  };
+
+  $scope.cupon = function(item){
+    $scope.item = item;
+    $scope.BeneficiosModal.show();
+  }
 })
 
 // Controlador de las Categorias
@@ -2372,8 +2353,8 @@ angular.module('starter.controllers', ["angucomplete-alt",])
                  if(direction == 'right') 
                    $ionicHistory.goBack()
                }
-
 })
+
 // Controlador de los Shoppings
 .controller('ShoppingCtrl', function ($scope, $stateParams, $ionicHistory, StorageService, $state, $ionicModal, $ionicPopup, CentrosComerciales, $timeout, Auth, Favoritos) {
  
@@ -2382,12 +2363,12 @@ angular.module('starter.controllers', ["angucomplete-alt",])
 
       $scope.banners_destacados = ['1','2'];
 
-      $scope.options = {
+      $scope.opciones = {
         autoplay:2000,
         loop: false,
         free:false,
         speed:2000,
-        initialSlide: 2,
+        initialSlide: 3,
         direction: 'horizontal',
         autoplayDisableOnInteraction: false,
         slidesPerView: '1', 
@@ -3130,7 +3111,7 @@ angular.module('starter.controllers', ["angucomplete-alt",])
   };
 
 })
-// Controlador de las Multimarcas
+// Controlador de las Supermercados
 .controller('SupermercadosCtrl', function ($scope, $stateParams, $ionicHistory, StorageService, $state, $ionicModal,
  $ionicPopup, Supermercados, $timeout, Auth, Favoritos) {
  

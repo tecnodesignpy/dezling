@@ -6,22 +6,18 @@
 			
 	
 	<ion-content>
-    	<div style="margin-top: 10%" ng-show="!cargado">
+		<div ng-show="sponsors.length != 0" class="offer-header animated fadeIn" style="height: 60%">
+			<ion-slides options="options" slider="sliderDelegate" style="height: 100% !important;">
+                <ion-slide-page ng-repeat="sponsor in sponsors | orderBy:'-random'" ng-click="openSponsor(sponsor.titulo,sponsor.descripcion);SumarClick('sponsor', sponsor.key)">
+					<img ng-src="{{ sponsor.banner }}" width="100%">
+                </ion-slide-page>
+            </ion-slides>
+		</div>
+    	<div style="margin-top: 10%" ng-show="!cargado || !cargado_destacados">
       		<img style="margin-top: 5%" width="30%" src="img/consultas.svg"><br>
 		  	<ion-spinner icon="dots"></ion-spinner>
 		    <h5 class="light-font" style="margin:0 25px;">¡Estamos obteniendo las mejores promociones para vos!</h5>
 		</div>
-		<div ng-show="sponsors.length != 0" class="offer-header animated fadeIn" style="height: 60%">
-			<ion-slides options="opciones" slider="sliderDelegate" style="height: 100% !important;">
-                <ion-slide-page ng-repeat="sponsor in sponsors | orderBy:'-random'" ng-click="openSponsor(sponsor.item.titulo,sponsor.item.descripcion);SumarClick('sponsor', sponsor.key)">
-					<img ng-src="{{ sponsor.item.banner }}" width="100%">
-                </ion-slide-page>
-            </ion-slides>
-		</div>
-
-
-
-
 
 		<p ng-show="destacados.length != 0" class="script"><span>DESTACADOS</span></p>
 
@@ -31,14 +27,9 @@
 			<h5 class="light-font">Cargando..!</h5>
 			-->
 		</div>
-		<div ng-click="openSponsor(item.item.titulo,item.item.descripcion);SumarClick('destacado', item.key)" ng-repeat="(key, item) in destacados | orderBy:'-random'" class="offer-header animated fadeIn" style=" margin-top: 0px">
-					<img ng-src="{{ item.item.banner}}" width="100%">
+		<div ng-click="openSponsor(item.titulo,item.descripcion);SumarClick('destacado',item.key)" ng-repeat="(key, item) in destacados | orderBy:'-random'" class="offer-header animated fadeIn" style=" margin-top: 0px">
+					<img ng-src="{{ item.banner}}" width="100%">
 		</div>
-
-
-
-
-
 
 		<p class="script" ng-init="tab = 'shoppings'"><span>RANKING DE VISITAS</span></p>
       	<div class="row">

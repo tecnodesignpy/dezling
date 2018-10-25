@@ -259,11 +259,67 @@ angular.module('starter.services', [])
         return qDel.promise;
       };
       // Get Sponsor
-      self.onValueSponsor = function(childRef) {
+      self.onValueSponsor = function(childRef, cantidad) {
+        console.log("Entro en la funcion ",new Date());
         var qGet = $q.defer();
-        console.log(new Date());
-        firebase.database().ref(childRef).on('value', function(snapshot) {
-            qGet.resolve(snapshot.val());
+        var datos2 = [];
+        var contador = 1
+        var cantidad = cantidad;
+
+        //console.log(new Date());
+        var timeNow = new Date();
+        var dia = timeNow.getDate();
+        var mes = timeNow.getMonth() +1;
+        var year = timeNow.getFullYear();
+        var inicio = year+"-"+mes+"-"+dia 
+        console.log(inicio);
+
+        firebase.database().ref(childRef).orderByChild('fechainicio').on('child_added', function(snapshot) {
+              // Una vez que se haya cambiado la fecha de inicio y fin en Sponsors y Destacados, debemos cambiar el valor <child_added> por el valor <value>
+              //console.log(new Date(snapshot.val().fechainicio) <= new Date() && new Date(snapshot.val().fechafin) >= new Date());
+
+              // CAMBIAMOS PRIMERO LA FECHA DE INICIO 
+                // Solo cambiamos la variable fechainicio por la variable fechafin
+
+              //const [day, month, year] = snapshot.val().fechainicio.split("/");
+              //const [day1, month1, year1] = snapshot.val().fechafin.split("/");
+              //var date1 = new Date(year, month - 1, day);
+              //var date2 = new Date(year1, month1 - 1, day1);
+              /*
+              var dia = date1.getDate();
+              var mes = date1.getMonth() + 1;
+              var year1 = date1.getFullYear(); 
+              var fecha_to_push  = year1+"-"+mes+"-"+dia
+              // SPONSOS=5, DESTACADOS=7
+              if(cantidad == 7){
+                console.log(fecha_to_push);
+                //firebase.database().ref('destacados/'+snapshot.key).update({fechainicio:fecha_to_push});
+              }
+              */
+
+                  const [year, month, day] = snapshot.val().fechainicio.split("-");
+                  var inicio = new Date(year, month-1, day);
+                  const [year1, month1, day1] = snapshot.val().fechafin.split("-");
+                  var fin = new Date(year1, month1-1, day1);
+                  //console.log("Fecha Fin: "+new Date(snapshot.val().fechafin));
+                  //console.log("Fecha Hoy: "+new Date());
+                  //console.log(new Date(snapshot.val().fechainicio) <= new Date() && new Date(snapshot.val().fechafin) >= new Date())
+                  //console.log("------------------");
+
+                
+                if(inicio <= timeNow && fin >= timeNow && contador <= cantidad){
+                  console.log("Fecha Inicio:"+new Date(snapshot.val().fechainicio));
+                  console.log("Fecha Fin:"+new Date(snapshot.val().fechafin));
+                  var randomvalue = 0.5 - Math.random();
+                  datos2.push({random:randomvalue, fechainicio:snapshot.val().fechainicio, fechafin:snapshot.val().fechafin,
+                   banner:snapshot.val().banner, titulo:snapshot.val().titulo, descripcion:snapshot.val().descripcion, key: snapshot.key})
+                  contador = contador + 1;
+                }
+                
+
+
+            qGet.resolve(datos2);
+            //qGet.resolve(snapshot.val());
         }, function(error){
             qGet.reject(error);
         });
@@ -761,10 +817,10 @@ angular.module('starter.services', [])
       self.changeProfilePicture = function(sourceTypeIndex, uid) {
         return CordovaCamera.newImage(sourceTypeIndex, 800).then(
           function(imageData){
+            //return imageData;
             if(imageData != undefined) {
+              //return firebase.database().ref('/users/' + uid + '/' + 'perfil/foto_perfil').update(imageData);
               return self.setGlobal(uid, 'perfil/foto_perfil', imageData);
-            } else {
-              return imageData;
             }
           }, function(error){
               return error;
@@ -1509,7 +1565,7 @@ angular.module('starter.services', [])
 
       self.get = function() {
         var qCat = $q.defer();
-        FireFunc.onValueSponsor('/sponsors/').then(function(result){
+        FireFunc.onValueSponsor('/sponsors/',5).then(function(result){
           console.log("Sponsor Get");
           console.log(new Date());
           if(result != null) {
@@ -1551,7 +1607,7 @@ angular.module('starter.services', [])
 
       self.get = function() {
         var qCat = $q.defer();
-        FireFunc.onValueSponsor('/destacados/').then(function(result){
+        FireFunc.onValueSponsor('/destacados/',7).then(function(result){
           console.log("Destacados Get");
           console.log(new Date());
           if(result != null) {
@@ -1948,7 +2004,6 @@ angular.module('starter.services', [])
       // Generic wrapper to load the list
       // Prevents duplicate loading
       self.load = function(AuthData) {
-
         // reset if authdata unauth
         if(!AuthData.hasOwnProperty('uid')) {
           self.CachedList = {};
@@ -2010,7 +2065,9 @@ angular.module('starter.services', [])
 
       // REMOVE
       self.remove = function(uid, productId, categoria, comercio) {
+        var qPress = $q.defer();
         // Guardamos el favorito en la estadistica de la empresa
+        /*
         var posteo ={
             fav: false,
         }
@@ -2028,9 +2085,33 @@ angular.module('starter.services', [])
             firebase.database().ref('categorias/supermercados/comercios/' + comercio + '/locales/' + productId +'/estadisticas/favoritos/'+uid).update(posteo);
             break
         }
+        */
 
         var childRef = 'users/' + uid + '/favoritos/' + productId;
-        return FireFunc.remove(childRef);
+        FireFunc.remove(childRef).then(
+              function(success){
+                //self.CachedList[productId] = false;
+
+                self.getList(uid).then(
+                  function(WalletList){
+                    console.log("Favoritos ",self.CachedList);
+                    qPress.resolve(self.CachedList);
+                  },
+                  function(error){
+                    console.log(error);
+                    qPress.reject(error);
+                })
+
+
+
+                //qPress.resolve(self.CachedList);
+              },
+              function(error){
+                console.log("ERROR ",error);
+                qPress.reject();
+              }
+            );
+        return qPress.promise;
       };
 
       // PRESS
@@ -2041,6 +2122,8 @@ angular.module('starter.services', [])
 
         if(AuthData.hasOwnProperty('uid') && !tempPressed) {
           tempPressed = true;
+          //console.log("CachedList",self.CachedList);
+          //console.log("CachedList Producto",self.CachedList[productId]);
 
           if(!self.CachedList[productId]){ // add
             //////console.log("Agrega fav");
@@ -2064,13 +2147,13 @@ angular.module('starter.services', [])
 
             self.remove(AuthData.uid, productId, categoria, comercio).then(
               function(success){
-                //////console.log(success);
+                console.log("SUCCESS ", success);
                 self.CachedList[productId] = false;
                 tempPressed = false;
                 qPress.resolve(self.CachedList);
               },
               function(error){
-                //////console.log(error);
+                console.log("ERROR ",error);
                 tempPressed = false;
                 qPress.reject();
               }

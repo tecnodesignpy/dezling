@@ -15,18 +15,20 @@
 		    <ion-list
 		              show-delete="showDelete"
 		              can-swipe="listCanSwipe">
-		      <ion-item class="item-thumbnail-left" ng-repeat="favs in detalle_Favorito | orderBy:'perfil.nombre' track by $index  ">
-		        <ion-delete-button 	class="ion-minus-circled" 
-		        					ng-click="eliminar($index)">
-		        </ion-delete-button>
-		        <img  width="100%" height="auto" ng-src="{{ favs.perfil.icono || 'img/dezling-logo.png' }}">
-		        <h2 class="text-left" style="font-size: 15px;">{{favs.perfil.nombre}}</h2>
-		        <p class="text-left" style="font-size: 13px;">{{ favs.perfil.direccion || favs.perfil.descripcion }}</p>
-		        <ion-option-button class="button-assertive icon_set_1_icon-77"
-		                           ng-click="eliminar($index)">
-		        </ion-option-button>
+		      	<ion-item class="item-thumbnail-left" ng-repeat="favs in detalle_Favorito | orderBy:'perfil.nombre' track by $index  ">
+			        <ion-delete-button 	class="ion-minus-circled" 
+			        					ng-click="eliminar($index)">
+			        </ion-delete-button>
+			        <img  width="100%" height="auto" ng-src="{{ favs.perfil.icono || 'img/dezling-logo.png' }}">
+			        <h2 class="text-left" style="font-size: 15px;">{{favs.perfil.nombre}}</h2>
+			        <p class="text-left" style="font-size: 13px;">{{ favs.perfil.direccion || favs.perfil.descripcion }}</p>
+			        <!--
+			        <ion-option-button class="button-assertive icon_set_1_icon-77"
+			                           ng-click="eliminar($index)">
+			        </ion-option-button>
+			    	-->
 
-		      </ion-item>
+		      	</ion-item>
 		    </ion-list>
 		</div>
 		<div ng-show="detalle_Favorito.length == 0">

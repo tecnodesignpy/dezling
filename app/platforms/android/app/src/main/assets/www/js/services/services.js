@@ -259,11 +259,38 @@ angular.module('starter.services', [])
         return qDel.promise;
       };
       // Get Sponsor
-      self.onValueSponsor = function(childRef) {
+      self.onValueSponsor = function(childRef, cantidad) {
         var qGet = $q.defer();
-        console.log(new Date());
-        firebase.database().ref(childRef).on('value', function(snapshot) {
-            qGet.resolve(snapshot.val());
+        //console.log(new Date());
+        var timeNow = new Date();
+        var dia = timeNow.getDate();
+        var mes = timeNow.getMonth() + 1;
+        var year = timeNow.getFullYear();
+        var inicio = dia+"/"+mes+"/"+year;
+        //console.log(inicio)
+        var datos2 = [];
+        /*
+          Probar el siguiente codigo 
+          Lo primero es la ruta
+          Lo segundo es el orden con el que va a traer los items, debe ser en base al json
+          Lo tercero es la cantidad de items a traer
+
+          FireFunc.onValueSort('categorias/multimarcas/comercios/','/estadisticas/visitas/', 5).then(function(result){}
+
+        */
+
+        firebase.database().ref(childRef).orderByChild('fechainicio').startAt(inicio).on('value', function(snapshot) {
+            var contador = 1
+            snapshot.forEach(function (detalles,key) {
+              //console.log(detalles.val().fechafin);
+                          if(detalles.val().fechafin >= inicio && contador <= cantidad){
+                            var randomvalue = 0.5 - Math.random();
+                            datos2.push({random:randomvalue, fechainicio:detalles.val().fechainicio, fechafin:detalles.val().fechafin, banner:detalles.val().banner, titulo:detalles.val().titulo})
+                            contador = contador + 1;
+                          }
+                        });
+            qGet.resolve(datos2);
+            //qGet.resolve(snapshot.val());
         }, function(error){
             qGet.reject(error);
         });
@@ -761,10 +788,10 @@ angular.module('starter.services', [])
       self.changeProfilePicture = function(sourceTypeIndex, uid) {
         return CordovaCamera.newImage(sourceTypeIndex, 800).then(
           function(imageData){
+            //return imageData;
             if(imageData != undefined) {
+              //return firebase.database().ref('/users/' + uid + '/' + 'perfil/foto_perfil').update(imageData);
               return self.setGlobal(uid, 'perfil/foto_perfil', imageData);
-            } else {
-              return imageData;
             }
           }, function(error){
               return error;
@@ -1509,7 +1536,7 @@ angular.module('starter.services', [])
 
       self.get = function() {
         var qCat = $q.defer();
-        FireFunc.onValueSponsor('/sponsors/').then(function(result){
+        FireFunc.onValueSponsor('/sponsors/',5).then(function(result){
           console.log("Sponsor Get");
           console.log(new Date());
           if(result != null) {
@@ -1551,7 +1578,7 @@ angular.module('starter.services', [])
 
       self.get = function() {
         var qCat = $q.defer();
-        FireFunc.onValueSponsor('/destacados/').then(function(result){
+        FireFunc.onValueSponsor('/destacados/',7).then(function(result){
           console.log("Destacados Get");
           console.log(new Date());
           if(result != null) {
@@ -1948,7 +1975,6 @@ angular.module('starter.services', [])
       // Generic wrapper to load the list
       // Prevents duplicate loading
       self.load = function(AuthData) {
-
         // reset if authdata unauth
         if(!AuthData.hasOwnProperty('uid')) {
           self.CachedList = {};
@@ -2041,6 +2067,8 @@ angular.module('starter.services', [])
 
         if(AuthData.hasOwnProperty('uid') && !tempPressed) {
           tempPressed = true;
+          console.log("CachedList",self.CachedList);
+          console.log("CachedList Producto",self.CachedList[productId]);
 
           if(!self.CachedList[productId]){ // add
             //////console.log("Agrega fav");

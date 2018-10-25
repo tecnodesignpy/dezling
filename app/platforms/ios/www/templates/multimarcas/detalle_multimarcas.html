@@ -43,10 +43,10 @@
                 </div>
                 <div class="card-content">
 	                <div class="card-action  text-left">
-	                    <i class="icon_set_1_icon-91" style="font-size: 16px"></i> Telefono: {{shopping.perfil.numero_telefono || ''}}
+	                    <i class="icon_set_1_icon-91" style="font-size: 16px"></i> Telefono: <a ng-href="tel:{{shopping.perfil.numero_telefono}}">{{shopping.perfil.numero_telefono || ''}}</a>
 	                </div>
 	                <div class="card-action  text-left">
-	                    <i class="icon_set_1_icon-84" style="font-size: 16px"></i> Email: <a href="mailto:{{shopping.perfil.email}}"">{{shopping.perfil.email || 'info@dezling.com'}}</a>
+	                    <i class="icon_set_1_icon-84" style="font-size: 16px"></i> Email: <a ng-href="mailto:{{shopping.perfil.email}}"">{{shopping.perfil.email || 'info@dezling.com'}}</a>
 	                </div>
 	            </div>
 	        </div>

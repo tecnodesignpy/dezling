@@ -7,26 +7,22 @@
 
   <ion-content class="has-header" style="background-image: linear-gradient(to bottom, #ffffff 0%, #e6e6e6d4 100%);">
     <!-- 
-    <label style="text-align: left; min-height: 0px" class="item item-divider" ng-show="hay_nuevas == true">
-      Nuevas
-    </label>
-      -->
+      NUEVAS NOTIFICACIONES
+    -->
     <ion-list ng-controller="NotificacionesCtrl"
               show-delete="shouldShowDelete"
               show-reorder="shouldShowReorder"
               can-swipe="listCanSwipe">
-      <ion-item ng-click="openSponsor(item.datos.titulo,item.datos.descripcion_larga)" style="min-height: 75px" class="item-no-leido"  ng-repeat="item in lista_notificaciones | filter : {estado:'nueva'} " ng-click="{{ item.funcion }}">
+      <ion-item ng-click="openSponsor(item.datos.titulo,item.datos.descripcion_larga, item.avatar)" style="min-height: 75px" class="item-no-leido"  ng-repeat="item in lista_notificaciones | filter : {estado:'nueva'} " ng-click="{{ item.funcion }}">
         <img style="width: 60px; height: auto;" ng-src="{{ item.avatar || 'img/dezling-logo.png' }}">
         <h2 class="text-left" style="padding-left: 10px;">{{ item.datos.titulo }}</h2>
         <p class="text-left" style="white-space: normal; padding-left: 10px">{{ item.datos.descripcion }}</p>
       </ion-item>
     <!--
-    <label style="text-align: left; min-height: 0px" class="item item-divider" ng-show="hay_vigentes == true">
-      Vigentes
-    </label>
+      NOTIFICACIONES ANTERIORES PERO VIGENTES
     -->
       <ion-item ng-click="openSponsor(item.datos.titulo, item.datos.descripcion_larga, item.avatar)" style="min-height: 75px" class="item-thumbnail-left"  ng-repeat="item in lista_notificaciones | filter : {estado:'vigente'} " ng-click="{{ item.funcion }}">
-        <img style="width: 60px; height: auto;" ng-src="{{ item.avatar || 'img/dezling-logo.png' }}">
+        <img style="width: 60px; height: auto;" ng-src="{{ item.avatar || 'img/dezling-logo.png' }}" alt="">
         <h2 class="text-left" style="padding-left: 10px;">{{ item.datos.titulo }}</h2>
         <p class="text-left" style="white-space: normal; padding-left: 10px">{{ item.datos.descripcion }}</p>
       </ion-item>

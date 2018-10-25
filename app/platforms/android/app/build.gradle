@@ -264,8 +264,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     // SUB-PROJECT DEPENDENCIES START
     implementation(project(path: ":CordovaLib"))
-    compile "com.android.support:customtabs:23.3.0"
-    compile "com.android.support:support-v4:24.1.1+"
+    compile "com.android.support:customtabs:26.+"
+    compile "com.android.support:support-v4:26.+"
     compile "com.facebook.android:facebook-android-sdk:4.+"
     compile "com.google.android.gms:play-services-analytics:11.0.1"
     compile "com.onesignal:OneSignal:3.9.1"

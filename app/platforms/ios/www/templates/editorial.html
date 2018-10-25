@@ -3,75 +3,70 @@
         <img width="40%" src="img/dezling-name.png" />
     </ion-nav-title>
 	
-			
-	
 	<ion-content>
-    	<div style="margin-top: 10%" ng-show="!cargado">
-      		<img style="margin-top: 5%" width="30%" src="img/consultas.svg"><br>
-		  	<ion-spinner icon="dots"></ion-spinner>
-		    <h5 class="light-font" style="margin:0 25px;">¡Estamos obteniendo las mejores promociones para vos!</h5>
-		</div>
-		<div ng-show="sponsors.length != 0" class="offer-header animated fadeIn" style="height: 60%">
-			<ion-slides options="opciones" slider="sliderDelegate" style="height: 100% !important;">
-                <ion-slide-page ng-repeat="sponsor in sponsors | orderBy:'-random'" ng-click="openSponsor(sponsor.item.titulo,sponsor.item.descripcion);SumarClick('sponsor', sponsor.key)">
-					<img ng-src="{{ sponsor.item.banner }}" width="100%">
-                </ion-slide-page>
-            </ion-slides>
-		</div>
+		<!-- Slides de banner's Sponsor's -->
+			<div ng-show="sponsors.length != 0" style="height: 60%">
+				<ion-slides options="opciones" slider="sliderDelegate" style="height: 100% !important;">
+	                <ion-slide-page ng-repeat="sponsor in sponsors | orderBy:'-random'">
+						<a ng-click="openSponsor(sponsor.titulo,sponsor.descripcion);SumarClick('sponsor', sponsor.key)"><img ng-src="{{ sponsor.banner }}" width="100%"></a>
+	                </ion-slide-page>
+	            </ion-slides>
+			</div>
+		<!-- FIN Slides de banner's Sponsor's -->
 
-
-
-
+		<!-- Animación de cargando ..  -->
+	    	<div style="margin-top: 10%" ng-show="!cargado || !cargado_destacados">
+	      		<img style="margin-top: 5%" width="30%" src="img/consultas.svg"><br>
+			  	<ion-spinner icon="dots"></ion-spinner>
+			    <h5 class="light-font" style="margin:0 25px;">¡Estamos obteniendo las mejores promociones para vos!</h5>
+			</div>
+		<!-- FIN Animación de cargando ..  -->
 
 		<p ng-show="destacados.length != 0" class="script"><span>DESTACADOS</span></p>
 
-         <div style="margin-top: 10%" ng-show="!cargado_destacados">
-         	<!--
-			<ion-spinner></ion-spinner>
-			<h5 class="light-font">Cargando..!</h5>
-			-->
-		</div>
-		<div ng-click="openSponsor(item.item.titulo,item.item.descripcion);SumarClick('destacado', item.key)" ng-repeat="(key, item) in destacados | orderBy:'-random'" class="offer-header animated fadeIn" style=" margin-top: 0px">
-					<img ng-src="{{ item.item.banner}}" width="100%">
-		</div>
-
-
-
-
-
-
-		<p class="script" ng-init="tab = 'shoppings'"><span>RANKING DE VISITAS</span></p>
-      	<div class="row">
-        	<div class="col col-33">
-        		<a ng-click="tab = 'shoppings'">
-					<figure class="snip1581"><img src="img/shopping.jpg" alt="profile-sample2"/>
-					  <figcaption>
-					    <h3 class="title3">Shoppings</h3>
-					  </figcaption>
-					</figure>
-				</a>
+		<!-- Banner's Destacados  -->
+			<div ng-click="openSponsor(item.titulo,item.descripcion);SumarClick('destacado',item.key)" ng-repeat="(key, item) in destacados | orderBy:'-random'" class="offer-header animated fadeIn" style=" margin-top: 0px">
+				<img ng-src="{{ item.banner}}" width="100%">
 			</div>
-        	<div class="col col-33">
-        		<a ng-click="tab = 'multitiendas'">
-					<figure class="snip1581"><img src="img/multimarcas.jpg" alt="profile-sample7"/>
-					  <figcaption>
-					    <h3 class="title3">Multitiendas</h3>
-					  </figcaption>
-					</figure>
-				</a>
+		<!-- FIN Banner's Destacados  -->
+
+		<!-- Titulo e Imagenes del Ranking de Visitas  -->
+			<p class="script" ng-init="tab = 'shoppings'"><span>RANKING DE VISITAS</span></p>
+	      	<div class="row">
+	        	<div class="col col-33">
+	        		<a ng-click="tab = 'shoppings'">
+						<figure class="snip1581"><img src="img/shopping.jpg" alt="profile-sample2"/>
+						  <figcaption>
+						    <h3 class="title3">Shoppings</h3>
+						  </figcaption>
+						</figure>
+					</a>
+				</div>
+	        	<div class="col col-33">
+	        		<a ng-click="tab = 'multitiendas'">
+						<figure class="snip1581"><img src="img/multimarcas.jpg" alt="profile-sample7"/>
+						  <figcaption>
+						    <h3 class="title3">Multitiendas</h3>
+						  </figcaption>
+						</figure>
+					</a>
+				</div>
+	        	<div class="col col-33">
+	        		<a ng-click="tab = 'supermercados'">
+						<figure class="snip1581"><img src="img/supermercados.jpg" alt="profile-sample6"/>
+						  <figcaption>
+						    <h3 class="title3">Supermercados</h3>
+						  </figcaption>
+						</figure>
+					</a>
+				</div>
 			</div>
-        	<div class="col col-33">
-        		<a ng-click="tab = 'supermercados'">
-					<figure class="snip1581"><img src="img/supermercados.jpg" alt="profile-sample6"/>
-					  <figcaption>
-					    <h3 class="title3">Supermercados</h3>
-					  </figcaption>
-					</figure>
-				</a>
-			</div>
-		</div>
+		<!-- FIN Titulo e Imagenes del Ranking de Visitas  -->
+
+		<!-- Desglose del top 5-->
 			<h2 style="text-transform: uppercase; margin: 0px">{{ tab }}</h2>
 			<p>TOP 5</p>
+			<!-- Shoppings -->
 			<div class="product-list" ng-show="tab =='shoppings'" style="margin-bottom: 5px">
 				<div ng-show="visitas_shopping[0]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: url('img/trofeo.svg'); background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
@@ -174,6 +169,7 @@
 					  	</div>
 				</div>
 			</div>
+			<!-- Multimarcas -->
 			<div class="product-list" ng-show="tab =='multitiendas'" style="margin-bottom: 5px">
 				<div ng-show="visitas_multimarcas[0]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: url('img/trofeo.svg'); background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
@@ -276,6 +272,7 @@
 					  	</div>
 				</div>
 			</div>
+			<!-- Supermercados -->
 			<div class="product-list" ng-show="tab =='supermercados'" style="margin-bottom: 5px">
 				<div ng-show="visitas_supermercados[0]" class="card" style="background-color: #f5f5f5">
 					  	<div class="item item-divider"  style="background-image: url('img/trofeo.svg'); background-position: right; background-repeat: no-repeat; background-size: contain; padding: 0px !important; background-color: white">
@@ -378,7 +375,6 @@
 					  	</div>
 				</div>
 			</div>
-		
+		<!-- FIN Desglose del top 5-->
 	</ion-content>
-
 </ion-view>
